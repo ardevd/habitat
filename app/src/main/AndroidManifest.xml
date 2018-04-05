@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="no.aegisdynamics.habitat">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:allowBackup="true"
+        android:name=".HabitatApplication"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:colorMode="wideColorGamut"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:extractNativeLibs="false"
+        android:fullBackupContent="@xml/backup_descriptor">
+        <activity
+            android:name=".dashboard.DashboardActivity"
+            android:launchMode="singleTask"/>
+        <activity
+            android:name=".devices.DevicesActivity"
+            android:launchMode="singleTask"/>
+        <activity android:name=".preferences.PrefsActivity"/>
+        <activity
+            android:name=".locations.LocationsActivity"
+            android:launchMode="singleTask"/>
+        <activity android:name=".devicedetail.DeviceDetailActivity"/>
+        <activity android:name=".locationdetail.LocationDetailActivity"/>
+        <activity
+            android:name=".notifications.NotificationsActivity"
+            android:launchMode="singleTask" />
+        <activity android:name=".locationadd.LocationAddActivity"/>
+        <activity android:name=".automations.AutomationsActivity"/>
+        <activity android:name=".automationadd.AutomationAddActivity"/>
+        <activity
+            android:name=".controller.ControllerActivity"
+            android:launchMode="singleTask"/>
+        <activity
+            android:name=".setup.SetupActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+
+        <activity android:name=".backup.BackupActivity"
+            android:launchMode="singleTask"/>
+
+        <activity android:name=".participate.ParticipateActivity"
+            android:launchMode="singleTask" />
+
+        <activity
+            android:name=".splash.SplashActivity"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name=".provider.AutomationDataProvider"
+            android:authorities="no.aegisdynamics.habitat.habitatdata"
+            android:readPermission="no.aegisdynamics.habitat.permission.READ_AUTOMATIONS"
+            android:writePermission="no.aegisdynamics.habitat.permission.WRITE_AUTOMATIONS"
+            android:enabled="true"
+            android:exported="false"
+            android:syncable="false">
+        </provider>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="no.aegisdynamics.habitat.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/exposed_filepaths" />
+        </provider>
+
+        <receiver
+            android:name=".automator.AutomatorOnBootReceiver"
+            android:enabled="false"
+            android:exported="false"
+            android:label="@string/automator_boot_receiver_label">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".automator.AutomatorAutomationReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="no.aegisdynamics.habitat.AUTOMATION" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".jobservices.BackupJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="false"/>
+
+        <service
+            android:name=".fcm.FcmService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".fcm.FcmIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
+             See README(https://goo.gl/l4GJaQ) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_automation" />
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/fcm_channel_id" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="PLACEHOLDER"/>
+
+    </application>
+
+</manifest>

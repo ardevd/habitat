@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/devices_header_layout"
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
+        android:elevation="3dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/devices_header_devices"
+            style="@android:style/TextAppearance.Material.Body1"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:layout_margin="@dimen/md_keylines"/>
+
+    </RelativeLayout>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout_devices"
+        android:layout_below="@id/devices_header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/devices_list"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/devices_activity_vertical_margin"
+            android:paddingLeft="@dimen/devices_activity_horizontal_margin"
+            android:paddingRight="@dimen/devices_activity_horizontal_margin"
+            android:paddingTop="@dimen/devices_activity_vertical_margin"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+</RelativeLayout>

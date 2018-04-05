@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/menu_top"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/menu_home"
+            android:icon="@drawable/ic_home"
+            android:tint="@color/colorAccent"
+            android:title="@string/menu_nav_home"/>
+
+        <item
+            android:id="@+id/menu_devices"
+            android:icon="@drawable/ic_device_24dp"
+            android:tint="@color/colorAccent"
+            android:title="@string/menu_nav_devices" />
+
+        <item
+            android:id="@+id/menu_events"
+            android:icon="@drawable/ic_event_24dp"
+            android:tint="@color/colorAccent"
+            android:title="@string/menu_nav_events" />
+
+        <item
+            android:id="@+id/menu_rooms"
+            android:icon="@drawable/ic_room_24dp"
+            android:tint="@color/colorAccent"
+            android:title="@string/menu_nav_rooms" />
+
+        <item
+            android:id="@+id/menu_automation"
+            android:icon="@drawable/ic_alarm_24dp"
+            android:tint="@color/colorAccent"
+            android:title="@string/menu_nav_automation" />
+
+        <item
+            android:id="@+id/menu_controller"
+            android:icon="@drawable/ic_controller"
+            android:tint="@color/colorAccent"
+            android:title="@string/menu_nav_controller" />
+
+        <item
+            android:id="@+id/menu_backup"
+            android:icon="@drawable/ic_backup"
+            android:tint="@color/colorAccent"
+            android:title="@string/menu_nav_backup"/>
+
+    </group>
+
+    <group
+        android:id="@+id/menu_middle"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/menu_settings"
+            android:icon="@drawable/ic_settings_24dp"
+            android:tint="@color/colorAccent"
+            android:title="@string/menu_nav_settings" />
+
+        <item
+            android:id="@+id/menu_participate"
+            android:title="@string/menu_nav_participate"
+            android:icon="@drawable/ic_info"
+            android:tint="@color/colorAccent" />
+
+    </group>
+
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/menu_logout"
+            android:icon="@android:drawable/ic_lock_power_off"
+            android:tint="@color/colorAccent"
+            android:title="@string/menu_nav_logout" />
+    </group>
+</menu>

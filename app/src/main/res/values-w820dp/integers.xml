@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="num_devices_columns">2</integer>
+    <integer name="num_locations_columns">3</integer>
+    <integer name="num_notifications_columns">3</integer>
+    <integer name="num_backups_columns">2</integer>
+    <integer name="num_dashboard_columns">1</integer>
+</resources>

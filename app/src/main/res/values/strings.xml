@@ -1,0 +1,256 @@
+<resources>
+    <string name="app_name">Habitat</string>
+    <string name="base_anonymous">Anonymous User</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_set_location">Set your location</string>
+    <string name="dashboard_set_location_hint">Set your home location</string>
+    <string name="dashboard_set_location_hint_desc">We will show you a really nice weather forecast if you do.</string>
+    <string name="dashboard_devices_hint">Dashboard devices</string>
+    <string name="dashboard_devices_hint_desc">Devices will show up here once you add them through the Z-Way Smarthome web interface</string>
+    <string name="dashboard_no_devices">Your dashboard is empty</string>
+    <string name="dashboard_menu_update_location">Change location</string>
+    <string name="dashboard_menu_push_notifications">Device event notifications</string>
+    <string name="dashboard_warning_lock_title">Security Notice</string>
+    <string name="dashboard_warning_lock_open">1 lock open</string>
+    <string name="dashboard_warning_locks_open">%1$d locks open</string>
+
+    <!-- Devices -->
+    <string name="devices_command_ok">Command accepted by server</string>
+    <string name="devices_command_error">Server returned an error</string>
+    <string name="devices_authentication_error">Authentication error</string>
+    <string name="devices_devices">Devices</string>
+    <string name="devices_num_devices">%1$d devices</string>
+    <string name="devices_menu_show_favorites">Favorites only</string>
+    <string name="devices_menu_search">Search</string>
+    <string name="devices_menu_search_hint">Search devices</string>
+    <string name="devices_controller">Z-Way controller</string>
+    <string name="devices_restart">Restart</string>
+    <string name="devices_controller_will_restart">Controller restarting…</string>
+    <string name="devices_controller_has_restarted">Controller has restarted</string>
+    <string name="devices_controller_not_available">Controller returned error code</string>
+    <string name="devices_controller_status_loading">Loading</string>
+    <string name="devices_controller_is_available">Available</string>
+    <string name="devices_controller_is_unavailable">Unavailable</string>
+    <string name="devices_restart_controller_dialog_title">Restart Z-Way controller?</string>
+    <string name="devices_restart_controller_dialog_desc">This will reload all notifications and reinitialize all apps.</string>
+
+    <!-- Device Detail -->
+    <string name="devicedetail_controls">Controls</string>
+    <string name="devicedetail_events">Event Log</string>
+    <string name="devicedetail_empty_device_message">Could not show load device details</string>
+    <string name="devicedetail_title_generic">Device Details</string>
+    <string name="devicedetail_location_unknown">Unknown location</string>
+    <string name="devicedetail_apply">Apply</string>
+    <string name="devicedetail_not_ready">Device details not ready yet</string>
+    <string name="devicedetail_no_events">No recent events</string>
+    <string name="devicedetail_dash_added">Device added to dashboard</string>
+    <string name="devicedetail_dash_removed">Device removed from dashboard</string>
+
+    <!-- Location Detail -->
+    <string name="locationdetail_devices">Devices</string>
+    <string name="locationdetail_edit">Edit location</string>
+    <string name="locationdetail_edit_description">Edit the location name.</string>
+    <string name="locationdetail_location_updated">Location has been updated</string>
+
+    <!-- Device States -->
+    <string name="device_state_on">On</string>
+    <string name="device_state_off">Off</string>
+    <string name="device_type_not_supported">Device type is not yet supported</string>
+
+    <!-- Locations -->
+    <string name="locations_title">Rooms</string>
+    <string name="locations_devices">devices</string>
+    <string name="location_action_menu_title">Location</string>
+    <string name="location_deleted">Location deleted</string>
+
+    <!-- Location Add -->
+    <string name="locationadd_title">New Room</string>
+    <string name="locationadd_subtitle">Create a new room</string>
+    <string name="locationadd_description">Add a new room to your Z-way controller. The location can be customized further from the Z-way smarthome UI.</string>
+    <string name="locationadd_title_hint">Location title</string>
+    <string name="locationadd_menu_save">Save</string>
+    <string name="locationadd_empty_location">Can\'t add an empty location</string>
+    
+    <!-- Notifications -->
+    <string name="notifications_title">Events</string>
+    <string name="notifications_subtitle">LAST 12 HOURS</string>
+    <string name="notification_action_menu_title">Event</string>
+    <string name="notification_redeemed">Event redeemed</string>
+    <string name="notification_deleted">Event deleted</string>
+
+    <!-- Automations -->
+    <string name="automations_title">Automation</string>
+    <string name="automations_subtitle">Automate your devices by scheduling events</string>
+    <string name="automation_action_menu_title">Automation</string>
+    <string name="automation_no_automations">No automations</string>
+    <string name="automation_removed">Automation deleted</string>
+    <string name="automation_not_removed">Automation could not be deleted.</string>
+    <string name="automation_type_recurring">Daily at %s</string>
+    <string name="automation_target_title">Create your first automation</string>
+    <string name="automation_target_subtitle">Tap the icon to create your first automation</string>
+
+    <!-- Automation Add -->
+    <string name="automationadd_title">New Automation</string>
+    <string name="automationadd_subtitle">Create a new automation</string>
+    <string name="automationadd_description">Automated commands can be fired once or daily</string>
+    <string name="automationadd_name_hint">Automation Name</string>
+    <string name="automationadd_description_hint">Automation Description</string>
+    <string name="automationadd_type_label">Automation Type</string>
+    <string name="automationadd_time_description">Automated command will trigger every day at the specified time</string>
+    <string name="automationadd_time_hint">Time of day to trigger</string>
+    <string name="automationadd_type_time">Time</string>
+    <string name="automationadd_type_device">Device State</string>
+    <string name="automationadd_type_geo">Geo Fence</string>
+    <string name="automationadd_command_label">Command to issue</string>
+    <string name="automationadd_command_hint">Command</string>
+    <string name="automationadd_device_label">Device to command</string>
+    <string name="automationadd_empty">Incomplete automation data</string>
+    <string name="automationadd_invalid_trigger">Invalid trigger value. Verify format.</string>
+    <string name="automationadd_repeating">Repeating</string>
+    <string name="automationadd_single">Single shot</string>
+
+    <!-- Custom Command Dialog -->
+    <string name="custom_command_dialog_title">Custom Command</string>
+    <string name="custom_command_dialog_description">Send a custom command to selected device. Refer to the ZWay API documentation for details on supported commands</string>
+
+    <!-- Pin To Dash dialog -->
+    <string name="pin_to_dash_dialog_title">Add device to dashboard</string>
+    <string name="pin_to_dash_dialog_description">Add this device to your Habitat dashboard.</string>
+    <string name="pin_to_dash_dialog_hint">Optional device description (Leave blank to use the device title)</string>
+
+    <!-- Nav Bar Menu -->
+    <string name="menu_nav_home">Home</string>
+    <string name="menu_nav_devices">Devices</string>
+    <string name="menu_nav_events">Events</string>
+    <string name="menu_nav_rooms">Rooms</string>
+    <string name="menu_nav_automation">Automation</string>
+    <string name="menu_nav_controller">Controller</string>
+    <string name="menu_nav_settings">Settings</string>
+    <string name="menu_nav_participate">About</string>
+    <string name="menu_nav_logout">Log out</string>
+    <string name="menu_nav_backup">Backups</string>
+
+    <!-- Error Messages -->
+    <string name="error_generic">An error occurred</string>
+    <string name="error_json">Error parsing response from server</string>
+    <string name="error_not_implemented">Feature not implemented yet</string>
+    <string name="error_parsing">Valid data received but parsing failed</string>
+
+    <!-- Actions -->
+    <string name="action_delete">Delete</string>
+    <string name="action_redeem">Redeem</string>
+    <string name="action_custom_command">Custom Command</string>
+    <string name="action_pin_to_dashboard">Add to dashboard</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
+
+    <!-- Preferences -->
+    <string name="prefs_connection">Connection Parameters</string>
+    <string name="prefs_advanced">Advanced</string>
+    <string name="prefs_hostname">Z-Way Address</string>
+    <string name="prefs_hostname_summary">IP address or hostname of Z-Way server</string>
+    <string name="prefs_name">Home name</string>
+    <string name="prefs_name_summary">Personalized name for your Z-Way location</string>
+    <string name="prefs_username">Username</string>
+    <string name="prefs_username_summary">Optional username for a Z-Way user</string>
+    <string name="prefs_password">Password</string>
+    <string name="prefs_password_summary">Optional password for Z-Way user</string>
+    <string name="prefs_anonymous_access">Anonymous Access</string>
+    <string name="prefs_anonymous_access_summary">Do not authenticate with the Z-Way controller</string>
+    <string name="prefs_use_user_images">Use user location images</string>
+    <string name="prefs_use_user_images_summary">Use user defined location images instead of the stock Z-Way images.</string>
+    <string name="prefs_night_mode">Night Mode</string>
+    <string name="prefs_night_mode_summary">Night mode applies a dark theme to Habitat. (Requires app restart)</string>
+    <string name="prefs_night_mode_default">off</string>
+    <string name="prefs_appearance">Appearance</string>
+    <string name="prefs_temperature_units">Weather temperature unit</string>
+    <string name="prefs_temperature_units_summary">The unit of temperature used in the weather app</string>
+    <string name="prefs_temperature_units_celsius">Celsius</string>
+    <string name="prefs_hide_globalroom_devices">Hide globalRoom devices</string>
+    <string name="prefs_hide_globalroom_devices_summary">Hide devices that are not associated with a room.</string>
+    <string name="prefs_backup_show_notifications">Show scheduled backup notifications</string>
+    <string name="prefs_backup_show_notifications_summary">Show a notification when scheduled backups have been created</string>
+    <string name="prefs_ssl">Use HTTPS</string>
+    <string name="prefs_ssl_summary">Use SSL/TLS for Z-way network communication</string>
+
+    <!-- Setup -->
+    <string name="setup_title">Habitat</string>
+    <string name="setup_welcome_title">Welcome to Habitat</string>
+    <string name="setup_welcome_subtitle">Lets get things set up</string>
+    <string name="setup_credentials_required">Authentication required.</string>
+    <string name="setup_custom_name">Provide a cool name for your Zway Network.</string>
+    <string name="setup_hostname">ZWay Hostname or IP</string>
+    <string name="setup_username">ZWay Username</string>
+    <string name="setup_password">ZWay User Password</string>
+    <string name="setup_name">Name Your Network</string>
+    <string name="setup_submit">Submit</string>
+    <string name="setup_empty_hostname">Please enter a valid hostname or IP.</string>
+    <string name="setup_empty_name">Please enter a name for your network.</string>
+    <string name="setup_credentials_encryption_failed">Failed to encrypt and store your credentials.</string>
+    <string name="setup_restart_setup">Cancel</string>
+    <string name="setup_anonymous_access">Attempt anonymous access</string>
+    <string name="setup_use_https">Use HTTPS</string>
+
+    <!-- Automator -->
+    <string name="automator_boot_receiver_label">Habitat boot complete receiver</string>
+    <string name="automator_notification_success_title">Automated command</string>
+    <string name="automator_notification_success_text">Automation executed successfully</string>
+    <string name="automator_notification_error_title">Automated command failed</string>
+    <string name="automator_notification_channel_title">Habitat Automations</string>
+    <string name="automator_notification_channel_description">Automated action events</string>
+
+    <!-- Controller -->
+    <string name="controller_activity_title">Controller</string>
+    <string name="controller_title">Z-Wave Controller</string>
+    <string name="controller_restart_description">Restarting the controller will reload all notifications, ZAutomation API and reinitialize (not reload) all apps. Do you wish to proceed?</string>
+    <string name="controller_online">Controller Online</string>
+    <string name="controller_restart">Restart</string>
+
+    <!-- Backups -->
+    <string name="backup_activity_title">Backups</string>
+    <string name="backup_no_backups">No backups have been saved</string>
+    <string name="backup_download_title">Downloading ZWay backup</string>
+    <string name="backup_download_desc">Downloading backup file from Zway controller</string>
+    <string name="backup_started">Backup requested, retrieving data...</string>
+    <string name="backup_created">Backup created and downloaded successfully.</string>
+    <string name="backup_item_menu_delete">Delete backup</string>
+    <string name="backup_deleted">Backup deleted</string>
+    <string name="backup_desc">Backups include all device names, icons, apps and settings.</string>
+    <string name="backup_scheduled">Automatic Daily Backups</string>
+    <string name="backup_dialog_title">Automatic backups</string>
+    <string name="backup_dialog_desc">Habitat can automatically download backups of your Z-way controller. The backup will be done approximately once a day when your phone is idle and connected to WiFi while charging.</string>
+    <string name="backup_dialog_retention">Backup retention time</string>
+    <string name="backup_dialog_retention_desc">Delete old backups after the specified number of days.</string>
+    <string name="backup_dialog_positive_button">Enable</string>
+    <string name="backup_dialog_negative_button">Cancel</string>
+    <string name="backup_available_storage">Available Storage</string>
+    <string name="backup_intent_no_supported_apps">No applications can handle this file type.</string>
+    <string name="backup_intent_file_does_not_exist">File no longer exists.</string>
+    <string name="backup_notification_channel_title">Habitat Z-Way Backups</string>
+    <string name="backup_notification_channel_description">Scheduled Z-Way backup events</string>
+    <string name="backup_notification_title">Z-Way backup created</string>
+    <string name="backup_notification_text">Scheduled backup was successfully downloaded</string>
+
+    <!-- Firebase Cloud Messaging -->
+    <string name="fcm_channel_id">habitat_fcm</string>
+    <string name="fcm_channel_title">Habitat ZWay Notifications</string>
+    <string name="fcm_channel_description">ZWay event notifications provided by the Habitat app module.</string>
+    <string name="fcm_notification_title">Z-Wave device event</string>
+    <string name="fcm_token_registered_message">Z-Wave device event notifications enabled</string>
+
+    <!-- Habitat App Module Info Dialog -->
+    <string name="app_module_dialog_title">Habitat App Support Module</string>
+    <string name="app_module_dialog_text">The Habitat App Support Z-way app is required to receive device event push notifications. Please install and configure the app from your Zway Smarthome web interface. Do that now?</string>
+    <string name="app_module_dialog_yes">Yes</string>
+    <string name="app_module_dialog_no">No</string>
+
+    <!-- Participate -->
+    <string name="participate_title">About Habitat</string>
+    <string name="participate_description">Habitat needs your feedback, issues or questions which you can submit to the Github repository. Like the app? Feel free to leave a review on Google Play.</string>
+    <string name="participate_version">Version</string>
+    <string name="participate_connect">Connect and participate</string>
+    <string name="copyright" translatable="false">Redbird © %1$d</string>
+    <string name="participate_github">Check out the GitHub repo</string>
+    <string name="participate_play">Leave a review on Google Play</string>
+</resources>

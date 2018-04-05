@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+
+
+    <RelativeLayout
+        android:id="@+id/backup_desc_header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:id="@+id/backup_desc_title"
+            android:text="@string/backup_desc"
+            style="@android:style/TextAppearance.Material.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:layout_margin="@dimen/md_keylines"/>
+
+
+        <TextView
+            android:id="@+id/backup_available_storage"
+            android:text="@string/backup_available_storage"
+            style="@android:style/TextAppearance.Material.Caption"
+            android:layout_below="@id/backup_desc_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:layout_marginStart="@dimen/md_keylines"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="@dimen/md_keylines" />
+
+        <ProgressBar
+            android:id="@+id/backup_storage_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_alignTop="@id/backup_available_storage"
+            android:layout_marginTop="2dp"
+            android:layout_toEndOf="@id/backup_available_storage"
+            android:layout_toStartOf="@id/backup_available_storage_percentage"
+            android:layout_marginEnd="10dp"/>
+
+        <TextView
+            android:id="@+id/backup_available_storage_percentage"
+            style="@android:style/TextAppearance.Material.Caption"
+            android:layout_below="@id/backup_desc_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="@dimen/md_keylines"
+            android:layout_marginBottom="@dimen/md_keylines" />
+
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/backups_scheduled_layout"
+        android:layout_below="@id/backup_desc_header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        card_view:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            style="@style/Widget.CardContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/backup_scheduled_title"
+                android:text="@string/backup_scheduled"
+                style="@android:style/TextAppearance.Material.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginStart="@dimen/md_keylines"
+                android:layout_marginEnd="@dimen/md_keylines"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="@dimen/devices_activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/devices_activity_horizontal_margin" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/backups_scheduled_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/backup_scheduled_title"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/md_keylines"
+                android:layout_alignBaseline="@id/backup_scheduled_title"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <RelativeLayout
+        android:id="@+id/backups_empty_layout"
+        android:layout_width="match_parent"
+        android:layout_below="@id/backups_scheduled_layout"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:text="@string/backup_no_backups"
+            style="@android:style/TextAppearance.Material.Body1"
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorLightGray"
+            android:layout_margin="@dimen/md_keylines"/>
+
+    </RelativeLayout>
+
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout_backups"
+        android:layout_width="match_parent"
+        android:layout_below="@id/backups_scheduled_layout"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/backups_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/devices_activity_vertical_margin"
+            android:paddingLeft="@dimen/devices_activity_vertical_margin"
+            android:paddingRight="@dimen/devices_activity_vertical_margin"
+            android:paddingTop="@dimen/devices_activity_vertical_margin"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</RelativeLayout>

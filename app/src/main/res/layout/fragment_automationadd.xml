@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/automationadd_header_layout"
+        android:layout_width="match_parent"
+        android:elevation="5dp"
+        android:background="@color/colorPrimary"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/automationadd_title"
+            android:text="@string/automationadd_subtitle"
+            style="@android:style/TextAppearance.Material.Small"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/colorWhite"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/md_keylines"/>
+
+        <TextView
+            android:text="@string/automationadd_description"
+            style="@android:style/TextAppearance.Material.Caption"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_below="@id/automationadd_title"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:layout_marginStart="@dimen/md_keylines"
+            android:layout_marginEnd="@dimen/md_keylines"
+            android:layout_marginBottom="@dimen/devices_activity_horizontal_margin"
+            android:layout_marginTop="@dimen/devices_activity_vertical_margin" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/automationadd_body_layout"
+                android:layout_width="match_parent"
+                android:elevation="0dp"
+                android:animateLayoutChanges="true"
+                style="@style/ControlsBackground"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/automationadd_name_edittext"
+                    android:layout_width="match_parent"
+                    android:hint="@string/automationadd_name_hint"
+                    android:gravity="center"
+                    android:textColorHint="@color/colorLightGray"
+                    android:layout_margin="@dimen/devices_activity_vertical_margin"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/automationadd_description_edittext"
+                    android:layout_width="match_parent"
+                    android:hint="@string/automationadd_description_hint"
+                    android:layout_below="@id/automationadd_name_edittext"
+                    android:gravity="center"
+                    android:textColorHint="@color/colorLightGray"
+                    android:layout_margin="@dimen/devices_activity_vertical_margin"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/automationadd_type_label"
+                    android:text="@string/automationadd_type_label"
+                    style="@android:style/TextAppearance.Material.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:layout_below="@id/automationadd_description_edittext"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_marginTop="@dimen/devices_activity_vertical_margin"/>
+
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/automationadd_type_label"
+                    android:orientation="horizontal"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/automationadd_type_radiogroup">
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="55dp"
+                        android:text="@string/automationadd_single"
+                        android:id="@+id/automationadd_single"
+                        android:checked="true"
+                        android:textSize="16sp" />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/automationadd_repeating"
+                        android:id="@+id/automationadd_repeating"
+                        android:checked="false"
+                        android:layout_marginStart="@dimen/devices_activity_horizontal_margin"
+                        android:textSize="16sp"/>
+                </RadioGroup>
+
+                <RelativeLayout
+                    android:id="@+id/automationadd_layout_time"
+                    android:layout_width="match_parent"
+                    android:layout_below="@id/automationadd_type_radiogroup"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/automationadd_time_label"
+                        android:text="@string/automationadd_time_description"
+                        style="@android:style/TextAppearance.Material.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginTop="@dimen/devices_activity_vertical_margin"/>
+
+                    <EditText
+                        android:id="@+id/automationadd_time_edittext"
+                        android:layout_width="match_parent"
+                        android:hint="@string/automationadd_time_hint"
+                        android:gravity="center"
+                        android:textColorHint="@color/colorLightGray"
+                        android:layout_below="@id/automationadd_time_label"
+                        android:layout_margin="@dimen/devices_activity_vertical_margin"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/automationadd_layout_commands"
+                    android:layout_width="match_parent"
+                    android:layout_below="@id/automationadd_layout_time"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/automationadd_command_label"
+                        android:text="@string/automationadd_command_label"
+                        style="@android:style/TextAppearance.Material.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginTop="@dimen/devices_activity_vertical_margin"/>
+
+                    <EditText
+                        android:id="@+id/automationadd_command_edittext"
+                        android:layout_width="match_parent"
+                        android:hint="@string/automationadd_command_hint"
+                        android:gravity="center"
+                        android:textColorHint="@color/colorLightGray"
+                        android:layout_below="@id/automationadd_command_label"
+                        android:layout_margin="@dimen/devices_activity_vertical_margin"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/devices_header_layout"
+                android:layout_below="@id/automationadd_body_layout"
+                android:layout_width="match_parent"
+                style="@style/ControlsBackground"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/automationadd_device_label"
+                    android:text="@string/automationadd_device_label"
+                    style="@android:style/TextAppearance.Material.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_marginTop="@dimen/devices_activity_vertical_margin"/>
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/automationadd_device_label"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:id="@+id/automationadd_device_spinner" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

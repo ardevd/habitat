@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- switchBinary -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/devicedetail_controls_switchbinary"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/ControlsBackground">
+
+    <ImageView
+        android:id="@+id/devicedetail_switchbinary_icon"
+        android:layout_width="50dp"
+        android:src="@drawable/ic_switch_off"
+        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/devicedetail_control_vertical_margin"
+        android:layout_centerHorizontal="true"/>
+
+    <Switch
+        android:id="@+id/devicedetail_switchbinary_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/devicedetail_switchbinary_icon"
+        android:textColor="@color/colorAccent"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        style="@android:style/TextAppearance.Material.Medium"
+        android:layout_marginTop="@dimen/devicedetail_control_vertical_margin"
+        android:layout_marginStart="@dimen/devicedetail_control_vertical_margin"
+        android:layout_marginEnd="@dimen/devices_activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/devicedetail_control_vertical_margin"/>
+
+    <TextView
+        android:id="@+id/devicedetail_switchbinary_state_off"
+        android:text="@string/device_state_off"
+        style="@android:style/TextAppearance.Material.Medium"
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorWhite"
+        android:layout_margin="@dimen/devicedetail_control_vertical_margin"/>
+
+    <TextView
+        android:id="@+id/devicedetail_switchbinary_state_on"
+        android:text="@string/device_state_on"
+        style="@android:style/TextAppearance.Material.Medium"
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorWhite"
+        android:layout_margin="@dimen/devicedetail_control_vertical_margin"/>
+
+</RelativeLayout>

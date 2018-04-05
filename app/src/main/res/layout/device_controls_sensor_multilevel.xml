@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/devicedetail_controls_sensorMultilevel"
+    android:layout_width="match_parent"
+    style="@style/ControlsBackground"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/devicedetail_sensorMultilevel_value"
+        style="@android:style/TextAppearance.Material.Headline"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginTop="@dimen/md_keylines"
+        android:layout_marginBottom="@dimen/devices_activity_vertical_margin"/>
+
+    <TextView
+        android:id="@+id/devicedetail_sensorMultilevel_notation"
+        style="@android:style/TextAppearance.Material.Caption"
+        android:layout_width="wrap_content"
+        android:layout_toEndOf="@id/devicedetail_sensorMultilevel_value"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginTop="@dimen/md_keylines"
+        android:layout_marginBottom="@dimen/md_keylines"/>
+
+    <TextView
+        android:id="@+id/devicedetail_sensorMultilevel_probe_title"
+        style="@android:style/TextAppearance.Material.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/devicedetail_sensorMultilevel_value"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginBottom="@dimen/md_keylines"/>
+
+</RelativeLayout>

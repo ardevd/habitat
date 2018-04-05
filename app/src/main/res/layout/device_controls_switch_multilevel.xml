@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/devicedetail_controls_switchmultilevel"
+    android:layout_width="match_parent"
+    style="@style/ControlsBackground"
+    android:layout_height="wrap_content">
+
+    <Switch
+        android:id="@+id/devicedetail_switchmultilevel_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        style="@android:style/TextAppearance.Material.Medium"
+        android:layout_marginTop="@dimen/devicedetail_control_vertical_margin"
+        android:layout_marginStart="@dimen/devicedetail_control_vertical_margin"
+        android:layout_marginEnd="@dimen/devices_activity_horizontal_margin" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/devicedetail_switchmultilevel_switch"
+        android:layout_marginTop="@dimen/devicedetail_control_vertical_margin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:max="99"
+        android:id="@+id/devicedetail_switchmultilevel_seekbar" />
+
+    <TextView
+        android:id="@+id/devicedetail_switchmultilevel_value"
+        style="@android:style/TextAppearance.Material.Headline"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/devicedetail_switchmultilevel_seekbar"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginBottom="@dimen/devices_activity_horizontal_margin"/>
+
+
+</RelativeLayout>

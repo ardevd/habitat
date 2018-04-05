@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+
+        <LinearLayout
+            android:id="@+id/dashboard_empty_place_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/dashboard_location_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dashboard_set_location"
+                android:textColor="@color/colorWhite"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/dashboard_weather_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/dashboard_weather_temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                style="@style/WeatherTemperatureFont"
+                android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+            <TextView
+                android:id="@+id/dashboard_weather_condition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/dashboard_weather_temperature"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                style="@style/WeatherConditionsFont"/>
+
+            <TextView
+                android:id="@+id/dashboard_weather_temperature_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/dashboard_weather_temperature"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:layout_alignTop="@id/dashboard_weather_temperature"
+                android:layout_marginEnd="@dimen/activity_vertical_margin"
+                style="@style/WeatherConditionsTemperatureMaxMin"/>
+
+            <TextView
+                android:id="@+id/dashboard_weather_temperature_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/dashboard_weather_temperature"
+                android:layout_below="@id/dashboard_weather_temperature_max"
+                android:layout_marginTop="@dimen/devices_activity_horizontal_margin"
+                android:layout_marginEnd="@dimen/activity_vertical_margin"
+                style="@style/WeatherConditionsTemperatureMaxMin"/>
+
+            <ImageView
+                android:id="@+id/dashboard_weather_arrow_up"
+                android:layout_width="16sp"
+                android:layout_height="16sp"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
+                android:layout_toStartOf="@id/dashboard_weather_temperature_max"
+                android:layout_alignBottom="@id/dashboard_weather_temperature_max"
+                android:src="@drawable/ic_arrow_up"
+                android:tint="@color/colorWhite"/>
+
+            <ImageView
+                android:id="@+id/dashboard_weather_arrow_down"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
+                android:layout_toStartOf="@id/dashboard_weather_temperature_min"
+                android:layout_alignBottom="@id/dashboard_weather_temperature_min"
+                android:layout_width="16sp"
+                android:layout_height="16sp"
+                android:src="@drawable/ic_arrow_dow"
+                android:tint="@color/colorWhite"/>
+
+            <TextView
+                android:id="@+id/dashboard_weather_icon"
+                style="@style/WeatherIconFont"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
+                android:layout_toEndOf="@id/dashboard_weather_temperature" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/dashboard_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/dashboard_home_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                style="@android:style/TextAppearance.Material.Medium"
+                android:textColor="@color/colorWhite"
+                android:layout_margin="@dimen/activity_vertical_margin"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dashboard_dynamic_states"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:orientation="horizontal">
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/dashboard_no_devices_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/dashboard_no_devices_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/dashboard_no_devices"
+            style="@android:style/TextAppearance.Material.Caption"
+            android:layout_margin="@dimen/activity_vertical_margin"/>
+    </RelativeLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout_dashboard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/dashboard_list"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/devices_activity_vertical_margin"
+            android:paddingLeft="@dimen/devices_activity_horizontal_margin"
+            android:paddingRight="@dimen/devices_activity_horizontal_margin"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</LinearLayout>

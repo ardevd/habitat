@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/dialog_backup_title"
+        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+        android:layout_width="match_parent"
+        android:text="@string/backup_dialog_title"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="5dp"/>
+
+    <TextView
+        android:id="@+id/dialog_backup_text"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        android:text="@string/backup_dialog_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+    <TextView
+        android:id="@+id/dialog_backup_retention"
+        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+        android:layout_width="match_parent"
+        android:text="@string/backup_dialog_retention"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="5dp"/>
+
+    <TextView
+        android:id="@+id/dialog_backup_retention_text"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        android:text="@string/backup_dialog_retention_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+    <com.xw.repo.BubbleSeekBar
+        android:id="@+id/dialog_backup_retention_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="@dimen/md_keylines"
+        android:layout_marginStart="@dimen/md_keylines"
+        app:bsb_bubble_color="@color/colorAccent"
+        app:bsb_bubble_text_color="@color/colorWhite"
+        app:bsb_max="30"
+        app:bsb_min="2"
+        app:bsb_hide_bubble="false"
+        app:bsb_auto_adjust_section_mark="false"
+        app:bsb_progress="7"
+        app:bsb_second_track_color="@color/colorAccent"
+        app:bsb_section_count="14"
+        app:bsb_section_text_position="bottom_sides"
+        app:bsb_show_progress_in_float="false"
+        app:bsb_show_section_mark="true"
+        app:bsb_show_section_text="true"
+        app:bsb_show_thumb_text="true"
+        app:bsb_track_color="@color/colorPrimary"/>
+
+</LinearLayout>

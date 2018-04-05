@@ -1,0 +1,65 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
+    </style>
+
+    <style name="Widget.CardContent" parent="android:Widget">
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
+
+    <style name="NavigationMenu">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="itemIconTint">@color/menu_nav_colors</item>
+        <item name="itemTextColor">@color/menu_nav_colors</item>
+        <item name="itemBackground">@drawable/menu_nav_tint</item>
+        <item name="headerLayout">@layout/navheader</item>
+        <item name="menu">@menu/menu_navigation</item>
+    </style>
+
+    <style name="AccentTitleFont" parent="@android:style/TextAppearance.Material.Caption">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="RegularValueFont" parent="@android:style/TextAppearance.Material.Small">
+    </style>
+
+    <style name="StatusValueFont" parent="@android:style/TextAppearance.Material.Medium">
+    </style>
+
+    <style name="WeatherTemperatureFont" parent="@android:style/TextAppearance.Material.Large.Inverse">
+        <item name="android:textSize">40sp</item>
+    </style>
+
+    <style name="WeatherConditionsFont" parent="@android:style/TextAppearance.Material.Medium.Inverse">
+    </style>
+
+    <style name="WeatherConditionsTemperatureMaxMin" parent="@android:style/TextAppearance.Material.Caption">
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="WeatherIconFont" parent="@android:style/TextAppearance.Material.Large.Inverse">
+        <item name="android:textSize">40sp</item>
+    </style>
+
+    <style name="ControlsBackground">
+        <item name="android:background">@color/colorWhite</item>
+    </style>
+</resources>

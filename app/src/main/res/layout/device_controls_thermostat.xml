@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    style="@style/ControlsBackground"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <io.feeeei.circleseekbar.CircleSeekBar
+        android:id="@+id/devicedetail_thermostat_seekbar"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        app:wheel_scroll_only_one_circle="true"
+        app:wheel_reached_color="@color/colorPrimary"
+        app:wheel_reached_width="15dp"
+        app:wheel_unreached_color="@color/colorAccent"
+        app:wheel_unreached_width="15dp"
+        app:wheel_pointer_radius='10dp'
+        app:wheel_pointer_color="@color/colorWhite"
+        app:wheel_has_pointer_shadow="true"
+        app:wheel_pointer_shadow_radius="3dp"
+        app:wheel_has_cache="false" />
+
+    <TextView
+        android:id="@+id/devicedetail_thermostat_value"
+        style="@android:style/TextAppearance.Material.Headline"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"/>
+
+    <TextView
+        android:id="@+id/devicedetail_thermostat_notation"
+        style="@android:style/TextAppearance.Material.Caption"
+        android:layout_width="wrap_content"
+        android:layout_alignTop="@id/devicedetail_thermostat_value"
+        android:layout_toEndOf="@id/devicedetail_thermostat_value"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"/>
+
+</RelativeLayout>

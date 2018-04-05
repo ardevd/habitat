@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/prefs_connection">
+
+        <EditTextPreference
+            android:key="zway_hostname"
+            android:title="@string/prefs_hostname"
+            android:summary="@string/prefs_hostname_summary" />
+
+        <EditTextPreference
+            android:key="zway_name"
+            android:title="@string/prefs_name"
+            android:summary="@string/prefs_name_summary" />
+
+        <CheckBoxPreference
+            android:key="zway_anonymous"
+            android:title="@string/prefs_anonymous_access"
+            android:summary="@string/prefs_anonymous_access_summary"
+            android:disableDependentsState="true"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:key="zway_ssl"
+            android:title="@string/prefs_ssl"
+            android:summary="@string/prefs_ssl_summary"
+            android:defaultValue="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/prefs_appearance">
+
+        <ListPreference
+            android:key="weather_unit"
+            android:title="@string/prefs_temperature_units"
+            android:summary="@string/prefs_temperature_units_summary"
+            android:entries="@array/prefs_temperature"
+            android:entryValues="@array/prefs_temperature"
+            android:defaultValue="@string/prefs_temperature_units_celsius" />
+
+        <CheckBoxPreference
+            android:key="scheduled_backup_notifications"
+            android:title="@string/prefs_backup_show_notifications"
+            android:summary="@string/prefs_backup_show_notifications_summary"
+            android:defaultValue="true" />
+
+        <ListPreference
+            android:key="nightmode"
+            android:title="@string/prefs_night_mode"
+            android:summary="@string/prefs_night_mode_summary"
+            android:entries="@array/prefs_nightmode"
+            android:entryValues="@array/prefs_nightmode_values"
+            android:defaultValue="@string/prefs_night_mode_default"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/prefs_advanced">
+
+        <CheckBoxPreference
+            android:key="use_user_images"
+            android:title="@string/prefs_use_user_images"
+            android:summary="@string/prefs_use_user_images_summary"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:key="hide_globalRoom"
+            android:title="@string/prefs_hide_globalroom_devices"
+            android:summary="@string/prefs_hide_globalroom_devices_summary"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -1,0 +1,1015 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="4" by="lint 3.0.1">
+
+    <issue
+        id="CommitPrefEdits"
+        message="`SharedPreferences.edit()` without a corresponding `commit()` or `apply()` call">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/dashboard/DashboardFragment.java"
+            line="202"/>
+    </issue>
+
+    <issue
+        id="CommitPrefEdits"
+        message="`SharedPreferences.edit()` without a corresponding `commit()` or `apply()` call">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/devices/DevicesFragment.java"
+            line="111"/>
+    </issue>
+
+    <issue
+        id="CommitPrefEdits"
+        message="`SharedPreferences.edit()` without a corresponding `commit()` or `apply()` call">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/setup/SetupFragment.java"
+            line="66"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/automationadd/AutomationAddFragment.java"
+            line="126"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/devicedetail/DeviceDetailFragment.java"
+            line="414"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/util/DeviceStatusHelper.java"
+            line="23"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/util/DeviceStatusHelper.java"
+            line="27"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/util/FileSizeStringifier.java"
+            line="11"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/util/FileSizeStringifier.java"
+            line="13"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/util/FileSizeStringifier.java"
+            line="16"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/adapters/LocationsAdapter.java"
+            line="59"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/zautomation/ZWayNetworkHelper.java"
+            line="66"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/zautomation/ZWayNetworkHelper.java"
+            line="110"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/zautomation/ZWayNetworkHelper.java"
+            line="114"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/zautomation/ZWayNetworkHelper.java"
+            line="118"/>
+    </issue>
+
+    <issue
+        id="SimpleDateFormat"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates.">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/automator/AutomatorScheduler.java"
+            line="34"/>
+    </issue>
+
+    <issue
+        id="SimpleDateFormat"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates.">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/data/backup/BackupsServiceApiImpl.java"
+            line="143"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `colorMode` is only used in API level 26 and higher (current min is 23)">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="14"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `tooltipText` is only used in API level 26 and higher (current min is 23)">
+        <location
+            file="src/main/res/menu/menu_devices.xml"
+            line="7"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `iconTint` is only used in API level 26 and higher (current min is 23)">
+        <location
+            file="src/main/res/menu/menu_navigation.xml"
+            line="10"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/devicedetail/DeviceDetailFragment.java"
+            line="628"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/devicedetail/DeviceDetailFragment.java"
+            line="660"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/dialogs/HabitatAppModuleInfoDialog.java"
+            line="22"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/locationdetail/LocationDetailFragment.java"
+            line="239"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/dialogs/ScheduledBackupDialog.java"
+            line="43"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.guava:guava than 20.0 is available: 22.0">
+        <location
+            file="build.gradle"/>
+    </issue>
+
+    <issue
+        id="PluralsCandidate"
+        message="Formatting %d followed by words (&quot;locks&quot;): This should probably be a plural rather than a string">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="15"/>
+    </issue>
+
+    <issue
+        id="PluralsCandidate"
+        message="Formatting %d followed by words (&quot;devices&quot;): This should probably be a plural rather than a string">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="22"/>
+    </issue>
+
+    <issue
+        id="ExportedService"
+        message="Exported service does not require permission">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="99"/>
+    </issue>
+
+    <issue
+        id="ExportedService"
+        message="Exported service does not require permission">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="106"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="This AsyncTask class should be static or leaks might occur (no.aegisdynamics.habitat.data.backup.BackupsServiceApiImpl.CreateBackupFileTask)">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/data/backup/BackupsServiceApiImpl.java"
+            line="123"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="This AsyncTask class should be static or leaks might occur (no.aegisdynamics.habitat.dashboard.DashboardFragment.DashboardDeviceLoaderTask)">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/dashboard/DashboardFragment.java"
+            line="457"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="This AsyncTask class should be static or leaks might occur (no.aegisdynamics.habitat.data.device.DevicesServiceApiImpl.CreateDevicesTask)">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/data/device/DevicesServiceApiImpl.java"
+            line="515"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields (static reference to `RequestQueueSingelton` which has field `mCtx` pointing to `Context`); this is a memory leak (and also breaks Instant Run)">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/util/RequestQueueSingelton.java"
+            line="13"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields; this is a memory leak (and also breaks Instant Run)">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/util/RequestQueueSingelton.java"
+            line="16"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (1137 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_controller.xml"
+            line="8"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (2180 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_navheader.xml"
+            line="6"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (1223 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_navheader.xml"
+            line="8"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (3674 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_navheader.xml"
+            line="10"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (1306 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_navheader.xml"
+            line="12"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (859 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_navheader.xml"
+            line="14"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (2497 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_navheader.xml"
+            line="16"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (1369 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_navheader.xml"
+            line="18"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (2148 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_navheader.xml"
+            line="20"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (4593 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_navheader.xml"
+            line="22"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (6640 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_navheader.xml"
+            line="24"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (5702 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_navheader.xml"
+            line="26"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (5888 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_navheader.xml"
+            line="28"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (4361 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_navheader.xml"
+            line="30"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (5136 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_navheader.xml"
+            line="32"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (3338 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_navheader.xml"
+            line="34"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (871 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="src/main/res/drawable/ic_settings_24dp.xml"
+            line="8"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/colorPrimaryDark` with a theme that also paints a background (inferred theme is `@style/AppTheme`)">
+        <location
+            file="src/main/res/layout/fragment_setup.xml"
+            line="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `?attr/colorPrimaryDark` with a theme that also paints a background (inferred theme is `@style/AppTheme`)">
+        <location
+            file="src/main/res/layout/navheader.xml"
+            line="5"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.activity_prefs` appears to be unused">
+        <location
+            file="src/main/res/layout/activity_prefs.xml"
+            line="2"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.colorPrimaryLight` appears to be unused">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="5"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.device_keylines` appears to be unused">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="11"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_battery_20` appears to be unused">
+        <location
+            file="src/main/res/drawable/ic_battery_20.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_extension_24dp` appears to be unused">
+        <location
+            file="src/main/res/drawable/ic_extension_24dp.xml"
+            line="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_home_24dp` appears to be unused">
+        <location
+            file="src/main/res/drawable/ic_home_24dp.xml"
+            line="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_navheader` appears to be unused">
+        <location
+            file="src/main/res/drawable/ic_navheader.xml"
+            line="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_search_24dp` appears to be unused">
+        <location
+            file="src/main/res/drawable/ic_search_24dp.xml"
+            line="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_switch_on` appears to be unused">
+        <location
+            file="src/main/res/drawable/ic_switch_on.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.devices_devices` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="21"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.devices_menu_search` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="24"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.devices_controller` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="26"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.devices_restart` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="27"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.devices_controller_will_restart` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="28"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.devices_controller_has_restarted` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="29"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.devices_controller_not_available` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="30"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.devices_controller_status_loading` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="31"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.devices_controller_is_available` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="32"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.devices_controller_is_unavailable` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="33"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.devices_restart_controller_dialog_desc` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="35"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.devicedetail_apply` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="43"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.automationadd_type_time` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="101"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.automationadd_type_device` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="102"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.automationadd_type_geo` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="103"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.error_generic` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="133"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.error_json` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="134"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.error_parsing` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="136"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.prefs_username` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="153"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.prefs_username_summary` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="154"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.prefs_password` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="155"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.prefs_password_summary` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="156"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.automator_notification_success_title` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="190"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.backup_download_title` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="206"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.backup_download_desc` appears to be unused">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="207"/>
+    </issue>
+
+    <issue
+        id="UselessParent"
+        message="This `RelativeLayout` layout or its `LinearLayout` parent is useless; transfer the `background` attribute to the other view">
+        <location
+            file="src/main/res/layout/fragment_dashboard.xml"
+            line="108"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="208"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ic_automation.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/ic_automation.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ic_battery_0.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/ic_battery_0.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ic_battery_100.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/ic_battery_100.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ic_battery_20.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/ic_battery_20.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ic_battery_40.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/ic_battery_40.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ic_battery_60.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/ic_battery_60.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ic_battery_80.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/ic_battery_80.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ic_house.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/ic_house.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ic_switch_off.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/ic_switch_off.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ic_switch_on.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/ic_switch_on.png"/>
+    </issue>
+
+    <issue
+        id="GoogleAppIndexingWarning"
+        message="App is not indexable by Google Search; consider adding at least one Activity with an ACTION-VIEW intent filter. See issue explanation for more details.">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``CircleSeekBar`` has `setOnTouchListener` called on it but does not override `performClick`">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/devicedetail/DeviceDetailFragment.java"
+            line="429"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="`onTouch` should call `View#performClick` when a click is detected">
+        <location
+            file="src/main/java/no/aegisdynamics/habitat/devicedetail/DeviceDetailFragment.java"
+            line="432"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src/main/res/layout/activity_locationdetail.xml"
+            line="27"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src/main/res/layout/dashboard_lock_state.xml"
+            line="45"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src/main/res/layout/device_controls_battery.xml"
+            line="9"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src/main/res/layout/device_controls_switch_binary.xml"
+            line="9"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src/main/res/layout/fragment_automation.xml"
+            line="15"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src/main/res/layout/fragment_controller.xml"
+            line="19"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src/main/res/layout/fragment_dashboard.xml"
+            line="67"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src/main/res/layout/fragment_dashboard.xml"
+            line="77"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src/main/res/layout/fragment_devicedetail.xml"
+            line="27"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src/main/res/layout/fragment_locationadd.xml"
+            line="13"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src/main/res/layout/fragment_setup.xml"
+            line="12"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src/main/res/layout/item_backup.xml"
+            line="15"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src/main/res/layout/item_device.xml"
+            line="16"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src/main/res/layout/item_device.xml"
+            line="96"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image">
+        <location
+            file="src/main/res/layout/item_location.xml"
+            line="15"/>
+    </issue>
+
+    <issue
+        id="LabelFor"
+        message="No label views point to this text field with an `android:labelFor=&quot;@+id/custom_command_input&quot;` attribute">
+        <location
+            file="src/main/res/layout/dialog_custom_command.xml"
+            line="34"/>
+    </issue>
+
+    <issue
+        id="LabelFor"
+        message="No label views point to this text field with an `android:labelFor=&quot;@+id/edit_location_input&quot;` attribute">
+        <location
+            file="src/main/res/layout/dialog_edit_location.xml"
+            line="34"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;201720123-wad&quot;, should use `@string` resource">
+        <location
+            file="src/main/res/layout/item_backup.xml"
+            line="35"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;5124kb&quot;, should use `@string` resource">
+        <location
+            file="src/main/res/layout/item_backup.xml"
+            line="48"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;210213 &quot;, should use `@string` resource">
+        <location
+            file="src/main/res/layout/item_backup.xml"
+            line="60"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Search&quot;, should use `@string` resource">
+        <location
+            file="src/main/res/menu/menu_devices.xml"
+            line="5"/>
+    </issue>
+
+    <issue
+        id="RelativeOverlap"
+        message="`@id/devicedetail_switchbinary_state_on` can overlap `@id/devicedetail_switchbinary_icon` if @string/device_state_on grows due to localized text expansion">
+        <location
+            file="src/main/res/layout/device_controls_switch_binary.xml"
+            line="42"/>
+    </issue>
+
+    <issue
+        id="RelativeOverlap"
+        message="`@id/devicedetail_switchbinary_state_on` can overlap `@id/devicedetail_switchbinary_state_off` if @string/device_state_off, @string/device_state_on grow due to localized text expansion">
+        <location
+            file="src/main/res/layout/device_controls_switch_binary.xml"
+            line="42"/>
+    </issue>
+
+    <issue
+        id="RelativeOverlap"
+        message="`@id/devicedetail_controls_title` can overlap `@id/devicedetail_controls_favimage` if @string/devicedetail_controls grows due to localized text expansion">
+        <location
+            file="src/main/res/layout/fragment_devicedetail.xml"
+            line="15"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 27">
+        <location
+            file="src/main/res/layout/item_tooltip.xml"
+            line="14"/>
+    </issue>
+
+</issues>

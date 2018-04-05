@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/devicedetail_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/devicedetail_controls_header_layout"
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
+        android:elevation="5dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/devicedetail_controls_title"
+            android:text="@string/devicedetail_controls"
+            style="@android:style/TextAppearance.Material.Body1"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:layout_margin="@dimen/md_keylines"/>
+
+
+        <ImageButton
+            android:id="@+id/devicedetail_controls_favimage"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_star_border_24dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/md_keylines"
+            android:background="@color/colorPrimary"
+            android:layout_centerVertical="true"
+            android:tint="@color/colorAccent"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/devicedetail_controls_layout"
+        android:layout_below="@id/devicedetail_controls_header_layout"
+        android:background="@color/colorPrimary"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:layout_width="match_parent">
+
+        <!-- doorlock -->
+        <RelativeLayout
+            android:id="@+id/devicedetail_controls_doorlock"
+            android:layout_width="match_parent"
+            android:background="@color/colorWhite"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/devicedetail_location_layout"
+        android:layout_width="match_parent"
+        android:layout_below="@id/devicedetail_controls_layout"
+        android:background="@color/colorPrimaryDark"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/devicedetail_location_title"
+            style="@android:style/TextAppearance.Material.Body1"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:layout_margin="@dimen/md_keylines"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/devicedetail_events_header_layout"
+        android:layout_width="match_parent"
+        android:elevation="5dp"
+        android:layout_below="@id/devicedetail_location_layout"
+        android:background="@color/colorPrimary"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/devicedetail_events_title"
+            android:text="@string/devicedetail_events"
+            style="@android:style/TextAppearance.Material.Body1"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:layout_margin="@dimen/md_keylines"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/devicedetail_events_empty_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/devicedetail_events_header_layout">
+
+        <TextView
+            android:text="@string/devicedetail_no_events"
+            style="@android:style/TextAppearance.Material.Body1"
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorLightGray"
+            android:layout_margin="@dimen/md_keylines"
+            android:id="@+id/textView" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/devicedetail_events_header_layout"
+        android:background="@color/colorWhite">
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_layout_devicedetail"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/devicedetail_events_list"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/devices_activity_vertical_margin"
+                android:paddingTop="@dimen/devices_activity_vertical_margin"/>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_layout_sensormultileveldetail"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:background="@color/colorPrimary"
+            android:layout_height="match_parent">
+
+            <com.db.chart.view.LineChartView
+                xmlns:chart="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/sensormultileveldetail_linechart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:background="@color/colorPrimary"
+                chart:chart_labelColor="@color/colorWhite"
+                chart:chart_axisBorderSpacing="@dimen/activity_vertical_margin"/>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,42 @@
+<!-- fragment_edit_name.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/edit_name"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:layout_gravity="center" android:orientation="vertical"  >
+
+    <TextView
+        android:id="@+id/pin_to_dash_title"
+        android:text="@string/pin_to_dash_dialog_title"
+        style="@android:style/TextAppearance.Material.Medium"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/pin_to_dash_description"
+        style="@android:style/TextAppearance.Material.Small"
+        android:layout_width="wrap_content"
+        android:text="@string/pin_to_dash_dialog_description"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_height="wrap_content" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin">
+
+        <AutoCompleteTextView
+            android:id="@+id/pin_to_dash_descriptor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textNoSuggestions"
+            android:hint="@string/pin_to_dash_dialog_hint"
+            android:maxLines="1" />
+
+    </android.support.design.widget.TextInputLayout>
+
+</LinearLayout>

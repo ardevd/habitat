@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="prefs_nightmode">
+        <item>Off</item>
+        <item>On</item>
+        <item>Auto</item>
+    </string-array>
+
+    <string-array name="prefs_nightmode_values">
+        <item>off</item>
+        <item>on</item>
+        <item>auto</item>
+    </string-array>
+
+    <string-array name="prefs_temperature">
+        <item>Celsius</item>
+        <item>Fahrenheit</item>
+        <item>Kelvin</item>
+    </string-array>
+
+
+</resources>

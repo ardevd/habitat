@@ -1,0 +1,5 @@
+<resources>
+    <style name="ControlsBackground">
+        <item name="android:background">@color/darkGray</item>
+    </style>
+</resources>

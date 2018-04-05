@@ -16,10 +16,6 @@ import java.util.List;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
-/**
- * Created by eho on 3/27/18.
- */
-
 public class APILocationProviderRepositoryTest {
 
     private APILocationProviderRepository mLocationRepository;

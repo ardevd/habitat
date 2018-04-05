@@ -16,6 +16,10 @@ import java.util.List;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
+/**
+ * Unit tests for the APILocationProviderRepository class.
+ */
+
 public class APILocationProviderRepositoryTest {
 
     private APILocationProviderRepository mLocationRepository;

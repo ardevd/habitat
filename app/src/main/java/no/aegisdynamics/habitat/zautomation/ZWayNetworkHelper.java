@@ -162,7 +162,7 @@ public class ZWayNetworkHelper implements DeviceDataContract {
     }
 
     public static String getZwayProfileUrl(Context context) {
-        return String.format("%s%s/ZAutomation/api/v1/profiles", getURLPrefix(context),
+        return String.format("%s%s/ZAutomation/api/v1/session", getURLPrefix(context),
                 getZWayServerHostname(context));
     }
 

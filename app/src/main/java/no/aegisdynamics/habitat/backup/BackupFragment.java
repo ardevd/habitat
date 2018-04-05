@@ -168,7 +168,7 @@ public class BackupFragment extends Fragment implements BackupContract.View,
             View view = getView();
             if (view != null) {
                 RelativeLayout emptyBackupLayout = view.findViewById(R.id.backups_empty_layout);
-                if (backups.size() > 0) {
+                if (!backups.isEmpty()) {
                     emptyBackupLayout.setVisibility(View.GONE);
                 } else {
                     emptyBackupLayout.setVisibility(View.VISIBLE);

@@ -25,6 +25,7 @@ import java.util.TimeZone;
 
 import no.aegisdynamics.habitat.R;
 import no.aegisdynamics.habitat.util.NotificationTimestampComparator;
+import no.aegisdynamics.habitat.util.VolleyResponseHelper;
 import no.aegisdynamics.habitat.zautomation.ZWayNetworkHelper;
 import no.aegisdynamics.habitat.util.RequestQueueSingelton;
 
@@ -56,18 +57,11 @@ public class NotificationsServiceApiImpl implements NotificationsServiceApi {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
-                            // Verify response code
-                            int responseCode = response.getInt("code");
-                            if (responseCode == 200) {
-                                callback.onLoaded(true);
-                            } else {
-                                callback.onError(context.getString(R.string.error_generic));
-                            }
-
-                        } catch (JSONException e) {
-                            callback.onError(e.getMessage());
-                            e.printStackTrace();
+                        // Verify response code
+                        if (VolleyResponseHelper.hasResponseReturnedOK(response)) {
+                            callback.onLoaded(true);
+                        } else {
+                            callback.onError(context.getString(R.string.error_generic));
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -113,18 +107,10 @@ public class NotificationsServiceApiImpl implements NotificationsServiceApi {
 
                         @Override
                         public void onResponse(JSONObject response) {
-                            try {
-                                // Verify response code
-                                int responseCode = response.getInt("code");
-                                if (responseCode == 200) {
-                                    callback.onLoaded(true);
-                                } else {
-                                    callback.onError(context.getString(R.string.error_generic));
-                                }
-
-                            } catch (JSONException e) {
-                                callback.onError(e.getMessage());
-                                e.printStackTrace();
+                            if (VolleyResponseHelper.hasResponseReturnedOK(response)) {
+                                callback.onLoaded(true);
+                            } else {
+                                callback.onError(context.getString(R.string.error_generic));
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -170,8 +156,7 @@ public class NotificationsServiceApiImpl implements NotificationsServiceApi {
                         List<Notification> notifications = new ArrayList<>();
                         try {
                             // Verify response code
-                            int responseCode = response.getInt("code");
-                            if (responseCode == 200) {
+                            if (VolleyResponseHelper.hasResponseReturnedOK(response)) {
 
                                 JSONObject dataObjects = response.getJSONObject("data");
                                 JSONArray notificationsArray = dataObjects.getJSONArray("notifications");

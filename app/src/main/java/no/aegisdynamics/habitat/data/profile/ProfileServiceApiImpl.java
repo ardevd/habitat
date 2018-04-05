@@ -8,18 +8,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import no.aegisdynamics.habitat.R;
 import no.aegisdynamics.habitat.util.RequestQueueSingelton;
+import no.aegisdynamics.habitat.util.VolleyResponseHelper;
 import no.aegisdynamics.habitat.zautomation.ZWayNetworkHelper;
 
 /**
@@ -38,39 +34,12 @@ public class ProfileServiceApiImpl implements ProfileServiceApi {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            // Verify response code
-                            int responseCode = response.getInt("code");
-                            if (responseCode == 200) {
+                            if (VolleyResponseHelper.hasResponseReturnedOK(response)) {
 
-                                JSONArray dataArray = response.getJSONArray("data");
-                                Pattern pattern = Pattern.compile("(\\D+)");
-
-                                for (int i = 0; i < dataArray.length(); i++) {
-                                    try {
-                                        JSONObject profileObject = dataArray.getJSONObject(i);
-                                        // Check if this is the correct profile for the given username.
-
-                                        Matcher matcher = pattern.matcher(profileObject.getString("qrcode"));
-                                        if (matcher.find()) {
-
-                                            if (matcher.group(0).equals(username)) {
-                                                // Parse user profile data
-                                                String name = profileObject.getString("name");
-                                                String email = profileObject.getString("email");
-                                                int userId = profileObject.getInt("id");
-                                                JSONArray dashboardDevices = profileObject.getJSONArray("dashboard");
-                                                List<String> dashboardDevicesList = new ArrayList();
-                                                for (int x = 0; x < dashboardDevices.length(); x++) {
-                                                    dashboardDevicesList.add(dashboardDevices.getString(x));
-                                                }
-
-                                                callback.onLoaded(new Profile(userId, name, email, dashboardDevicesList));
-                                                return;
-                                            }
-                                        }
-
-                                    } catch (JSONException e) {
-                                    }
+                                JSONObject dataObject = response.getJSONObject("data");
+                                Profile userProfile = ProfileDataHelper.getProfileFromJsonData(dataObject);
+                                if (userProfile != null) {
+                                    callback.onLoaded(userProfile);
                                 }
                             }
 
@@ -78,7 +47,7 @@ public class ProfileServiceApiImpl implements ProfileServiceApi {
                             e.printStackTrace();
                         }
 
-                        callback.onError("No profile found");
+                        callback.onError("No profile data found");
 
                     }
                 }, new Response.ErrorListener() {

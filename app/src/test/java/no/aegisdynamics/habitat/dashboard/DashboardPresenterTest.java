@@ -121,7 +121,7 @@ public class DashboardPresenterTest {
         verify(mDashboardView).setProgressIndicator(true);
         verify(mProfileRepository).getProfile(any(String.class), mGetProfileCallbackCaptor.capture());
         mGetProfileCallbackCaptor.getValue().onProfileLoaded(new Profile(0, "admin",
-                "admin@mail.com", dashboardDevices));
+                "Administrator", "admin@mail.com", dashboardDevices));
 
         verify(mDashboardView).onDashboardDevicesRetrieved(dashboardDevices);
 

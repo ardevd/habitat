@@ -1,7 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.sonarqube'
-apply plugin: 'net.saliman.cobertura'
 apply plugin: 'com.github.ksoichiro.console.reporter'
+apply plugin: 'jacoco-android'
+
 
 android {
     signingConfigs {
@@ -13,7 +14,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 27
         versionCode 42
-        versionName "1.0.4"
+        versionName project.habitatVersionName
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -26,6 +27,14 @@ android {
     externalNativeBuild {
         cmake {
             path "CMakeLists.txt"
+        }
+    }
+
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
         }
     }
 }
@@ -49,6 +58,8 @@ dependencies {
     // Dependencies for local unit tests
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-all:1.10.19'
+    testImplementation 'org.json:json:20140107'
+
     // Google stuff
     implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support:design:27.1.0'
@@ -74,38 +85,44 @@ dependencies {
     apply plugin: 'com.google.gms.google-services'
 }
 
+consoleReporter {
+    jacoco {
+        reportFile = new File("${project.buildDir}/reports/jacoco/jacocoTestDebugUnitTestReport/jacocoTestDebugUnitTestReport.xml")
+    }
+}
+
+jacocoAndroidUnitTestReport {
+
+    excludes += ['**/*Activity.*',
+                 '**/*Fragment.*',
+                 '**/*DbHelper.*',
+                 '**/*BackupNotifications.*',
+                 '**/*GooglePlayServicesHelper.*',
+                 '**/*KeyStoreHelper.*',
+                 '**/*InputStreamVolleyRequest.*',
+                 '**/*PaletteHelper.*',
+                 '**/*UserCredentialsManager.*',
+                 '**/adapters/**',
+                 '**/base/**',
+                 '**/dialogs/**',
+                 '**/fcm/**',
+                 '**/jobservices/**',
+                 '**/participate/**',
+                 '**/preferences/**',
+                 '**/provider/**',
+                 '**/splash/**',
+                 '**/zautomation/**']
+}
+
 sonarqube {
     properties {
         property "sonar.projectName", "Habitat"
         property "sonar.projectKey", "android_habitat"
         property "sonar.sources","src/main/java"
         property "sonar.language","java"
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.jacoco.reportPaths","${project.buildDir}/jacoco/testDebugUnitTest.exec"
     }
 }
 
-
-cobertura {
-    coverageIncludes = ['.*no.aegisdynamics.habitat.automationsadd.*',
-                        '.*no.aegisdynamics.habitat.automations.*',
-                        '.*no.aegisdynamics.habitat.backup.*',
-                        '.*no.aegisdynamics.habitat.controller',
-                        '.*no.aegisdynamics.habitat.dashboard.*',
-                        '.*no.aegisdynamics.habitat.data.*',
-                        '.*no.aegisdynamics.habitat.devicedetail',
-                        '.*no.aegisdynamics.habitat.devices.*',
-                        '.*no.aegisdynamics.habitat.locationadd.*',
-                        '.*no.aegisdynamics.habitat.locations.*',
-                        '.*no.aegisdynamics.habitat.notifications.*',
-                        '.*no.aegisdynamics.habitat.setup.*',
-                        '.*no.aegisdynamics.habitat.util.*']
-
-    coverageExcludes = ['.*Activity.*',
-                        '.*Fragment.*',
-                        '.*DbHelper.*',
-                        '.*BackupNotifications.*',
-                        '.*GooglePlayServicesHelper.*',
-                        '.*KeyStoreHelper.*',
-                        '.*InputStreamVolleyRequest.*',
-                        '.*PaletteHelper.*',
-                        '.*UserCredentialsManager.*']
-}
+tasks.sonarqube.dependsOn jacocoTestReport

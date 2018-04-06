@@ -6,6 +6,6 @@ Habitat is still being actively developed but with the plethora of available Z-w
 
 # Requirements
 
-* Z-way controller. Version 2.3.6 is the currently supported version.
+* Z-way controller. Version 2.3.7 is the currently supported version.
 * Android 23 or newer. 
 

@@ -161,8 +161,7 @@ public class SetupFragment extends Fragment implements SetupContract.View {
     @Override
     public void showHostnameAnonymousAccessApproved() {
         if (getView() != null) {
-            CheckBox anonymousAccessCheckbox = getView().findViewById(R.id.setup_disable_anonymous_access);
-            if (anonymousAccessCheckbox.isChecked()) {
+            if (settings.getBoolean("zway_anonymous", false)) {
                 showCustomNameView();
             } else {
                 showCredentialsView();
@@ -213,11 +212,13 @@ public class SetupFragment extends Fragment implements SetupContract.View {
 
         // Save parameters to SharedPrefs first
         editor.putString("zway_hostname", hostname);
-        editor.putBoolean("zway_anonymous", true);
-
         // Determine SSL access
         CheckBox sslCheckbox = getView().findViewById(R.id.setup_use_https);
         editor.putBoolean("zway_ssl", sslCheckbox.isChecked());
+
+        // Determine anonymous access
+        CheckBox anonymousAccessCheckbox = getView().findViewById(R.id.setup_disable_anonymous_access);
+        editor.putBoolean("zway_anonymous", anonymousAccessCheckbox.isChecked());
 
         editor.apply();
         mActionsListener.verifyHostname(hostname);

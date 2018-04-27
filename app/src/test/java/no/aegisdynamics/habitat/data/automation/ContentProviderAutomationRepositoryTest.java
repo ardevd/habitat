@@ -12,8 +12,6 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.aegisdynamics.habitat.automations.AutomationsActivity;
-
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 

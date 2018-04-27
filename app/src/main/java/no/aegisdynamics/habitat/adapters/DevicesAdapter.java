@@ -44,9 +44,9 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
     private List<Device> mDevices;
     private List<Device> mAllDevices;
     private boolean temperatureValueSynced = false;
-    private DeviceItemListener mItemListener;
-    private DeviceCommandListener mCommandListener;
-    ValueFilter valueFilter;
+    private final DeviceItemListener mItemListener;
+    private final DeviceCommandListener mCommandListener;
+    private ValueFilter valueFilter;
 
     public DevicesAdapter(List<Device> devices, DeviceItemListener itemListener, DeviceCommandListener commandListener) {
         setList(devices);
@@ -72,7 +72,7 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
         holder.room.setText(String.valueOf(device.getLocation()));
         holder.title.setText(device.getTitle());
         if (device.getStatusNotation() != null) {
-            holder.status.setText(String.format("%s %s", device.getStatus(),device.getStatusNotation()));
+            holder.status.setText(String.format("%s %s", device.getStatus(), device.getStatusNotation()));
         } else {
             holder.status.setText(device.getStatus());
         }
@@ -80,8 +80,16 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
         holder.statusSwitch.setOnCheckedChangeListener(null);
         if (device.isSwitchable()) {
             holder.statusSwitch.setVisibility(View.VISIBLE);
-            holder.statusSwitch.setText(device.getStatus());
-            holder.statusSwitch.setChecked(DeviceStatusHelper.parseStatusMessageToBoolean(device.getStatus()));
+
+            // TOGGLE_BUTTON devices should never be checked.
+            if (device.getType().equals(DeviceDataContract.DEVICE_TYPE_TOGGLE_BUTTON)) {
+                holder.statusSwitch.setChecked(false);
+
+            } else {
+                holder.statusSwitch.setChecked(DeviceStatusHelper.parseStatusMessageToBoolean(device.getStatus()));
+                holder.statusSwitch.setText(device.getStatus());
+
+            }
             holder.status.setVisibility(View.GONE);
             holder.picker.setVisibility(View.GONE);
             holder.statusSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -136,16 +144,15 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
 
             holder.picker.setListener(thermostatValueListener);
 
-        }  else {
+        } else {
             holder.statusSwitch.setVisibility(View.GONE);
             holder.picker.setVisibility(View.GONE);
             holder.status.setVisibility(View.VISIBLE);
         }
 
 
-
         Set<String> favorites = FavoritesHelper.getFavoriteDevicesFromPrefs(holder.title.getContext());
-        if (favorites.contains(device.getId())){
+        if (favorites.contains(device.getId())) {
             holder.favoriteIcon.setVisibility(View.VISIBLE);
         } else {
             holder.favoriteIcon.setVisibility(View.GONE);
@@ -196,7 +203,7 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
         return mDevices.size();
     }
 
-    public Device getItem(int position) {
+    private Device getItem(int position) {
         return mDevices.get(position);
     }
 
@@ -211,23 +218,23 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView room;
+        final TextView room;
 
-        public TextView title;
+        final TextView title;
 
-        public TextView status;
+        final TextView status;
 
-        public ImageView icon;
+        final ImageView icon;
 
-        public ImageView favoriteIcon;
+        final ImageView favoriteIcon;
 
-        public Switch statusSwitch;
+        final Switch statusSwitch;
 
-        public ActualNumberPicker picker;
+        final ActualNumberPicker picker;
 
-        private DeviceItemListener mItemListener;
+        private final DeviceItemListener mItemListener;
 
-        public ViewHolder(View itemView, DeviceItemListener itemListener) {
+        ViewHolder(View itemView, DeviceItemListener itemListener) {
             super(itemView);
             mItemListener = itemListener;
             room = itemView.findViewById(R.id.item_device_room);

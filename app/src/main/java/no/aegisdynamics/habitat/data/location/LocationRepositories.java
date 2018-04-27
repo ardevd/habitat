@@ -12,7 +12,7 @@ public class LocationRepositories {
 
     private static LocationsRepository repository = null;
 
-    public synchronized static LocationsRepository getRepository(@NonNull Context context,
+    public static synchronized LocationsRepository getRepository(@NonNull Context context,
                                                                  @NonNull LocationsServiceApi locationsServiceApi) {
         repository = new APILocationProviderRepository(locationsServiceApi, context);
         return repository;

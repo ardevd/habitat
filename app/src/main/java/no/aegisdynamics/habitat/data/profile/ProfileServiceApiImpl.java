@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.util.Map;
 
 import no.aegisdynamics.habitat.R;
+import no.aegisdynamics.habitat.util.LogHelper;
 import no.aegisdynamics.habitat.util.RequestQueueSingelton;
 import no.aegisdynamics.habitat.util.VolleyResponseHelper;
 import no.aegisdynamics.habitat.zautomation.ZWayNetworkHelper;
@@ -23,6 +24,8 @@ import no.aegisdynamics.habitat.zautomation.ZWayNetworkHelper;
  */
 
 public class ProfileServiceApiImpl implements ProfileServiceApi {
+
+    private final String TAG = "Profile API";
 
     @Override
     public void getProfile(final Context context, final String username, final ProfileServiceCallback<Profile> callback) {
@@ -44,7 +47,7 @@ public class ProfileServiceApiImpl implements ProfileServiceApi {
                             }
 
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            LogHelper.logError(context, TAG, e.getMessage());
                         }
 
                         callback.onError("No profile data found");
@@ -54,7 +57,7 @@ public class ProfileServiceApiImpl implements ProfileServiceApi {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
+                        LogHelper.logError(context, TAG, error.getMessage());
                         if (error instanceof AuthFailureError) {
                             callback.onError(context.getString(R.string.devices_authentication_error));
                         }

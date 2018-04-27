@@ -55,6 +55,11 @@ public interface DevicesRepository  {
         void onTokenRegisterError(String error);
     }
 
+    interface GetControllerDataCallback {
+        void onControllerDataLoaded(Controller controller);
+        void onControllerDataLoadError(String error);
+    }
+
     void getDevices(@NonNull LoadDevicesCallback callback);
 
     void sendCommand(@NonNull String deviceId, @NonNull String command, @NonNull SendCommandCallback callback);
@@ -69,5 +74,7 @@ public interface DevicesRepository  {
     void getDevicesForLocation(int locationId, @NonNull GetDevicesForLocationCallback callback);
 
     void registerFCMDeviceToken(@NonNull String deviceToken, @NonNull RegisterFCMDeviceTokenCallback callback);
+
+    void getControllerData(@NonNull GetControllerDataCallback callback);
 }
 

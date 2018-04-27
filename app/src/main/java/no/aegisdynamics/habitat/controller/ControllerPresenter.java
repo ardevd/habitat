@@ -2,6 +2,7 @@ package no.aegisdynamics.habitat.controller;
 
 import android.support.annotation.NonNull;
 
+import no.aegisdynamics.habitat.data.device.Controller;
 import no.aegisdynamics.habitat.data.device.DevicesRepository;
 import no.aegisdynamics.habitat.provider.DeviceDataContract;
 
@@ -34,6 +35,23 @@ public class ControllerPresenter implements ControllerContract.UserActionsListen
             @Override
             public void onControllerDown(String error) {
                 mControllerView.showControllerStatusError(error);
+            }
+        });
+
+    }
+
+    @Override
+    public void getControllerData() {
+        // Get Z-Way controller data
+        mDevicesRepository.getControllerData(new DevicesRepository.GetControllerDataCallback() {
+            @Override
+            public void onControllerDataLoaded(Controller controller) {
+                mControllerView.showControllerData(controller);
+            }
+
+            @Override
+            public void onControllerDataLoadError(String error) {
+                mControllerView.showControllerDataError(error);
             }
         });
 

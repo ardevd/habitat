@@ -14,6 +14,9 @@ import no.aegisdynamics.habitat.data.device.DevicesServiceApiImpl;
 import no.aegisdynamics.habitat.data.location.LocationRepositories;
 import no.aegisdynamics.habitat.data.location.LocationsRepository;
 import no.aegisdynamics.habitat.data.location.LocationsServiceApiImpl;
+import no.aegisdynamics.habitat.data.log.LogRepositories;
+import no.aegisdynamics.habitat.data.log.LogRepository;
+import no.aegisdynamics.habitat.data.log.LogServiceApiImpl;
 import no.aegisdynamics.habitat.data.notifications.NotificationRepositories;
 import no.aegisdynamics.habitat.data.notifications.NotificationsRepository;
 import no.aegisdynamics.habitat.data.notifications.NotificationsServiceApiImpl;
@@ -53,6 +56,10 @@ public class Injection {
 
     public static ProfileRepository provideProfileRepository(Context context) {
         return ProfileRepositories.getRepository(context, new ProfileServiceApiImpl());
+    }
+
+    public static LogRepository provideLogRepository(Context context) {
+        return LogRepositories.getRepository(context, new LogServiceApiImpl());
     }
 
 }

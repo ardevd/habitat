@@ -76,6 +76,13 @@ public class DeviceStatusHelper implements DeviceDataContract {
                     } else {
                         return SWITCH_MULTILEVEL_OFF;
                     }
+                case DEVICE_TYPE_TOGGLE_BUTTON:
+                    // TOGGLE_BUTTON_
+                    if (commandedState) {
+                        return SWITCH_BINARY_ON;
+                    } else {
+                        return SWITCH_BINARY_OFF;
+                    }
                 default:
                     throw new IllegalArgumentException("Unsupported device type: " + deviceType);
 

@@ -28,7 +28,7 @@ import no.aegisdynamics.habitat.itemListeners.NotificationItemListener;
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.ViewHolder> {
 
     private List<Notification> mNotifications;
-    private NotificationItemListener mItemListener;
+    private final NotificationItemListener mItemListener;
 
     public NotificationsAdapter(List<Notification> notifications, NotificationItemListener itemListener) {
         setList(notifications);
@@ -83,17 +83,17 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
-        public TextView deviceName;
+        final TextView deviceName;
 
-        public TextView notificationMessage;
+        final TextView notificationMessage;
 
-        public TextView notificationTimestamp;
+        final TextView notificationTimestamp;
 
-        public RelativeLayout colorBarLayout;
+        final RelativeLayout colorBarLayout;
 
-        private NotificationItemListener mItemListener;
+        private final NotificationItemListener mItemListener;
 
-        public ViewHolder(View itemView, NotificationItemListener itemListener) {
+        ViewHolder(View itemView, NotificationItemListener itemListener) {
             super(itemView);
             mItemListener = itemListener;
             deviceName = itemView.findViewById(R.id.item_notification_device);
@@ -135,7 +135,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 menu.getItem(i).setOnMenuItemClickListener(listener);
         }
 
-        public boolean onCustomMenuItemClick(MenuItem menuItem) {
+        boolean onCustomMenuItemClick(MenuItem menuItem) {
             int position = getAdapterPosition();
             Notification notification = getItem(position);
 

@@ -33,7 +33,7 @@ import no.aegisdynamics.habitat.zautomation.ZWayNetworkHelper;
 public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.ViewHolder> {
 
     private List<Location> mLocations;
-    private LocationItemListener mItemListener;
+    private final LocationItemListener mItemListener;
 
     public LocationsAdapter(List<Location> locations, LocationItemListener itemListener) {
         setList(locations);
@@ -101,22 +101,22 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
         return mLocations.size();
     }
 
-    public Location getItem(int position) {
+    private Location getItem(int position) {
         return mLocations.get(position);
     }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
-        public TextView title;
+        final TextView title;
 
-        public TextView deviceCount;
+        final TextView deviceCount;
 
-        public ImageView image;
+        final ImageView image;
 
-        private LocationItemListener mItemListener;
+        private final LocationItemListener mItemListener;
 
-        public ViewHolder(View itemView, LocationItemListener itemListener) {
+        ViewHolder(View itemView, LocationItemListener itemListener) {
             super(itemView);
             mItemListener = itemListener;
             title = itemView.findViewById(R.id.item_location_title);
@@ -157,7 +157,7 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
                 menu.getItem(i).setOnMenuItemClickListener(listener);
         }
 
-        public boolean onCustomMenuItemClick(MenuItem menuItem) {
+        boolean onCustomMenuItemClick(MenuItem menuItem) {
             int position = getAdapterPosition();
             Location location = getItem(position);
 

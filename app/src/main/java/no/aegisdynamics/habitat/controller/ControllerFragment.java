@@ -1,6 +1,7 @@
 package no.aegisdynamics.habitat.controller;
 
 
+import android.animation.Animator;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
@@ -11,14 +12,18 @@ import android.support.annotation.Nullable;
 import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 import no.aegisdynamics.habitat.R;
 import no.aegisdynamics.habitat.data.Injection;
+import no.aegisdynamics.habitat.data.device.Controller;
+import no.aegisdynamics.habitat.util.SnackbarHelper;
 
 public class ControllerFragment extends Fragment implements ControllerContract.View {
 
@@ -89,6 +94,8 @@ public class ControllerFragment extends Fragment implements ControllerContract.V
         if (isAdded()) {
             textViewControllerStatus.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorGreen));
             textViewControllerStatus.setText(getString(R.string.controller_online));
+            // Controller is online. Get controller data
+            mActionsListener.getControllerData();
         }
     }
 
@@ -120,6 +127,44 @@ public class ControllerFragment extends Fragment implements ControllerContract.V
             }
         });
         alertDialog.show();
+    }
+
+    @Override
+    public void showControllerData(Controller controller) {
+        if (getView() != null && isAdded()) {
+            TextView firmwareVersion = getView().findViewById(R.id.controller_firmware_version);
+            firmwareVersion.setText(getString(R.string.controller_version, controller.getFirmwareVersion()));
+            TextView remoteId = getView().findViewById(R.id.controller_remote_id);
+            remoteId.setText(getString(R.string.controller_remote_id, controller.getRemoteId()));
+            TextView firstStart = getView().findViewById(R.id.controller_first_start);
+            firstStart.setText(getString(R.string.controller_first_start, controller.getFirstStartDate().toString()));
+            TextView statusMessage = getView().findViewById(R.id.controller_status_message);
+            statusMessage.setText(getString(R.string.controller_status_message, controller.getStatus()));
+            CardView controllerCardView = getView().findViewById(R.id.controller_cardview);
+
+            // get the center for the clipping circle
+            int centerX = (controllerCardView.getLeft() + controllerCardView.getRight()) / 2;
+            int centerY = (controllerCardView.getTop() + controllerCardView.getBottom()) / 2;
+
+            int startRadius = 0;
+            // get the final radius for the clipping circle
+            int endRadius = Math.max(controllerCardView.getWidth(), controllerCardView.getHeight());
+
+            // create the animator for this view (the start radius is zero)
+            Animator anim =
+                    ViewAnimationUtils.createCircularReveal(controllerCardView, centerX, centerY, startRadius, endRadius);
+
+            // make the view visible and start the animation
+            controllerCardView.setVisibility(View.VISIBLE);
+            anim.start();
+        }
+    }
+
+    @Override
+    public void showControllerDataError(String error) {
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+        }
     }
 
     @Override

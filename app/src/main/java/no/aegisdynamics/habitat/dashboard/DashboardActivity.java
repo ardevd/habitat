@@ -3,13 +3,17 @@ package no.aegisdynamics.habitat.dashboard;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 
 import no.aegisdynamics.habitat.R;
 import no.aegisdynamics.habitat.base.BaseActivity;
+import no.aegisdynamics.habitat.setup.SetupActivity;
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 import uk.co.samuelwall.materialtaptargetprompt.extras.backgrounds.RectanglePromptBackground;
 import uk.co.samuelwall.materialtaptargetprompt.extras.focals.RectanglePromptFocal;
@@ -22,6 +26,17 @@ public class DashboardActivity extends BaseActivity implements DashboardContract
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
+        // If on first run, we launch the setup activity.
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (settings.getBoolean("first_run", true)) {
+            Intent intent = new Intent(this, SetupActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+
         setContentView(R.layout.activity_dashboard);
         super.onCreate(savedInstanceState);
 

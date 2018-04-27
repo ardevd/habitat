@@ -145,4 +145,19 @@ public class APIDeviceProviderRepository implements DevicesRepository, DeviceDat
         });
     }
 
+    @Override
+    public void getControllerData(@NonNull final GetControllerDataCallback callback) {
+        mDevicesServiceApi.getControllerData(mContext, new DevicesServiceApi.DevicesServiceCallback<Controller>() {
+            @Override
+            public void onLoaded(Controller controller) {
+                callback.onControllerDataLoaded(controller);
+            }
+
+            @Override
+            public void onError(String error) {
+                callback.onControllerDataLoadError(error);
+            }
+        });
+    }
+
 }

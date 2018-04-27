@@ -39,5 +39,7 @@ public interface DevicesServiceApi {
 
     void registerFCMDeviceToken(Context context, String deviceToken, FCMDeviceTokenRegistrationServiceCallback callback);
 
+    void getControllerData(Context context, DevicesServiceCallback<Controller> callback);
+
 }
 

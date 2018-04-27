@@ -53,6 +53,7 @@ import no.aegisdynamics.habitat.dialogs.HabitatAppModuleInfoDialog;
 import no.aegisdynamics.habitat.itemListeners.DeviceCommandListener;
 import no.aegisdynamics.habitat.itemListeners.DeviceItemListener;
 import no.aegisdynamics.habitat.util.GooglePlayServicesHelper;
+import no.aegisdynamics.habitat.util.LogHelper;
 import no.aegisdynamics.habitat.util.SnackbarHelper;
 import no.aegisdynamics.habitat.util.TemperatureConverterHelper;
 import no.aegisdynamics.habitat.util.UserCredentialsManager;
@@ -63,6 +64,8 @@ import no.aegisdynamics.habitat.util.WeatherIconFontHelper;
  */
 
 public class DashboardFragment extends Fragment implements DashboardContract.View {
+
+    private final String TAG = this.getClass().getSimpleName();
 
     protected GeoDataClient mGeoDataClient;
     protected PlaceDetectionClient mPlaceDetectionClient;
@@ -234,7 +237,7 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
 
                 startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                LogHelper.logError(getContext(), TAG, ex.getMessage());
             }
         }
     }
@@ -287,7 +290,7 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
             }
         } catch (IllegalStateException ex) {
             // Illegal state.
-            ex.printStackTrace();
+            LogHelper.logError(getContext(), TAG, ex.getMessage());
         }
     }
 
@@ -513,7 +516,7 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
                 mListAdapter.replaceData(devices);
             } catch (NullPointerException ex) {
                 // We were probably unable to get a view.
-                ex.printStackTrace();
+                LogHelper.logError(getContext(), ex.getMessage(), TAG);
             }
         }
     }

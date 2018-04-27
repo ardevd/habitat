@@ -43,4 +43,26 @@ public class DeviceStatusHelperTest {
         assertEquals(DeviceStatusHelper.parseStatusToIconSuffix(DeviceDataContract.DEVICE_TYPE_SENSOR_BINARY,
                 "on"), "-on");
     }
+
+    @Test
+    public void parseBooleanStatusToCommandTest() {
+        assertEquals(DeviceStatusHelper.parseBooleanStatusToCommand(
+                DeviceDataContract.DEVICE_TYPE_DOOR_LOCK, true),
+                "open");
+        assertEquals(DeviceStatusHelper.parseBooleanStatusToCommand(
+                DeviceDataContract.DEVICE_TYPE_DOOR_LOCK, false),
+                "close");
+        assertEquals(DeviceStatusHelper.parseBooleanStatusToCommand(
+                DeviceDataContract.DEVICE_TYPE_SWITCH_BINARY, true),
+                "on");
+        assertEquals(DeviceStatusHelper.parseBooleanStatusToCommand(
+                DeviceDataContract.DEVICE_TYPE_SWITCH_BINARY, false),
+                "off");
+        assertEquals(DeviceStatusHelper.parseBooleanStatusToCommand(
+                DeviceDataContract.DEVICE_TYPE_SWITCH_MULTILEVEL, true),
+                "on");
+        assertEquals(DeviceStatusHelper.parseBooleanStatusToCommand(
+                DeviceDataContract.DEVICE_TYPE_SWITCH_MULTILEVEL, false),
+                "off");
+    }
 }

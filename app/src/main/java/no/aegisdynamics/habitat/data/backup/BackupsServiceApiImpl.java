@@ -26,6 +26,7 @@ import java.util.Map;
 
 import no.aegisdynamics.habitat.R;
 import no.aegisdynamics.habitat.util.InputStreamVolleyRequest;
+import no.aegisdynamics.habitat.util.LogHelper;
 import no.aegisdynamics.habitat.util.RequestQueueSingelton;
 import no.aegisdynamics.habitat.zautomation.ZWayNetworkHelper;
 
@@ -37,6 +38,8 @@ public class BackupsServiceApiImpl implements BackupsServiceApi {
     private static final String BACKUPS_DIR = "backups";
     private static final String BACKUPS_SCHEDULED_IDENTIFIER = "auto";
     private static final int RETENTION_DAYS = 7;
+
+    private final String TAG = this.getClass().getSimpleName();
 
     @Override
     public void getBackups(Context context, BackupsServiceCallback<List<Backup>> callback) {
@@ -71,14 +74,14 @@ public class BackupsServiceApiImpl implements BackupsServiceApi {
                                 }
                             } catch (Exception e) {
                                 callback.onError(e.getMessage());
-                                e.printStackTrace();
+                                LogHelper.logError(context, TAG, e.getMessage());
                             }
                         }
                     }, new Response.ErrorListener() {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
+                    LogHelper.logError(context, TAG, error.getMessage());
                     if (error instanceof AuthFailureError) {
                         callback.onError(context.getString(R.string.devices_authentication_error));
                     } else {

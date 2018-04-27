@@ -7,6 +7,9 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Date;
+
+import no.aegisdynamics.habitat.data.device.Controller;
 import no.aegisdynamics.habitat.data.device.DevicesRepository;
 import no.aegisdynamics.habitat.provider.DeviceDataContract;
 
@@ -32,6 +35,12 @@ public class ControllerPresenterTest implements DeviceDataContract {
 
     @Captor
     private ArgumentCaptor<DevicesRepository.SendCommandCallback> mSendCommandCallbackCaptor;
+
+    @Captor
+    private ArgumentCaptor<DevicesRepository.GetControllerDataCallback> mGetControllerDataCaptor;
+
+    private Controller controller = new Controller(1234, "2.3.7",
+            new Date(), "200 OK");
 
     @Before
     public void setupDevicePresenter() {
@@ -104,5 +113,25 @@ public class ControllerPresenterTest implements DeviceDataContract {
         // Progress indicator is hidden and message is shown in the UI
         verify(mControllerView).setProgressIndicator(false);
         verify(mControllerView).showControllerRestartError(eq("Test Error"));
+    }
+
+    @Test
+    public void getControllerDataAndLoadIntoView() {
+        mControllerPresenter.getControllerData();
+        verify(mDevicesRepository).getControllerData(mGetControllerDataCaptor.capture());
+
+        mGetControllerDataCaptor.getValue().onControllerDataLoaded(controller);
+
+        verify(mControllerView).showControllerData(eq(controller));
+    }
+
+    @Test
+    public void getControllerDataAndShowError() {
+        mControllerPresenter.getControllerData();
+        verify(mDevicesRepository).getControllerData(mGetControllerDataCaptor.capture());
+
+        mGetControllerDataCaptor.getValue().onControllerDataLoadError("Error");
+
+        verify(mControllerView).showControllerDataError(eq("Error"));
     }
 }

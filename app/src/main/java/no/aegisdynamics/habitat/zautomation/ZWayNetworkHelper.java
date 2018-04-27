@@ -166,6 +166,11 @@ public class ZWayNetworkHelper implements DeviceDataContract {
                 getZWayServerHostname(context));
     }
 
+    public static String getZwayControllerDataUrl(Context context) {
+        return String.format("%s%s/ZAutomation/api/v1/system/info", getURLPrefix(context),
+                getZWayServerHostname(context));
+    }
+
     private static String getURLPrefix(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         boolean useSSL = settings.getBoolean("zway_ssl", false);

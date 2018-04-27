@@ -24,7 +24,9 @@ class Device(private val deviceId: String,
         get() = deviceId
 
     val isSwitchable: Boolean
-        get() = type == DeviceDataContract.DEVICE_TYPE_SWITCH_BINARY || type == DeviceDataContract.DEVICE_TYPE_DOOR_LOCK
+        get() = type == DeviceDataContract.DEVICE_TYPE_SWITCH_BINARY
+                || type == DeviceDataContract.DEVICE_TYPE_DOOR_LOCK
+                || type == DeviceDataContract.DEVICE_TYPE_TOGGLE_BUTTON
 
     val isEmpty: Boolean
         get() = title == null || "" == title

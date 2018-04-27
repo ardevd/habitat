@@ -13,17 +13,16 @@ import android.support.annotation.Nullable;
 
 import no.aegisdynamics.habitat.util.DbHelper;
 
-
-public class AutomationDataProvider extends ContentProvider implements DeviceDataContract {
+public class LogDataProvider extends ContentProvider implements DeviceDataContract {
 
     private DbHelper db;
     private final UriMatcher matcher = new UriMatcher(0);
-    private final static int URI_ALL_AUTOMATIONS = 1;
-    private final static int URI_ONE_AUTOMATION = 2;
-    
-    public AutomationDataProvider() {
-        matcher.addURI(AUTHORITY_AUTOMATIONS, ENTITY_AUTOMATION + "/#", URI_ONE_AUTOMATION);
-        matcher.addURI(AUTHORITY_AUTOMATIONS, ENTITY_AUTOMATION, URI_ALL_AUTOMATIONS);
+    private static final int URI_ALL_LOGS = 1;
+    private static final int URI_ONE_LOG = 2;
+
+    public LogDataProvider() {
+        matcher.addURI(AUTHORITY_LOGS, ENTITY_LOG + "/#", URI_ONE_LOG);
+        matcher.addURI(AUTHORITY_LOGS, ENTITY_LOG, URI_ALL_LOGS);
     }
     @Override
     public boolean onCreate() {
@@ -36,11 +35,11 @@ public class AutomationDataProvider extends ContentProvider implements DeviceDat
         Cursor c;
         SQLiteDatabase database = db.getWritableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-        qb.setTables(TABLE_AUTOMATION);
+        qb.setTables(TABLE_LOG);
         switch (matcher.match(uri)){
-            case URI_ONE_AUTOMATION:
+            case URI_ONE_LOG:
                 // Single item query is identical to all-items query so fall through here.
-            case URI_ALL_AUTOMATIONS:
+            case URI_ALL_LOGS:
                 c = qb.query(database, projection, selection, selectionArgs, null, null, sortBy, null);
                 break;
             default:
@@ -53,10 +52,10 @@ public class AutomationDataProvider extends ContentProvider implements DeviceDat
     @Override
     public String getType(@NonNull Uri uri) {
         switch (matcher.match(uri)){
-            case URI_ALL_AUTOMATIONS:
-                return MULTIPLE_AUTOMATIONS_MIME_TYPE;
-            case URI_ONE_AUTOMATION:
-                return SINGLE_AUTOMATION_MIME_TYPE;
+            case URI_ALL_LOGS:
+                return MULTIPLE_LOGS_MIME_TYPE;
+            case URI_ONE_LOG:
+                return SINGLE_LOG_MIME_TYPE;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -67,10 +66,10 @@ public class AutomationDataProvider extends ContentProvider implements DeviceDat
         Uri result = null;
         SQLiteDatabase database = db.getWritableDatabase();
         switch (matcher.match(uri)) {
-            case URI_ALL_AUTOMATIONS:
-                long automationRowId = database.insert(TABLE_AUTOMATION, null, contentValues);
-                if (automationRowId > 0) {
-                    result = ContentUris.withAppendedId(CONTENT_URI_AUTOMATIONS, automationRowId);
+            case URI_ALL_LOGS:
+                long logRowId = database.insert(TABLE_LOG, null, contentValues);
+                if (logRowId > 0) {
+                    result = ContentUris.withAppendedId(CONTENT_URI_LOGS, logRowId);
                 }
                 break;
 
@@ -87,8 +86,8 @@ public class AutomationDataProvider extends ContentProvider implements DeviceDat
         SQLiteDatabase database = db.getWritableDatabase();
         int count;
         switch (matcher.match(uri)){
-            case URI_ALL_AUTOMATIONS:
-                count = database.delete(TABLE_AUTOMATION, where, whereArgs);
+            case URI_ALL_LOGS:
+                count = database.delete(TABLE_LOG, where, whereArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -108,8 +107,8 @@ public class AutomationDataProvider extends ContentProvider implements DeviceDat
         SQLiteDatabase database = db.getWritableDatabase();
         int count;
         switch (matcher.match(uri)){
-            case URI_ALL_AUTOMATIONS:
-                count = database.update(TABLE_AUTOMATION, contentValues, where, whereArgs);
+            case URI_ALL_LOGS:
+                count = database.update(TABLE_LOG, contentValues, where, whereArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);

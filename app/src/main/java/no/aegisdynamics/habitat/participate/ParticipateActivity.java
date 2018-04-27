@@ -1,5 +1,6 @@
 package no.aegisdynamics.habitat.participate;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
 import no.aegisdynamics.habitat.R;
 import no.aegisdynamics.habitat.base.BaseActivity;
+import no.aegisdynamics.habitat.log.LogActivity;
+import no.aegisdynamics.habitat.util.LogHelper;
 
 /**
  * Activity class for the Participate screen.
@@ -44,9 +47,8 @@ public class ParticipateActivity extends BaseActivity{
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             version = packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            LogHelper.logError(this, "ParticipateActivity", "Could not get Habitat package info");
         }
-
 
         View aboutPage = new AboutPage(this)
                 .isRTL(false)
@@ -55,6 +57,8 @@ public class ParticipateActivity extends BaseActivity{
                 .addGroup(getString(R.string.participate_connect))
                 .addPlayStore("no.aegisdynamics.habitat", getString(R.string.participate_play))
                 .addGitHub("ardevd/Habitat", getString(R.string.participate_github))
+                .addGroup(getString(R.string.participate_debug))
+                .addItem(getLogsElement())
                 .addItem(getCopyRightsElement())
                 .setDescription(getString(R.string.participate_description))
                 .create();
@@ -81,4 +85,24 @@ public class ParticipateActivity extends BaseActivity{
         return copyRightsElement;
     }
 
+    Element getLogsElement() {
+        Element logElement = new Element();
+        logElement.setTitle(getString(R.string.participate_logs));
+        logElement.setIconDrawable(R.drawable.ic_info);
+        logElement.setIconTint(mehdi.sakout.aboutpage.R.color.about_item_icon_color);
+        logElement.setIconNightTint(android.R.color.white);
+        logElement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLogsActivity();
+            }
+        });
+
+        return logElement;
+    }
+
+    private void showLogsActivity() {
+        Intent intent = new Intent(this, LogActivity.class);
+        startActivity(intent);
+    }
 }

@@ -28,6 +28,7 @@ import java.util.Map;
 
 import no.aegisdynamics.habitat.R;
 import no.aegisdynamics.habitat.provider.DeviceDataContract;
+import no.aegisdynamics.habitat.util.LogHelper;
 import no.aegisdynamics.habitat.zautomation.ZWayNetworkHelper;
 import no.aegisdynamics.habitat.util.RequestQueueSingelton;
 
@@ -447,6 +448,66 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
         RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
     }
 
+    @Override
+    public void getControllerData(final Context context, final DevicesServiceCallback<Controller> callback) {
+        String url = ZWayNetworkHelper.getZwayControllerDataUrl(context);
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            // Verify response code
+                            int responseCode = response.getInt("code");
+                            if (responseCode == 200) {
+                                // Controller is up
+                                Controller controller = ControllerDataParser.parseControllerJsonData(response);
+                                if (controller != null) {
+                                    callback.onLoaded(controller);
+                                } else {
+                                    callback.onError(context.getString(R.string.error_controller_data_error));
+                                }
+                            } else {
+                                callback.onError(String.format("%s: %d", R.string.devices_controller_not_available, responseCode));
+                            }
+
+                        } catch (JSONException error) {
+                            error.printStackTrace();
+                            if (error.getLocalizedMessage() != null) {
+                                callback.onError(error.getLocalizedMessage());
+                            } else{
+                                callback.onError(context.getString(R.string.error_generic));
+                            }
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                        if (error instanceof AuthFailureError) {
+                            callback.onError(context.getString(R.string.devices_authentication_error));
+                        }
+                        else {
+                            if (error.getLocalizedMessage() != null) {
+                                callback.onError(error.getLocalizedMessage());
+                            } else{
+                                callback.onError(context.getString(R.string.error_generic));
+                            }
+                        }
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return ZWayNetworkHelper.getAuthenticationHeaders(context);
+            }
+        };
+
+        // Access the RequestQueue through your singleton class.
+        RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
+    }
+
     private String[] parseTags(JSONArray tagsArray){
         String [] tags;
         List<String> tagsList = new ArrayList<>();
@@ -555,7 +616,7 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
                 }
 
             } catch (JSONException e) {
-                e.printStackTrace();
+                LogHelper.logError(mContext, TAG, e.getMessage());
             }
             // Iterate over devices and remove globalRoom devices if set to do so
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);

@@ -23,7 +23,7 @@ import no.aegisdynamics.habitat.provider.DeviceDataContract;
 public class AutomationsAdapter extends RecyclerView.Adapter<AutomationsAdapter.ViewHolder> implements DeviceDataContract{
 
     private List<Automation> mAutomations;
-    private AutomationItemListener mItemListener;
+    private final AutomationItemListener mItemListener;
 
     public AutomationsAdapter(List<Automation> automations, AutomationItemListener itemListener) {
         setList(automations);
@@ -77,13 +77,13 @@ public class AutomationsAdapter extends RecyclerView.Adapter<AutomationsAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
-        private TextView title;
-        private TextView description;
-        private TextView triggerText;
+        private final TextView title;
+        private final TextView description;
+        private final TextView triggerText;
 
-        private AutomationItemListener mItemListener;
+        private final AutomationItemListener mItemListener;
 
-        public ViewHolder(View itemView, AutomationItemListener itemListener) {
+        ViewHolder(View itemView, AutomationItemListener itemListener) {
             super(itemView);
             mItemListener = itemListener;
             title = itemView.findViewById(R.id.item_automation_title);
@@ -124,7 +124,7 @@ public class AutomationsAdapter extends RecyclerView.Adapter<AutomationsAdapter.
                 menu.getItem(i).setOnMenuItemClickListener(listener);
         }
 
-        public boolean onCustomMenuItemClick(MenuItem menuItem) {
+        boolean onCustomMenuItemClick(MenuItem menuItem) {
             int position = getAdapterPosition();
             Automation automation = getItem(position);
 

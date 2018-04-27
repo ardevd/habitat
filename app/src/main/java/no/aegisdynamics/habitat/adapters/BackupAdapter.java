@@ -32,7 +32,7 @@ import no.aegisdynamics.habitat.util.FileSizeStringifier;
 public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.ViewHolder> {
 
     private List<Backup> mBackups;
-    private BackupItemListener mItemListener;
+    private final BackupItemListener mItemListener;
     private static final String BACKUPS_SCHEDULED_IDENTIFIER = "auto";
     private static final int RETENTION_DAYS = 7;
 
@@ -107,14 +107,14 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             View.OnCreateContextMenuListener {
 
-        private TextView filename;
-        private TextView filesize;
-        private TextView timestamp;
-        private ImageView retentionIcon;
+        private final TextView filename;
+        private final TextView filesize;
+        private final TextView timestamp;
+        private final ImageView retentionIcon;
 
-        private BackupItemListener mItemListener;
+        private final BackupItemListener mItemListener;
 
-        public ViewHolder(View itemView, BackupItemListener itemListener) {
+        ViewHolder(View itemView, BackupItemListener itemListener) {
             super(itemView);
 
             // Views
@@ -158,7 +158,7 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.ViewHolder
                 contextMenu.getItem(i).setOnMenuItemClickListener(listener);
         }
 
-        public boolean onCustomMenuItemClick(MenuItem menuItem) {
+        boolean onCustomMenuItemClick(MenuItem menuItem) {
             int position = getAdapterPosition();
             Backup backup = getItem(position);
 

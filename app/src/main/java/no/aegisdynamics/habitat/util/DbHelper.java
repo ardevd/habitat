@@ -12,7 +12,7 @@ import no.aegisdynamics.habitat.provider.DeviceDataContract;
 
 public class DbHelper extends SQLiteOpenHelper implements DeviceDataContract {
     private static final String DB_NAME = "habitat.db";
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 4;
 
     public DbHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -40,8 +40,6 @@ public class DbHelper extends SQLiteOpenHelper implements DeviceDataContract {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int previousVersion, int newVersion) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_AUTOMATION);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_LOG);
         onCreate(sqLiteDatabase);
     }
 }

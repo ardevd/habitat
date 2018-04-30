@@ -74,14 +74,14 @@ public class LocationDetailFragment extends Fragment implements LocationDetailCo
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_locationdetail, container, false);
         mLocationImageView = getActivity().findViewById(R.id.activity_locationdetail_image);
-        RecyclerView recyclerView = root.findViewById(R.id.locationdetail_events_list);
+        RecyclerView recyclerView = root.findViewById(R.id.locationdetail_devices_list);
         recyclerView.setAdapter(mListAdapter);
         int numColumns = getContext().getResources().getInteger(R.integer.num_devices_columns);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns));
 
         // Set up floating action button
-        FloatingActionButton fab = getActivity().findViewById(R.id.fab_edit_location);
+        final FloatingActionButton fab = getActivity().findViewById(R.id.fab_edit_location);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -21,7 +21,7 @@ public class DbHelper extends SQLiteOpenHelper implements DeviceDataContract {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         // Create tables
-        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_AUTOMATION + "("
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_AUTOMATION + "("
                 + FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + FIELD_AUTOMATION_NAME + " TEXT, "
                 + FIELD_AUTOMATION_DESCRIPTION + " TEXT, "
@@ -30,7 +30,7 @@ public class DbHelper extends SQLiteOpenHelper implements DeviceDataContract {
                 + FIELD_AUTOMATION_DEVICE + " TEXT, "
                 + FIELD_AUTOMATION_COMMANDS + " TEXT);");
 
-        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_LOG + "("
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_LOG + "("
                 + FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + FIELD_LOG_TAG + " TEXT, "
                 + FIELD_LOG_MESSAGE + " TEXT, "

@@ -4,9 +4,11 @@ package no.aegisdynamics.habitat.locationdetail;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -40,6 +42,20 @@ public class LocationDetailActivity extends AppCompatActivity implements Locatio
             collapsingToolbar.setTitle(locationName);
             initFragment(LocationDetailFragment.newInstance(locationId, locationName));
         }
+
+        // Hide the fab when the recyclerView (inside our nested scroll view) is scrolled down from the top
+        NestedScrollView nestedScrollView = findViewById(R.id.locationDetailContentFrame);
+        final FloatingActionButton fab = findViewById(R.id.fab_edit_location);
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY > 0) {
+                    fab.hide();
+                } else {
+                    fab.show();
+                }
+            }
+        });
     }
 
     private void setToolbarColorPalette(Bitmap bitmap) {
@@ -58,7 +74,7 @@ public class LocationDetailActivity extends AppCompatActivity implements Locatio
         // Add LocationDetailFragment to the layout
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.contentFrame, LocationDetailFragment);
+        transaction.add(R.id.locationDetailContentFrame, LocationDetailFragment);
         transaction.commit();
     }
 

@@ -24,7 +24,7 @@
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/locationdetail_events_list"
+        android:id="@+id/locationdetail_devices_list"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_below="@id/locationdetail_devices_header_layout"
         android:layout_width="match_parent"

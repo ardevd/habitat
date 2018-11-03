@@ -1,10 +1,13 @@
 package no.aegisdynamics.habitat.fcm;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -26,6 +29,36 @@ public class FcmService extends FirebaseMessagingService {
         }
     }
 
+    @Override
+    public void onNewToken(String token) {
+        super.onNewToken(token);
+        // Create notification channel.
+        createFcmNotificationChannel();
+    }
+
+    private void createFcmNotificationChannel() {
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            // The user-visible name of the channel.
+            CharSequence name = getString(R.string.fcm_channel_title);
+            // The user-visible description of the channel.
+            String description = getString(R.string.fcm_channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel mChannel = new NotificationChannel(getString(R.string.fcm_channel_id),
+                    name, importance);
+
+            // Configure the notification channel.
+            mChannel.setDescription(description);
+            mChannel.enableLights(true);
+            // Sets the notification light color for notifications posted to this
+            // channel, if the device supports this feature.
+            mChannel.setLightColor(Color.CYAN);
+            mChannel.enableVibration(true);
+            mNotificationManager.createNotificationChannel(mChannel);
+        }
+    }
+
     private void showNotification(String title, String text) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext(), getString(R.string.fcm_channel_id))
@@ -33,7 +66,8 @@ public class FcmService extends FirebaseMessagingService {
                         .setColor(getColor(R.color.colorPrimary))
                         .setContentTitle(title)
                         .setContentText(text)
-                        .setLights(Color.CYAN, 500, 2000)
+                        .setLights(ContextCompat.getColor(getApplicationContext(),
+                                R.color.colorPrimary), 500, 2000)
                         .setChannelId(getString(R.string.fcm_channel_id));
 
         // Set intent for the notification

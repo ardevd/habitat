@@ -23,9 +23,9 @@ public class DeviceDetailPresenter implements DeviceDetailContract.UserActionsLi
     private final NotificationsRepository mNotificationsRepository;
     private final DeviceDetailContract.View mDeviceDetailView;
 
-    public DeviceDetailPresenter(@NonNull DevicesRepository devicesRepository,
-                                 @NonNull NotificationsRepository notificationRepository,
-                               @NonNull DeviceDetailContract.View devicesView) {
+    DeviceDetailPresenter(@NonNull DevicesRepository devicesRepository,
+                          @NonNull NotificationsRepository notificationRepository,
+                          @NonNull DeviceDetailContract.View devicesView) {
         mDevicesRepository = devicesRepository;
         mNotificationsRepository = notificationRepository;
         mDeviceDetailView = devicesView;
@@ -128,7 +128,7 @@ public class DeviceDetailPresenter implements DeviceDetailContract.UserActionsLi
 
             @Override
             public void onNotificationUpdateError(String error) {
-                mDeviceDetailView.showNotificationRedeemError(error);
+                mDeviceDetailView.showNotificationUpdateError(error);
             }
         });
     }
@@ -144,7 +144,7 @@ public class DeviceDetailPresenter implements DeviceDetailContract.UserActionsLi
 
             @Override
             public void onNotificationDeleteError(String error) {
-                mDeviceDetailView.showNotificationDeletedError(error);
+                mDeviceDetailView.showNotificationUpdateError(error);
             }
         });
     }

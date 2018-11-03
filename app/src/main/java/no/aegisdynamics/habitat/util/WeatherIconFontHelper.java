@@ -6,6 +6,10 @@ package no.aegisdynamics.habitat.util;
 
 public class WeatherIconFontHelper {
 
+    private WeatherIconFontHelper() {
+        // Required empty private constructor
+    }
+
     public static String parseConditionIconToFontString(String code) {
         switch (code){
             case "50d":

@@ -56,12 +56,14 @@ public class DashboardPresenter implements DashboardContract.UserActionsListener
 
             @Override
             public void onProfileLoaded(Profile profile) {
+                mDashboardView.setProgressIndicator(false);
                 mDashboardView.onDashboardDevicesRetrieved(profile.getDashboardDevices());
             }
 
             @Override
             public void onProfileLoadError(String error) {
-
+                mDashboardView.setProgressIndicator(false);
+                mDashboardView.onDashboardDevicesRetrieveError(error);
             }
         });
 
@@ -81,15 +83,14 @@ public class DashboardPresenter implements DashboardContract.UserActionsListener
                 // Open Locks
                 int openLocks = 0;
                 for (Device device : devices) {
-                    if (device.getType().equals(DEVICE_TYPE_DOOR_LOCK)) {
-                        if (device.getStatus().equals("open")) {
-                            openLocks++;
-                        }
+                    if (device.getType().equals(DEVICE_TYPE_DOOR_LOCK) &&
+                            device.getStatus().equals("open")) {
+                        openLocks++;
                     }
                 }
                 if (openLocks > 0) {
                     mDashboardView.showLockStateWarning(openLocks);
-                } else{
+                } else {
                     mDashboardView.hideLockStateWarning();
                 }
             }

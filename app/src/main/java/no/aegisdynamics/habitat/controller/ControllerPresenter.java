@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import no.aegisdynamics.habitat.data.device.Controller;
 import no.aegisdynamics.habitat.data.device.DevicesRepository;
 import no.aegisdynamics.habitat.provider.DeviceDataContract;
+import no.aegisdynamics.habitat.util.ControllerDataParser;
 
 /**
  * Listens to user actions from the UI ({@link ControllerFragment}), retrieves the data and updates the
@@ -47,6 +48,9 @@ public class ControllerPresenter implements ControllerContract.UserActionsListen
             @Override
             public void onControllerDataLoaded(Controller controller) {
                 mControllerView.showControllerData(controller);
+                if (!ControllerDataParser.isControllerVersionSupported(controller.getFirmwareVersion())) {
+                    mControllerView.showControllerUnsupportedVersionMessage(controller.getFirmwareVersion());
+                }
             }
 
             @Override

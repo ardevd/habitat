@@ -7,7 +7,7 @@ import android.content.Context;
  * through this interface.
  */
 
-public interface ProfileServiceApi {
+interface ProfileServiceApi {
 
     interface ProfileServiceCallback<T> {
         void onLoaded(T profile);

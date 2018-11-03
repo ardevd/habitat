@@ -21,6 +21,10 @@ import no.aegisdynamics.habitat.util.KeyStoreHelper;
 
 public class ZWayNetworkHelper implements DeviceDataContract {
 
+    private ZWayNetworkHelper() {
+        // Required private constructor
+    }
+
     public static Map<String, String> getAuthenticationHeaders(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         HashMap<String, String> params = new HashMap<>();
@@ -171,6 +175,11 @@ public class ZWayNetworkHelper implements DeviceDataContract {
                 getZWayServerHostname(context));
     }
 
+    public static String getZwayModulesUrl(Context context) {
+        return String.format("%s%s/ZAutomation/api/v1/modules", getURLPrefix(context),
+                getZWayServerHostname(context));
+    }
+
     private static String getURLPrefix(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         boolean useSSL = settings.getBoolean("zway_ssl", false);
@@ -179,5 +188,20 @@ public class ZWayNetworkHelper implements DeviceDataContract {
         } else {
             return "http://";
         }
+    }
+
+    public static String getZwayModuleIconUrl(Context context, String moduleId, String icon) {
+        return String.format("%s%s/ZAutomation/api/v1/load/modulemedia/%s/%s", getURLPrefix(context),
+                getZWayServerHostname(context), moduleId, icon);
+    }
+
+    public static String getZwayModuleDeleteUrl(Context context, String moduleId) {
+        return String.format("%s%s/ZAutomation/api/v1/delete/%s", getURLPrefix(context),
+                getZWayServerHostname(context), moduleId);
+    }
+
+    public static String getZwayModuleInstallurl(Context context, String url) {
+        return String.format("%s%s/ZAutomation/api/v1/modules/install?moduleUrl=%s", getURLPrefix(context),
+                getZWayServerHostname(context), url);
     }
 }

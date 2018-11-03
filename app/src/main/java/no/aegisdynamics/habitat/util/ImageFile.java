@@ -6,7 +6,7 @@ package no.aegisdynamics.habitat.util;
 
 import java.io.IOException;
 
-public interface ImageFile {
+interface ImageFile {
     void create(String name, String extension) throws IOException;
 
     boolean exists();

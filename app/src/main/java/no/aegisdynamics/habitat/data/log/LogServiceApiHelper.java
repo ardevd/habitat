@@ -11,7 +11,7 @@ import java.util.Locale;
 
 import no.aegisdynamics.habitat.provider.DeviceDataContract;
 
-public class LogServiceApiHelper implements DeviceDataContract {
+class LogServiceApiHelper implements DeviceDataContract {
 
     private static final String TAG = "HabitatLogServiceAPI";
 

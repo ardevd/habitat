@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import no.aegisdynamics.habitat.data.automation.Automation;
 import no.aegisdynamics.habitat.data.automation.AutomationsRepository;
 
-public interface AutomatorContract {
+interface AutomatorContract {
 
     interface Scheduler {
         void scheduleAutomation(Automation automation);

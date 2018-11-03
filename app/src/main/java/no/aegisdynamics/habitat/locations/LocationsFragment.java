@@ -9,7 +9,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +83,7 @@ public class LocationsFragment extends Fragment implements LocationsContract.Vie
     /**
      * Listener for clicks on locations in the RecyclerView.
      */
-    private LocationItemListener mItemListener = new LocationItemListener() {
+    private final LocationItemListener mItemListener = new LocationItemListener() {
 
         @Override
         public void onLocationClick(Location clickedLocation) {
@@ -97,12 +96,6 @@ public class LocationsFragment extends Fragment implements LocationsContract.Vie
             mActionsListener.deleteLocation(clickedLocation);
         }
     };
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-    }
 
     @Override
     public void onResume() {
@@ -118,7 +111,10 @@ public class LocationsFragment extends Fragment implements LocationsContract.Vie
 
     @Override
     public void showLocationsLoadError(String error) {
-        SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+        if (isAdded()) {
+            SnackbarHelper.showFlashbarErrorMessage(getString(R.string.locations_generic_error_title),
+                    error, getActivity());
+        }
     }
 
     @Override
@@ -143,24 +139,27 @@ public class LocationsFragment extends Fragment implements LocationsContract.Vie
     }
 
     @Override
-    public void showLocationDetailUI(int locationId, String locationName) {
+    public void showLocationDetailUI(Location location) {
         // in it's own Activity, since it makes more sense that way
         Intent intent = new Intent(getContext(), LocationDetailActivity.class);
-        intent.putExtra(LocationDetailActivity.EXTRA_LOCATION_ID, locationId);
-        intent.putExtra(LocationDetailActivity.EXTRA_LOCATION_TITLE, locationName);
+        intent.putExtra(LocationDetailActivity.EXTRA_LOCATION, location);
         startActivity(intent);
     }
 
     @Override
     public void showDeleteLocation() {
-        SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.location_deleted), getView());
-        mActionsListener.loadLocations();
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.location_deleted), getView());
+            mActionsListener.loadLocations();
+        }
     }
 
     @Override
     public void showDeleteLocationError(String error) {
-        SnackbarHelper.showSimpleSnackbarMessage(error, getView());
-        mActionsListener.loadLocations();
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+            mActionsListener.loadLocations();
+        }
     }
 
 }

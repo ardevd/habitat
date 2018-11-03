@@ -33,6 +33,7 @@ import no.aegisdynamics.habitat.backup.BackupActivity;
 import no.aegisdynamics.habitat.controller.ControllerActivity;
 import no.aegisdynamics.habitat.dashboard.DashboardActivity;
 import no.aegisdynamics.habitat.devices.DevicesActivity;
+import no.aegisdynamics.habitat.modules.ModulesActivity;
 import no.aegisdynamics.habitat.notifications.NotificationsActivity;
 import no.aegisdynamics.habitat.participate.ParticipateActivity;
 import no.aegisdynamics.habitat.preferences.PrefsActivity;
@@ -119,6 +120,10 @@ public class BaseActivity extends AppCompatActivity {
                             case R.id.menu_participate:
                                 Intent participateIntent = new Intent(getApplicationContext(), ParticipateActivity.class);
                                 startActivity(participateIntent);
+                                break;
+                            case R.id.menu_modules:
+                                Intent modulesIntent = new Intent(getApplicationContext(), ModulesActivity.class);
+                                startActivity(modulesIntent);
                                 break;
                             case R.id.menu_logout:
                                 wipeCredentialsAndLogout();

@@ -40,6 +40,7 @@ public class DbHelper extends SQLiteOpenHelper implements DeviceDataContract {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int previousVersion, int newVersion) {
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_LOG);
         onCreate(sqLiteDatabase);
     }
 }

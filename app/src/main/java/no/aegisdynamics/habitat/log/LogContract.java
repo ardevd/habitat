@@ -4,7 +4,7 @@ import java.util.List;
 
 import no.aegisdynamics.habitat.data.log.HabitatLog;
 
-public interface LogContract {
+interface LogContract {
 
     interface View {
         void showLogs(List<HabitatLog> logs);

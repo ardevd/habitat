@@ -20,7 +20,7 @@ import no.aegisdynamics.habitat.data.automation.Automation;
 import no.aegisdynamics.habitat.itemListeners.AutomationItemListener;
 import no.aegisdynamics.habitat.provider.DeviceDataContract;
 
-public class AutomationsAdapter extends RecyclerView.Adapter<AutomationsAdapter.ViewHolder> implements DeviceDataContract{
+public class AutomationsAdapter extends RecyclerView.Adapter<AutomationsAdapter.AutomationsViewHolder> implements DeviceDataContract{
 
     private List<Automation> mAutomations;
     private final AutomationItemListener mItemListener;
@@ -32,16 +32,16 @@ public class AutomationsAdapter extends RecyclerView.Adapter<AutomationsAdapter.
 
 
     @Override
-    public AutomationsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AutomationsAdapter.AutomationsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View automationView = inflater.inflate(R.layout.item_automation, parent, false);
-        return new AutomationsAdapter.ViewHolder(automationView, mItemListener);
+        return new AutomationsAdapter.AutomationsViewHolder(automationView, mItemListener);
     }
 
 
     @Override
-    public void onBindViewHolder(AutomationsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(AutomationsAdapter.AutomationsViewHolder holder, int position) {
         final Automation automation = mAutomations.get(position);
 
         holder.title.setText(automation.getName());
@@ -70,12 +70,7 @@ public class AutomationsAdapter extends RecyclerView.Adapter<AutomationsAdapter.
         return mAutomations.size();
     }
 
-    private Automation getItem(int position) {
-        return mAutomations.get(position);
-    }
-
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
+    public class AutomationsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
         private final TextView title;
         private final TextView description;
@@ -83,7 +78,7 @@ public class AutomationsAdapter extends RecyclerView.Adapter<AutomationsAdapter.
 
         private final AutomationItemListener mItemListener;
 
-        ViewHolder(View itemView, AutomationItemListener itemListener) {
+        AutomationsViewHolder(View itemView, AutomationItemListener itemListener) {
             super(itemView);
             mItemListener = itemListener;
             title = itemView.findViewById(R.id.item_automation_title);
@@ -123,6 +118,11 @@ public class AutomationsAdapter extends RecyclerView.Adapter<AutomationsAdapter.
             for (int i = 0, n = menu.size(); i < n; i++)
                 menu.getItem(i).setOnMenuItemClickListener(listener);
         }
+
+        private Automation getItem(int position) {
+            return mAutomations.get(position);
+        }
+
 
         boolean onCustomMenuItemClick(MenuItem menuItem) {
             int position = getAdapterPosition();

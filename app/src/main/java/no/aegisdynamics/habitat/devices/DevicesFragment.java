@@ -1,14 +1,13 @@
 package no.aegisdynamics.habitat.devices;
 
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -30,18 +29,17 @@ import no.aegisdynamics.habitat.R;
 import no.aegisdynamics.habitat.adapters.DevicesAdapter;
 import no.aegisdynamics.habitat.data.device.Device;
 import no.aegisdynamics.habitat.data.Injection;
-import no.aegisdynamics.habitat.devicedetail.DeviceDetailActivity;
 import no.aegisdynamics.habitat.itemListeners.DeviceCommandListener;
 import no.aegisdynamics.habitat.itemListeners.DeviceItemListener;
 import no.aegisdynamics.habitat.util.FavoritesHelper;
+import no.aegisdynamics.habitat.util.HabitatNavigator;
 import no.aegisdynamics.habitat.util.SnackbarHelper;
 
 public class DevicesFragment extends Fragment implements DevicesContract.View, SearchView.OnQueryTextListener {
     private DevicesAdapter mListAdapter;
     private DevicesContract.UserActionsListener mActionsListener;
 
-    SharedPreferences settings;
-    SharedPreferences.Editor editor;
+    private SharedPreferences.Editor editor;
 
     private boolean favoritesOnly = false;
 
@@ -87,9 +85,10 @@ public class DevicesFragment extends Fragment implements DevicesContract.View, S
                 }
                 editor.putBoolean("devices_favorites_only", favoritesOnly).apply();
                 mActionsListener.loadDevices();
-                break;
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -107,7 +106,7 @@ public class DevicesFragment extends Fragment implements DevicesContract.View, S
         int numColumns = getContext().getResources().getInteger(R.integer.num_devices_columns);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns));
-        settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
         editor = settings.edit();
 
         favoritesOnly = settings.getBoolean("devices_favorites_only", false);
@@ -153,27 +152,32 @@ public class DevicesFragment extends Fragment implements DevicesContract.View, S
 
     @Override
     public void showDevices(List<Device> devices) {
-        if (favoritesOnly) {
-            // Redo the list of devices, removing non favorites
-            Set<String> favorites = FavoritesHelper.getFavoriteDevicesFromPrefs(getContext());
-            List<Device> favoriteDevices = new ArrayList<>();
-            for (Device device: devices) {
-                if (favorites.contains(device.getId())) {
-                    favoriteDevices.add(device);
+        if (isAdded()) {
+            if (favoritesOnly) {
+                // Redo the list of devices, removing non favorites
+                Set<String> favorites = FavoritesHelper.getFavoriteDevicesFromPrefs(getContext());
+                List<Device> favoriteDevices = new ArrayList<>();
+                for (Device device : devices) {
+                    if (favorites.contains(device.getId())) {
+                        favoriteDevices.add(device);
+                    }
+                    devices = favoriteDevices;
                 }
-                devices = favoriteDevices;
             }
+            // Update subtitle
+            TextView devicesSubtitle = getView().findViewById(R.id.devices_header_devices);
+            devicesSubtitle.setText(getString(R.string.devices_num_devices, devices.size()));
+            // Replace adapter data with the new list of devices
+            mListAdapter.replaceData(devices);
         }
-        // Update subtitle
-        TextView devicesSubtitle = getView().findViewById(R.id.devices_header_devices);
-        devicesSubtitle.setText(getString(R.string.devices_num_devices, devices.size()));
-        // Replace adapter data with the new list of devices
-        mListAdapter.replaceData(devices);
     }
 
     @Override
     public void showDevicesLoadError(String error) {
-        SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+        if (isAdded()) {
+            SnackbarHelper.showFlashbarErrorMessage(getString(R.string.devices_generic_error_title),
+                    error, getActivity());
+        }
     }
 
     @Override
@@ -194,12 +198,14 @@ public class DevicesFragment extends Fragment implements DevicesContract.View, S
 
     @Override
     public void showCommandStatusMessage(boolean success) {
-        String statusMessage = getString(R.string.devices_command_ok);
-        if (!success) {
-            statusMessage = getString(R.string.devices_command_error);
+        if (isAdded()) {
+            String statusMessage = getString(R.string.devices_command_ok);
+            if (!success) {
+                statusMessage = getString(R.string.devices_command_error);
+            }
+            SnackbarHelper.showSimpleSnackbarMessage(statusMessage, getView());
+            delayedRefresh();
         }
-        SnackbarHelper.showSimpleSnackbarMessage(statusMessage, getView());
-        delayedRefresh();
     }
 
     private void delayedRefresh() {
@@ -209,25 +215,20 @@ public class DevicesFragment extends Fragment implements DevicesContract.View, S
                 // Actions to do after 1 second
                 mActionsListener.loadDevices();
             }
-        }, 1000);
+        }, 3000);
     }
 
     @Override
     public void showCommandFailedMessage(String error) {
-        SnackbarHelper.showSimpleSnackbarMessage(error, getView());
-        delayedRefresh();
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+            delayedRefresh();
+        }
     }
 
     @Override
     public void showDeviceDetailUI(@NonNull Device device) {
-        // in it's own Activity, since it makes more sense that
-        Intent intent = new Intent(getContext(), DeviceDetailActivity.class);
-        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_ID, device.getId());
-        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_TITLE, device.getTitle());
-        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_STATE, device.getStatus());
-        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_NOTATION, device.getStatusNotation());
-        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_PROBE_TITLE, device.getDeviceProbeTitle());
-        startActivity(intent);
+        HabitatNavigator.showDeviceDetailUI(device, getContext());
     }
 
     @Override

@@ -13,6 +13,10 @@ import no.aegisdynamics.habitat.R;
 
 public class NightModeSetting {
 
+    private NightModeSetting() {
+        // Added required empty constructor
+    }
+
     public static int getNightModePreference(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String nightMode = settings.getString("nightmode", context.getString(R.string.prefs_night_mode_default));

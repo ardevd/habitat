@@ -2,8 +2,7 @@ package no.aegisdynamics.habitat.dashboard;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -15,6 +14,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.SwipeDismissBehavior;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
@@ -33,12 +34,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,16 +48,32 @@ import no.aegisdynamics.habitat.adapters.DevicesAdapter;
 import no.aegisdynamics.habitat.data.Injection;
 import no.aegisdynamics.habitat.data.device.Device;
 import no.aegisdynamics.habitat.data.weather.Weather;
-import no.aegisdynamics.habitat.devicedetail.DeviceDetailActivity;
 import no.aegisdynamics.habitat.dialogs.HabitatAppModuleInfoDialog;
 import no.aegisdynamics.habitat.itemListeners.DeviceCommandListener;
 import no.aegisdynamics.habitat.itemListeners.DeviceItemListener;
 import no.aegisdynamics.habitat.util.GooglePlayServicesHelper;
+import no.aegisdynamics.habitat.util.HabitatNavigator;
 import no.aegisdynamics.habitat.util.LogHelper;
 import no.aegisdynamics.habitat.util.SnackbarHelper;
 import no.aegisdynamics.habitat.util.TemperatureConverterHelper;
 import no.aegisdynamics.habitat.util.UserCredentialsManager;
 import no.aegisdynamics.habitat.util.WeatherIconFontHelper;
+
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_APP_MODULE_NOTIFICATION_SHOWN;
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_APP_MODULE_NOTIFICATION_SHOWN_DEFAULT;
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_DASHBOARD_DEVICES_HINT_SHOWN;
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_DASHBOARD_DEVICES_HINT_SHOWN_DEFAULT;
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_DASHBOARD_LOCATION_HINT_SHOWN;
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_DASHBOARD_LOCATION_HINT_SHOWN_DEFAULT;
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_HOME_LAT;
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_HOME_LAT_DEFAULT;
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_HOME_LONG;
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_HOME_LONG_DEFAULT;
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_TOKEN_REGISTERED;
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_TOKEN_REGISTERED_DEFAULT;
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_WEATHER_UNIT;
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_ZWAY_NAME;
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_ZWAY_NAME_DEFAULT;
 
 /**
  * Fragment for the Dashboard screen
@@ -67,10 +83,9 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
 
     private final String TAG = this.getClass().getSimpleName();
 
-    protected GeoDataClient mGeoDataClient;
-    protected PlaceDetectionClient mPlaceDetectionClient;
-
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
+    private static final String CELSIUS = "\u00B0";
 
     private DashboardContract.UserActionsListener mUserActionsListener;
 
@@ -83,7 +98,7 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
 
     private DevicesAdapter mListAdapter;
 
-    final private static int PLACE_PICKER_REQUEST = 1;
+    private static final int PLACE_PICKER_REQUEST = 1;
 
     private boolean locationHintShown = false;
 
@@ -102,11 +117,6 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Construct a GeoDataClient.
-        mGeoDataClient = Places.getGeoDataClient(getContext());
-        // Construct a PlaceDetectionClient.
-        mPlaceDetectionClient = Places.getPlaceDetectionClient(getContext());
 
         mListAdapter = new DevicesAdapter(new ArrayList<Device>(0), mItemListener, mCommandListener);
 
@@ -130,11 +140,18 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
 
         callGetWeatherData();
 
-        if (GooglePlayServicesHelper.checkForGooglePlayServices(getActivity(), PLAY_SERVICES_RESOLUTION_REQUEST) && FirebaseInstanceId.getInstance().getToken() != null) {
-            mUserActionsListener.registerFCMDeviceToken(FirebaseInstanceId.getInstance().getToken());
-        }
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(getActivity(),
+                new OnSuccessListener<InstanceIdResult>() {
+                    @Override
+                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                        if (GooglePlayServicesHelper
+                                .checkForGooglePlayServices(getActivity(), PLAY_SERVICES_RESOLUTION_REQUEST)) {
+                            mUserActionsListener.registerFCMDeviceToken(instanceIdResult.getToken());
+                        }
+                    }
+                });
 
-        mUserActionsListener.getProfileData(UserCredentialsManager.getZwayUsername(getContext().getApplicationContext()));
+        loadProfileData();
     }
 
     @Override
@@ -149,29 +166,28 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
         switch (item.getItemId()) {
             case R.id.menu_dashboard_push_notifications:
                 showAppSupportInfoDialog();
-                break;
+                return true;
             case R.id.menu_dashboard_location:
                 // Show location picker
                 showPlacePicker();
-                break;
-
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     private void callGetWeatherData() {
         try {
             placeLayout.setVisibility(View.GONE);
-            weatherLayout.setVisibility(View.VISIBLE);
-            double lat = Double.valueOf(settings.getString("home_lat", ""));
-            double lon = Double.valueOf(settings.getString("home_long", ""));
+            double lat = Double.parseDouble(settings.getString(PREF_HOME_LAT, PREF_HOME_LAT_DEFAULT));
+            double lon = Double.parseDouble(settings.getString(PREF_HOME_LONG, PREF_HOME_LONG_DEFAULT));
             mUserActionsListener.getWeatherData(lat, lon);
         } catch (NumberFormatException ex) {
             weatherLayout.setVisibility(View.GONE);
             placeLayout.setVisibility(View.VISIBLE);
-            if (!settings.getBoolean("dashboard_location_hint_shown", false)) {
+            if (!settings.getBoolean(PREF_DASHBOARD_LOCATION_HINT_SHOWN, PREF_DASHBOARD_LOCATION_HINT_SHOWN_DEFAULT)) {
                 ((DashboardActivity) getActivity()).showLocationAddHint();
-                editor.putBoolean("dashboard_location_hint_shown", true).apply();
+                editor.putBoolean(PREF_DASHBOARD_LOCATION_HINT_SHOWN, true).apply();
                 locationHintShown = true;
             }
         }
@@ -191,7 +207,8 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mUserActionsListener.loadDevices();
+                loadProfileData();
+                callGetWeatherData();
             }
         });
 
@@ -205,10 +222,9 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
         temperatureTextView = root.findViewById(R.id.dashboard_weather_temperature);
         weatherLayout = root.findViewById(R.id.dashboard_weather_layout);
         placeLayout = root.findViewById(R.id.dashboard_empty_place_layout);
-        TextView homeTitleTextView = root.findViewById(R.id.dashboard_home_title);
         settings = PreferenceManager.getDefaultSharedPreferences(getContext());
         editor = settings.edit();
-        homeTitleTextView.setText(settings.getString("zway_name", ""));
+        showNetworkName(true);
         locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -216,16 +232,19 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
             }
         });
 
-        Animation animation;
-        animation = AnimationUtils.loadAnimation(getContext().getApplicationContext(),
-                R.anim.move);
-        homeTitleTextView.startAnimation(animation);
-
         // Dynamic views
         LayoutInflater dynamicInflater = LayoutInflater.from(getActivity());
         lockStateLayout = dynamicInflater.inflate(R.layout.dashboard_lock_state, container, false);
 
         return root;
+    }
+
+    private void loadProfileData() {
+        Context context = getContext();
+        if (context != null) {
+            mUserActionsListener.getProfileData(UserCredentialsManager
+                    .getZwayUsername(getContext().getApplicationContext()));
+        }
     }
 
     @Override
@@ -242,6 +261,18 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
         }
     }
 
+    private void showNetworkName(boolean wantAnimation) {
+        if (getView() != null && getContext().getApplicationContext() != null) {
+            TextView homeTitleTextView = getView().findViewById(R.id.dashboard_home_title);
+            homeTitleTextView.setText(settings.getString(PREF_ZWAY_NAME, PREF_ZWAY_NAME_DEFAULT));
+            if (wantAnimation) {
+                Animation animation = AnimationUtils.loadAnimation(getContext().getApplicationContext(),
+                        R.anim.move);
+                homeTitleTextView.startAnimation(animation);
+            }
+        }
+    }
+
     @Override
     public void showWeatherData(Weather weather) {
         try {
@@ -251,7 +282,7 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
                 double temperatureMax;
                 double temperatureMin;
 
-                switch (settings.getString("weather_unit", getString(R.string.prefs_temperature_units_celsius))) {
+                switch (settings.getString(PREF_WEATHER_UNIT, getString(R.string.prefs_temperature_units_celsius))) {
                     case "Celsius":
                         temperature = TemperatureConverterHelper.convertKelvinToCelsius(weather.getTemperature());
                         temperatureMax = TemperatureConverterHelper.convertKelvinToCelsius(weather.getTemperatureMax());
@@ -273,7 +304,7 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
                 temperatureMax = Math.round(temperatureMax * 100) / 100;
                 temperatureMin = Math.round(temperatureMin * 100) / 100;
 
-                temperatureTextView.setText(String.format("%s%s", String.valueOf(temperature), "\u00B0"));
+                temperatureTextView.setText(String.format("%s%s", String.valueOf(temperature), CELSIUS));
                 TextView temperatureMaxView = getView().findViewById(R.id.dashboard_weather_temperature_max);
                 TextView temperatureMinView = getView().findViewById(R.id.dashboard_weather_temperature_min);
                 TextView weatherConditionView = getView().findViewById(R.id.dashboard_weather_condition);
@@ -285,8 +316,11 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
 
                 weatherConditionView.setText(weather.getCondition());
 
-                temperatureMaxView.setText(String.format("%s%s", String.valueOf(temperatureMax), "\u00B0"));
-                temperatureMinView.setText(String.format("%s%s", String.valueOf(temperatureMin), "\u00B0"));
+                temperatureMaxView.setText(String.format("%s%s", String.valueOf(temperatureMax), CELSIUS));
+                temperatureMinView.setText(String.format("%s%s", String.valueOf(temperatureMin), CELSIUS));
+
+                // Weather data loaded, show view.
+                weatherLayout.setVisibility(View.VISIBLE);
             }
         } catch (IllegalStateException ex) {
             // Illegal state.
@@ -296,7 +330,10 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
 
     @Override
     public void showWeatherDataError(String error) {
-
+        if (isAdded()) {
+            SnackbarHelper.showFlashbarErrorMessage(getString(R.string.dashboard_weather_error_title),
+                    error, getActivity());
+        }
     }
 
     @Override
@@ -307,7 +344,10 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
 
     @Override
     public void showDevicesLoadError(String error) {
-        SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+        if (isAdded()) {
+            SnackbarHelper.showFlashbarErrorMessage(getString(R.string.dashboard_generic_error_title),
+                    error, getActivity());
+        }
     }
 
     @Override
@@ -327,46 +367,43 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
 
     @Override
     public void showDeviceDetailUI(@NonNull Device device) {
-        // in it's own Activity, since it makes more sense that
-        Intent intent = new Intent(getContext(), DeviceDetailActivity.class);
-        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_ID, device.getId());
-        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_TITLE, device.getTitle());
-        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_STATE, device.getStatus());
-        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_NOTATION, device.getStatusNotation());
-        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_PROBE_TITLE, device.getDeviceProbeTitle());
-        startActivity(intent);
+        HabitatNavigator.showDeviceDetailUI(device, getContext());
     }
 
 
     @Override
     public void showCommandFailedMessage(String error) {
-        SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+        SnackbarHelper.showFlashbarErrorMessage(getString(R.string.dashboard_command_error_title),
+                error, getActivity());
         delayedRefresh();
     }
 
     @Override
     public void showCommandSuccessMessage() {
-        String statusMessage = getString(R.string.devices_command_ok);
+        if (isAdded()) {
+            String statusMessage = getString(R.string.devices_command_ok);
 
-        SnackbarHelper.showSimpleSnackbarMessage(statusMessage, getView());
-        delayedRefresh();
+            SnackbarHelper.showSimpleSnackbarMessage(statusMessage, getView());
+            delayedRefresh();
+        }
     }
 
     @Override
     public void showDeviceTokenRegistrationError(String error) {
-        boolean appModuleInfo = settings.getBoolean("app_module_notification_shown", false);
+        boolean appModuleInfo = settings.getBoolean(PREF_APP_MODULE_NOTIFICATION_SHOWN,
+                PREF_APP_MODULE_NOTIFICATION_SHOWN_DEFAULT);
         if (!appModuleInfo) {
-            editor.putBoolean("app_module_notification_shown", true).apply();
-            editor.putBoolean("token_registered", false).apply();
+            editor.putBoolean(PREF_APP_MODULE_NOTIFICATION_SHOWN, true).apply();
+            editor.putBoolean(PREF_TOKEN_REGISTERED, false).apply();
             showAppSupportInfoDialog();
         }
     }
 
     @Override
     public void showDeviceTokenRegistered() {
-        boolean tokenRegistered = settings.getBoolean("token_registered", false);
+        boolean tokenRegistered = settings.getBoolean(PREF_TOKEN_REGISTERED, PREF_TOKEN_REGISTERED_DEFAULT);
         if (!tokenRegistered) {
-            editor.putBoolean("token_registered", true).apply();
+            editor.putBoolean(PREF_TOKEN_REGISTERED, true).apply();
             SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.fcm_token_registered_message), getView());
         }
     }
@@ -427,7 +464,9 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
     public void showAppSupportInfoDialog() {
         HabitatAppModuleInfoDialog dialog = new HabitatAppModuleInfoDialog();
         FragmentManager manager = getFragmentManager();
-        dialog.show(manager, "habitat_app_module_dialog");
+        if (manager != null) {
+            dialog.show(manager, "habitat_app_module_dialog");
+        }
     }
 
     @Override
@@ -435,6 +474,19 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
         mDashboardDevices = dashboardDevices;
         // dashboard devices have been retrieved. Get all devices.
         mUserActionsListener.loadDevices();
+        // Update network name textView
+        showNetworkName(false);
+    }
+
+    @Override
+    public void onDashboardDevicesRetrieveError(String error) {
+        if (isAdded() && getView() != null) {
+            SnackbarHelper.showFlashbarErrorMessage(getString(R.string.dashboard_generic_error_title),
+                    error, getActivity());
+            TextView homeTitleTextView = getView().findViewById(R.id.dashboard_home_title);
+            homeTitleTextView.setText(getString(R.string.dashboard_network_unavailable,
+                    settings.getString(PREF_ZWAY_NAME, PREF_ZWAY_NAME_DEFAULT)));
+        }
     }
 
     private void delayedRefresh() {
@@ -442,23 +494,23 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
         handler.postDelayed(new Runnable() {
             public void run() {
                 // Actions to do after 2 seconds
-                mUserActionsListener.loadDevices();
+                loadProfileData();
             }
-        }, 2000);
+        }, 3000);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == Activity.RESULT_OK) {
-                Place place = PlacePicker.getPlace(getContext(), data);
-                double latitude = place.getLatLng().latitude;
-                double longitude = place.getLatLng().longitude;
-                editor.putString("home_lat", String.valueOf(latitude));
-                editor.putString("home_long", String.valueOf(longitude));
-                editor.apply();
-                callGetWeatherData();
-            }
+        Context context = getContext();
+        if (requestCode == PLACE_PICKER_REQUEST && resultCode == Activity.RESULT_OK
+                && context != null) {
+            Place place = PlacePicker.getPlace(context, data);
+            double latitude = place.getLatLng().latitude;
+            double longitude = place.getLatLng().longitude;
+            editor.putString(PREF_HOME_LAT, String.valueOf(latitude));
+            editor.putString(PREF_HOME_LONG, String.valueOf(longitude));
+            editor.apply();
+            callGetWeatherData();
         }
     }
 
@@ -486,11 +538,11 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
     private class DashboardDeviceLoaderTask extends AsyncTask<List<Device>, Integer, List<Device>> {
 
         @Override
-        protected List<Device> doInBackground(List<Device>[] deviceList ) {
+        protected List<Device> doInBackground(List<Device>[] deviceList) {
             List<Device> dashDevicesList = new ArrayList<>();
-            for (Device device: deviceList[0]) {
+            for (Device device : deviceList[0]) {
                 if (mDashboardDevices.contains(device.getId())) {
-                        dashDevicesList.add(device);
+                    dashDevicesList.add(device);
                 }
 
             }
@@ -500,15 +552,18 @@ public class DashboardFragment extends Fragment implements DashboardContract.Vie
         @Override
         protected void onPostExecute(List<Device> devices) {
             try {
-                if (devices.size() > 0) {
+                if (!devices.isEmpty()) {
                     getView().findViewById(R.id.dashboard_no_devices_layout).setVisibility(View.GONE);
                 } else {
                     getView().findViewById(R.id.dashboard_no_devices_layout).setVisibility(View.VISIBLE);
-                    if (!settings.getBoolean("dashboard_devices_hint_shown", false) &&
-                            settings.getBoolean("dashboard_location_hint_shown", false) &&
+                    if (!settings.getBoolean(PREF_DASHBOARD_DEVICES_HINT_SHOWN, PREF_DASHBOARD_DEVICES_HINT_SHOWN_DEFAULT) &&
+                            settings.getBoolean(PREF_DASHBOARD_LOCATION_HINT_SHOWN, PREF_DASHBOARD_LOCATION_HINT_SHOWN_DEFAULT) &&
                             !locationHintShown) {
-                        ((DashboardActivity) getActivity()).showDevicesHint();
-                        editor.putBoolean("dashboard_devices_hint_shown", true).apply();
+                        DashboardActivity dashboardActivity = (DashboardActivity) getActivity();
+                        if (dashboardActivity != null) {
+                            dashboardActivity.showDevicesHint();
+                            editor.putBoolean(PREF_DASHBOARD_DEVICES_HINT_SHOWN, true).apply();
+                        }
                     }
 
                 }

@@ -17,6 +17,7 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -27,8 +28,12 @@ import com.google.common.base.Charsets;
 import no.aegisdynamics.habitat.R;
 import no.aegisdynamics.habitat.dashboard.DashboardActivity;
 import no.aegisdynamics.habitat.data.Injection;
+import no.aegisdynamics.habitat.util.HostnameHelper;
 import no.aegisdynamics.habitat.util.KeyStoreHelper;
 import no.aegisdynamics.habitat.util.SnackbarHelper;
+
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_ZWAY_ANONYMOUS;
+import static no.aegisdynamics.habitat.util.PrefsConstants.PREF_ZWAY_ANONYMOUS_DEFAULT;
 
 public class SetupFragment extends Fragment implements SetupContract.View {
 
@@ -38,10 +43,7 @@ public class SetupFragment extends Fragment implements SetupContract.View {
     private EditText etZwayUsername;
     private EditText etZwayPassword;
     private TextView tvSubtitle;
-    private Button buttonHostnameSubmit;
-    private Button buttonCredentialsSubmit;
     private LinearLayout cardContainerLayout;
-    private LayoutInflater inflaterCardViews;
     private Button buttonRestartSetup;
 
     private View inflatedCardViewHostname;
@@ -50,6 +52,7 @@ public class SetupFragment extends Fragment implements SetupContract.View {
     private View inflatedProgressView;
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
+    private CheckBox sslCheckbox;
 
     public SetupFragment() {
         // Required empty constructor
@@ -82,7 +85,7 @@ public class SetupFragment extends Fragment implements SetupContract.View {
         tvSubtitle = root.findViewById(R.id.setup_subtitle);
 
         cardContainerLayout = root.findViewById(R.id.setup_card_container_layout);
-        inflaterCardViews = LayoutInflater.from(getActivity());
+        LayoutInflater inflaterCardViews = LayoutInflater.from(getActivity());
         inflatedCardViewHostname = inflaterCardViews.inflate(R.layout.setup_hostname,
                 container, false);
         inflatedCardViewCredentials = inflaterCardViews.inflate(R.layout.setup_credentials,
@@ -91,7 +94,6 @@ public class SetupFragment extends Fragment implements SetupContract.View {
                 container, false);
         inflatedProgressView = inflaterCardViews.inflate(R.layout.setup_progress,
                 container, false);
-
 
         buttonRestartSetup = root.findViewById(R.id.setup_restart_button);
         buttonRestartSetup.setOnClickListener(new View.OnClickListener() {
@@ -161,7 +163,7 @@ public class SetupFragment extends Fragment implements SetupContract.View {
     @Override
     public void showHostnameAnonymousAccessApproved() {
         if (getView() != null) {
-            if (settings.getBoolean("zway_anonymous", false)) {
+            if (settings.getBoolean(PREF_ZWAY_ANONYMOUS, PREF_ZWAY_ANONYMOUS_DEFAULT)) {
                 showCustomNameView();
             } else {
                 showCredentialsView();
@@ -175,7 +177,7 @@ public class SetupFragment extends Fragment implements SetupContract.View {
         cardContainerLayout.addView(inflatedCardViewHostname);
         tvSubtitle.setText(getString(R.string.setup_welcome_subtitle));
         etZwayHostname = getView().findViewById(R.id.setup_hostname);
-        buttonHostnameSubmit = getView().findViewById(R.id.setup_hostname_submit_button);
+        Button buttonHostnameSubmit = getView().findViewById(R.id.setup_hostname_submit_button);
         Animation animation = AnimationUtils.loadAnimation(getContext(),
                 R.anim.fade);
         CardView hostnameCardView = getView().findViewById(R.id.setup_cardview_hostname);
@@ -196,14 +198,29 @@ public class SetupFragment extends Fragment implements SetupContract.View {
                     handled = true;
                 }
                 return handled;
-
             }
         });
+
+        sslCheckbox = getView().findViewById(R.id.setup_use_https);
+
+        sslCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                if (checked) {
+                    etZwayHostname.setText(HostnameHelper
+                            .updateHostnameWhenSSLIsEnabled(etZwayHostname.getText().toString()));
+                } else {
+                    etZwayHostname.setText(HostnameHelper
+                            .updateHostnameWhenSSLIsDisabled(etZwayHostname.getText().toString()));
+                }
+            }
+        });
+
     }
 
     private void submitHostname() {
-        // Store hostname and attempt connection with anonymous credentials
-        String hostname = etZwayHostname.getText().toString();
+        // Store hostname (strip whitespaces) and attempt connection with anonymous credentials
+        String hostname = etZwayHostname.getText().toString().replaceAll("\\s+","");
         // Use port 8083 by default unless a port is specifically specified.
         if (!hostname.contains(":")) {
             // TODO: Use regex for this...
@@ -213,12 +230,11 @@ public class SetupFragment extends Fragment implements SetupContract.View {
         // Save parameters to SharedPrefs first
         editor.putString("zway_hostname", hostname);
         // Determine SSL access
-        CheckBox sslCheckbox = getView().findViewById(R.id.setup_use_https);
         editor.putBoolean("zway_ssl", sslCheckbox.isChecked());
 
         // Determine anonymous access
         CheckBox anonymousAccessCheckbox = getView().findViewById(R.id.setup_disable_anonymous_access);
-        editor.putBoolean("zway_anonymous", anonymousAccessCheckbox.isChecked());
+        editor.putBoolean(PREF_ZWAY_ANONYMOUS, anonymousAccessCheckbox.isChecked());
 
         editor.apply();
         mActionsListener.verifyHostname(hostname);
@@ -231,7 +247,7 @@ public class SetupFragment extends Fragment implements SetupContract.View {
         tvSubtitle.setText(getString(R.string.setup_credentials_required));
         etZwayUsername = getView().findViewById(R.id.setup_username);
         etZwayPassword = getView().findViewById(R.id.setup_password);
-        buttonCredentialsSubmit = getView().findViewById(R.id.setup_credentials_submit_button);
+        Button buttonCredentialsSubmit = getView().findViewById(R.id.setup_credentials_submit_button);
         buttonCredentialsSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -281,7 +297,7 @@ public class SetupFragment extends Fragment implements SetupContract.View {
         }
 
         // Save parameters to SharedPrefs first
-        editor.putBoolean("zway_anonymous", false);
+        editor.putBoolean(PREF_ZWAY_ANONYMOUS, false);
         editor.apply();
         mActionsListener.verifyCredentials();
     }

@@ -18,39 +18,52 @@ public class LogHelper {
         // Empty private constructor
     }
 
-    public static void logError(Context context, String tag, String message) {
-        HabitatLog logEntry = new HabitatLog(0, new Date(),
-                tag, message, LogConstants.LOG_TYPE_ERROR);
+    private static boolean isValidEntry(Context context, String tag, String message) {
 
-        logMessage(context, logEntry);
+        return context != null && tag != null && message != null && !tag.isEmpty() && !message.isEmpty();
+    }
+
+    public static void logError(Context context, String tag, String message) {
+        if (isValidEntry(context, tag, message)) {
+            HabitatLog logEntry = new HabitatLog(0, new Date(),
+                    tag, message, LogConstants.LOG_TYPE_ERROR);
+
+            logMessage(context, logEntry);
+        }
     }
 
     public static void logDebug(Context context, String tag, String message) {
-        HabitatLog logEntry = new HabitatLog(0, new Date(),
-                tag, message, LogConstants.LOG_TYPE_DEBUG);
+        if (isValidEntry(context, tag, message)) {
+            HabitatLog logEntry = new HabitatLog(0, new Date(),
+                    tag, message, LogConstants.LOG_TYPE_DEBUG);
 
-        logMessage(context, logEntry);
+            logMessage(context, logEntry);
+        }
     }
 
     public static void logInfo(Context context, String tag, String message) {
-        HabitatLog logEntry = new HabitatLog(0, new Date(),
-                tag, message, LogConstants.LOG_TYPE_INFO);
+        if (isValidEntry(context, tag, message)) {
+            HabitatLog logEntry = new HabitatLog(0, new Date(),
+                    tag, message, LogConstants.LOG_TYPE_INFO);
 
-        logMessage(context, logEntry);
+            logMessage(context, logEntry);
+        }
     }
 
     private static void logMessage(Context context, HabitatLog logEntry) {
-        LogRepository repository = Injection.provideLogRepository(context);
-        repository.createLog(logEntry, new LogRepository.CreateLogCallback() {
-            @Override
-            public void onLogCreated() {
-                // Ignore callback
-            }
+        if (context != null ) {
+            LogRepository repository = Injection.provideLogRepository(context);
+            repository.createLog(logEntry, new LogRepository.CreateLogCallback() {
+                @Override
+                public void onLogCreated() {
+                    // Ignore callback
+                }
 
-            @Override
-            public void onLogCreatedError(String error) {
-                // Ignore callback for now
-            }
-        });
+                @Override
+                public void onLogCreatedError(String error) {
+                    // Ignore callback for now
+                }
+            });
+        }
     }
 }

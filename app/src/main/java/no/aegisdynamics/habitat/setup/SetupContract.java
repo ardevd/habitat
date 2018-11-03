@@ -4,7 +4,7 @@ package no.aegisdynamics.habitat.setup;
 import android.support.annotation.NonNull;
 
 
-public interface SetupContract {
+interface SetupContract {
 
     interface View {
 

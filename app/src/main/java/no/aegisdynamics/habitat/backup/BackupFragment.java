@@ -1,8 +1,6 @@
 package no.aegisdynamics.habitat.backup;
 
 import android.animation.ObjectAnimator;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
@@ -13,7 +11,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -28,8 +29,6 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -142,7 +141,9 @@ public class BackupFragment extends Fragment implements BackupContract.View,
 
     @Override
     public void showBackupStarted() {
-        SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.backup_started), getView());
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.backup_started), getView());
+        }
     }
 
     @Override
@@ -179,14 +180,18 @@ public class BackupFragment extends Fragment implements BackupContract.View,
 
     @Override
     public void showBackupDeleted() {
-        SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.backup_deleted), getView());
-        mUserActionsListener.loadBackups();
-        mUserActionsListener.getAvailableStorage();
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.backup_deleted), getView());
+            mUserActionsListener.loadBackups();
+            mUserActionsListener.getAvailableStorage();
+        }
     }
 
     @Override
     public void showBackupDeleteError(String error) {
-        SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+        }
     }
 
     @Override
@@ -270,7 +275,7 @@ public class BackupFragment extends Fragment implements BackupContract.View,
     /**
      * Listener for clicks on backup items in the RecyclerView.
      */
-    private BackupItemListener mItemListener = new BackupItemListener() {
+    private final BackupItemListener mItemListener = new BackupItemListener() {
         @Override
         public void onBackupClick(Backup clickedBackup) {
             File backupPath = new File(getContext().getFilesDir(), "backups");

@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -76,17 +76,28 @@ public class ControllerFragment extends Fragment implements ControllerContract.V
 
     @Override
     public void showControllerWillRestartMessage() {
-
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.controller_is_restarting),
+                    getView());
+        }
     }
 
     @Override
     public void showControllerHasRestarted() {
-
+        if (isAdded()) {
+        mActionsListener.getControllerStatus();
+        mActionsListener.getControllerData();
+        }
     }
 
     @Override
     public void showControllerRestartError(String error) {
-
+        if (isAdded()) {
+            mActionsListener.getControllerStatus();
+            mActionsListener.getControllerData();
+            SnackbarHelper.showFlashbarErrorMessage(getString(R.string.controller_restart_error),
+                    error, getActivity());
+        }
     }
 
     @Override
@@ -116,6 +127,7 @@ public class ControllerFragment extends Fragment implements ControllerContract.V
         alertDialog.setPositiveButton(getString(R.string.action_ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 mActionsListener.restartController();
+                textViewControllerStatus.setText(getString(R.string.controller_restarting));
                 dialog.dismiss();
             }
         });
@@ -186,5 +198,14 @@ public class ControllerFragment extends Fragment implements ControllerContract.V
             }
         }
 
+    }
+
+    @Override
+    public void showControllerUnsupportedVersionMessage(String controllerVersion) {
+        if (isAdded()) {
+            SnackbarHelper.showUnsupportedControllerMessage(controllerVersion, getActivity());
+            TextView firmwareVersion = getView().findViewById(R.id.controller_firmware_version);
+            firmwareVersion.append(String.format(" %s", getString(R.string.controller_unsupported)));
+        }
     }
 }

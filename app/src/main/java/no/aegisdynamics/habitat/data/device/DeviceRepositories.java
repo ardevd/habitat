@@ -10,11 +10,8 @@ public class DeviceRepositories {
         // No instance
     }
 
-    private static DevicesRepository repository = null;
-
-    public synchronized static DevicesRepository getRepository(@NonNull Context context, @NonNull DevicesServiceApi devicesServiceApi) {
-        repository = new APIDeviceProviderRepository(devicesServiceApi, context);
-        return repository;
+    public static synchronized DevicesRepository getRepository(@NonNull Context context, @NonNull DevicesServiceApi devicesServiceApi) {
+        return new APIDeviceProviderRepository(devicesServiceApi, context);
     }
 
 }

@@ -10,13 +10,12 @@ import no.aegisdynamics.habitat.data.device.Device;
 import no.aegisdynamics.habitat.data.notifications.Notification;
 
 
-public interface DeviceDetailContract {
+interface DeviceDetailContract {
     
         interface View {
             void setProgressIndicator(boolean active);
             void showMissingDevice();
             void showDeviceLoadError(String error);
-            void hideTitle();
             void showTitle(String title);
             void showLocation(String location);
             void hideLocation();
@@ -28,14 +27,11 @@ public interface DeviceDetailContract {
             void showCommandStatusMessage(boolean success);
             void showCommandFailedMessage(String error);
             void updateFavoriteIndicator(String deviceId);
-            void showDeviceAddedToDash(String deviceId);
-            void showDeviceRemovedFromDash(String deviceId);
             void showNotifications(List<Notification> notifications);
             void showNotificationsLoadError(String error);
             void showNotificationRedeemed();
-            void showNotificationRedeemError(String error);
             void showNotificationDeleted();
-            void showNotificationDeletedError(String error);
+            void showNotificationUpdateError(String error);
             void showCustomCommandDialog();
 
         }

@@ -14,6 +14,10 @@ import no.aegisdynamics.habitat.R;
 
 public class UserCredentialsManager {
 
+    private UserCredentialsManager() {
+        // Required empty private constructor
+    }
+
     public static String getZwayUsername(Context context){
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         if (settings.getBoolean("zway_anonymous", true)){

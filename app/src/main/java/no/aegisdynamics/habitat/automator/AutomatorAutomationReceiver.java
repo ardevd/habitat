@@ -33,11 +33,11 @@ public class AutomatorAutomationReceiver extends BroadcastReceiver implements De
         mAutomationsRepository.deleteAutomation(automationId, new AutomationsRepository.DeleteAutomationCallback(){
 
             @Override
-            public void onAutomationDeleted() {
+            public void onAutomationDeleted() { // No need to do anything.
             }
 
             @Override
-            public void onAutomationDeleteError(String error) {
+            public void onAutomationDeleteError(String error) { // Well that sucks.
             }
         });
     }

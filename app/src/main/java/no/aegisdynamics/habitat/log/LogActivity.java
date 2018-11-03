@@ -46,8 +46,7 @@ public class LogActivity extends AppCompatActivity {
                 finish();
                 return true;
             default:
-                break;
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 }

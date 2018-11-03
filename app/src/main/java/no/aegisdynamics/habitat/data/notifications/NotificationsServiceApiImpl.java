@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import no.aegisdynamics.habitat.R;
+import no.aegisdynamics.habitat.util.ErrorParserHelper;
+import no.aegisdynamics.habitat.util.LogHelper;
 import no.aegisdynamics.habitat.util.NotificationTimestampComparator;
 import no.aegisdynamics.habitat.util.VolleyResponseHelper;
 import no.aegisdynamics.habitat.zautomation.ZWayNetworkHelper;
@@ -33,6 +35,8 @@ import no.aegisdynamics.habitat.util.RequestQueueSingelton;
  * Implementation of the Notification Service API that communicates with the ZAutomation API
  */
 public class NotificationsServiceApiImpl implements NotificationsServiceApi {
+
+    private static final String TAG = "NotificationsServiceApi";
 
     @Override
     public void getAllNotifications(Context context, final NotificationsServiceCallback<List<Notification>> callback) {
@@ -52,61 +56,12 @@ public class NotificationsServiceApiImpl implements NotificationsServiceApi {
             obj.put("id", notificationId);
             obj.put("redeemed", true);
 
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.PUT, url, obj, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // Verify response code
-                        if (VolleyResponseHelper.hasResponseReturnedOK(response)) {
-                            callback.onLoaded(true);
-                        } else {
-                            callback.onError(context.getString(R.string.error_generic));
-                        }
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        if (error instanceof AuthFailureError) {
-                            callback.onError(context.getString(R.string.devices_authentication_error));
-                        }
-                        // Volley cant handle empty 204 responses. So we need this hack for now.
-                        else if (error instanceof ParseError) {
-                            callback.onLoaded(true);
-                        }
-                        else {
-                            if (error.getLocalizedMessage() != null) {
-                                callback.onError(error.getLocalizedMessage());
-                            } else{
-                                callback.onError(context.getString(R.string.error_generic));
-                            }
-                        }
-                    }
-                }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                return ZWayNetworkHelper.getAuthenticationHeaders(context);
-            }
-        };
-
-        // Access the RequestQueue through your singleton class.
-        RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
-        } catch (JSONException ex) {
-            callback.onError(ex.getMessage());
-        }
-    }
-
-    @Override
-    public void deleteNotification(final Context context, final long notificationId, final NotificationsServiceCallback<Boolean> callback) {
-        String url = ZWayNetworkHelper.getZwayNotificationDeleteUrl(context, notificationId);
-
             JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                    (Request.Method.DELETE, url, null, new Response.Listener<JSONObject>() {
+                    (Request.Method.PUT, url, obj, new Response.Listener<JSONObject>() {
 
                         @Override
                         public void onResponse(JSONObject response) {
+                            // Verify response code
                             if (VolleyResponseHelper.hasResponseReturnedOK(response)) {
                                 callback.onLoaded(true);
                             } else {
@@ -124,24 +79,71 @@ public class NotificationsServiceApiImpl implements NotificationsServiceApi {
                             // Volley cant handle empty 204 responses. So we need this hack for now.
                             else if (error instanceof ParseError) {
                                 callback.onLoaded(true);
-                            }
-                            else {
+                            } else {
                                 if (error.getLocalizedMessage() != null) {
                                     callback.onError(error.getLocalizedMessage());
-                                } else{
+                                } else {
                                     callback.onError(context.getString(R.string.error_generic));
                                 }
                             }
                         }
                     }) {
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     return ZWayNetworkHelper.getAuthenticationHeaders(context);
                 }
             };
 
             // Access the RequestQueue through your singleton class.
-            RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
+            RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
+        } catch (JSONException ex) {
+            callback.onError(ex.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteNotification(final Context context, final long notificationId, final NotificationsServiceCallback<Boolean> callback) {
+        String url = ZWayNetworkHelper.getZwayNotificationDeleteUrl(context, notificationId);
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.DELETE, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if (VolleyResponseHelper.hasResponseReturnedOK(response)) {
+                            callback.onLoaded(true);
+                        } else {
+                            callback.onError(context.getString(R.string.error_generic));
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                        if (error instanceof AuthFailureError) {
+                            callback.onError(context.getString(R.string.devices_authentication_error));
+                        }
+                        // Volley cant handle empty 204 responses. So we need this hack for now.
+                        else if (error instanceof ParseError) {
+                            callback.onLoaded(true);
+                        } else {
+                            if (error.getLocalizedMessage() != null) {
+                                callback.onError(error.getLocalizedMessage());
+                            } else {
+                                callback.onError(context.getString(R.string.error_generic));
+                            }
+                        }
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return ZWayNetworkHelper.getAuthenticationHeaders(context);
+            }
+        };
+
+        // Access the RequestQueue through your singleton class.
+        RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
 
     }
 
@@ -172,7 +174,6 @@ public class NotificationsServiceApiImpl implements NotificationsServiceApi {
                                             boolean redeemed = notificationObject.getBoolean("redeemed");
                                             DateFormat notificationsFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS'Z'");
                                             notificationsFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-                                            String timestampString = notificationObject.getString("timestamp");
                                             Date timestamp = notificationsFormat.parse(notificationObject.getString("timestamp"));
                                             JSONObject messageObject = notificationObject.getJSONObject("message");
                                             String deviceName = messageObject.getString("dev");
@@ -184,7 +185,7 @@ public class NotificationsServiceApiImpl implements NotificationsServiceApi {
                                         }
                                     } catch (JSONException e) {
                                         // Could not parse json objects
-                                        //callback.onError(context.getString(R.string.error_json));
+                                        LogHelper.logDebug(context, TAG, e.getMessage());
                                     } catch (ParseException ex) {
                                         // Could not parse timestamp
                                         callback.onError(context.getString(R.string.error_parsing));
@@ -205,27 +206,17 @@ public class NotificationsServiceApiImpl implements NotificationsServiceApi {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        if (error instanceof AuthFailureError) {
-                            callback.onError(context.getString(R.string.devices_authentication_error));
-                        }
-                        else {
-                            if (error.getLocalizedMessage() != null) {
-                                callback.onError(error.getLocalizedMessage());
-                            } else{
-                                callback.onError(context.getString(R.string.error_generic));
-                            }
-                        }
+                        callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, error));
                     }
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 return ZWayNetworkHelper.getAuthenticationHeaders(context);
             }
         };
 
         // Access the RequestQueue through your singleton class.
-        RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
+        RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
     }
 
 }

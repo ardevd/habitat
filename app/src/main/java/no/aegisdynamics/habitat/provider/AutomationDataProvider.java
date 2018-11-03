@@ -18,8 +18,9 @@ public class AutomationDataProvider extends ContentProvider implements DeviceDat
 
     private DbHelper db;
     private final UriMatcher matcher = new UriMatcher(0);
-    private final static int URI_ALL_AUTOMATIONS = 1;
-    private final static int URI_ONE_AUTOMATION = 2;
+    private static final int URI_ALL_AUTOMATIONS = 1;
+    private static final int URI_ONE_AUTOMATION = 2;
+    private static final String UNSUPPORTED_URI = "Unsupported URI: ";
     
     public AutomationDataProvider() {
         matcher.addURI(AUTHORITY_AUTOMATIONS, ENTITY_AUTOMATION + "/#", URI_ONE_AUTOMATION);
@@ -58,7 +59,7 @@ public class AutomationDataProvider extends ContentProvider implements DeviceDat
             case URI_ONE_AUTOMATION:
                 return SINGLE_AUTOMATION_MIME_TYPE;
             default:
-                throw new IllegalArgumentException("Unsupported URI: " + uri);
+                throw new IllegalArgumentException(UNSUPPORTED_URI + uri);
         }
     }
     @Nullable
@@ -75,7 +76,7 @@ public class AutomationDataProvider extends ContentProvider implements DeviceDat
                 break;
 
             default:
-                throw new IllegalArgumentException("Unsupported URI: " + uri);
+                throw new IllegalArgumentException(UNSUPPORTED_URI + uri);
         }
         if (result != null) {
             sendChangeNotification(uri);
@@ -91,7 +92,7 @@ public class AutomationDataProvider extends ContentProvider implements DeviceDat
                 count = database.delete(TABLE_AUTOMATION, where, whereArgs);
                 break;
             default:
-                throw new IllegalArgumentException("Unsupported URI: " + uri);
+                throw new IllegalArgumentException(UNSUPPORTED_URI + uri);
         }
         if (count > 0) {
             sendChangeNotification(uri);
@@ -112,7 +113,7 @@ public class AutomationDataProvider extends ContentProvider implements DeviceDat
                 count = database.update(TABLE_AUTOMATION, contentValues, where, whereArgs);
                 break;
             default:
-                throw new IllegalArgumentException("Unsupported URI: " + uri);
+                throw new IllegalArgumentException(UNSUPPORTED_URI + uri);
         }
         if (count > 0) {
             sendChangeNotification(uri);

@@ -9,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import no.aegisdynamics.habitat.data.Injection;
 import no.aegisdynamics.habitat.data.notifications.Notification;
 import no.aegisdynamics.habitat.itemListeners.NotificationItemListener;
 import no.aegisdynamics.habitat.util.SnackbarHelper;
+import no.aegisdynamics.habitat.util.SwipeUtil;
 
 public class NotificationsFragment extends Fragment implements NotificationsContract.View {
 
@@ -75,36 +75,32 @@ public class NotificationsFragment extends Fragment implements NotificationsCont
             }
         });
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteTouchCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(getSwipeToDeleteNotification());
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
 
         return root;
     }
 
-    ItemTouchHelper.SimpleCallback swipeToDeleteTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+    private SwipeUtil getSwipeToDeleteNotification() {
+        SwipeUtil swipeHelper = new SwipeUtil(0, ItemTouchHelper.LEFT, getActivity()) {
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                // Delete notification.
+                int swipedItemPosition = viewHolder.getAdapterPosition();
+                mActionsListener.deleteNotification(mListAdapter.getItem(swipedItemPosition));
+                mListAdapter.notifyItemRemoved(swipedItemPosition);
+            }
+        };
 
-
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-            // TODO: Implement this in the list adapter
-            // Remove swiped item from list and notify the RecyclerView
-            final int position = viewHolder.getAdapterPosition();
-
-            // Delete notification.
-            mActionsListener.deleteNotification(mListAdapter.getItem(position));
-            mListAdapter.notifyItemRemoved(position);
-        }
-    };
+        //set swipe background-Color
+        swipeHelper.setLeftColorCode(ContextCompat.getColor(getActivity(), R.color.colorAccent));
+        return swipeHelper;
+    }
 
     /**
      * Listener for clicks on notifications in the RecyclerView.
      */
-    private NotificationItemListener mItemListener = new NotificationItemListener() {
+    private final NotificationItemListener mItemListener = new NotificationItemListener() {
 
         @Override
         public void onNotificationClick(Notification clickedNotification) {
@@ -125,19 +121,15 @@ public class NotificationsFragment extends Fragment implements NotificationsCont
     };
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-    }
-
-    @Override
     public void showNotifications(List<Notification> notifications) {
         mListAdapter.replaceData(notifications);
     }
 
     @Override
     public void showNotificationsLoadError(String error) {
-        SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+        }
     }
 
     @Override
@@ -157,23 +149,31 @@ public class NotificationsFragment extends Fragment implements NotificationsCont
 
     @Override
     public void showNotificationDeleted() {
-        SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.notification_deleted), getView());
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.notification_deleted), getView());
+        }
     }
 
     @Override
     public void showNotificationDeletedError(String error) {
-        SnackbarHelper.showSimpleSnackbarMessage(error, getView());
-        mActionsListener.loadNotifications();
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+            mActionsListener.loadNotifications();
+        }
     }
 
     @Override
     public void showNotificationRedeemed() {
-        SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.notification_redeemed), getView());
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.notification_redeemed), getView());
+        }
     }
 
     @Override
     public void showNotificationRedeemedError(String error) {
-        SnackbarHelper.showSimpleSnackbarMessage(error, getView());
-        mActionsListener.loadNotifications();
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+            mActionsListener.loadNotifications();
+        }
     }
 }

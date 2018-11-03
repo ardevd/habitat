@@ -25,7 +25,7 @@ import no.aegisdynamics.habitat.itemListeners.NotificationItemListener;
  * Notifications adapter used for display notification items in a recycler view.
  */
 
-public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.ViewHolder> {
+public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.NotificationsViewHolder> {
 
     private List<Notification> mNotifications;
     private final NotificationItemListener mItemListener;
@@ -37,16 +37,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NotificationsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View notificationView = inflater.inflate(R.layout.item_notification, parent, false);
-        return new ViewHolder(notificationView, mItemListener);
+        return new NotificationsViewHolder(notificationView, mItemListener);
     }
 
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(NotificationsViewHolder holder, int position) {
         final Notification notification = mNotifications.get(position);
 
         holder.deviceName.setText(notification.getDeviceName());
@@ -71,17 +71,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         mNotifications = notifications;
     }
 
+    public Notification getItem(int position) {
+        return mNotifications.get(position);
+    }
+
     @Override
     public int getItemCount() {
         return mNotifications.size();
     }
 
-    public Notification getItem(int position) {
-        return mNotifications.get(position);
-    }
-
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
+    public class NotificationsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
         final TextView deviceName;
 
@@ -93,7 +92,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
         private final NotificationItemListener mItemListener;
 
-        ViewHolder(View itemView, NotificationItemListener itemListener) {
+        NotificationsViewHolder(View itemView, NotificationItemListener itemListener) {
             super(itemView);
             mItemListener = itemListener;
             deviceName = itemView.findViewById(R.id.item_notification_device);

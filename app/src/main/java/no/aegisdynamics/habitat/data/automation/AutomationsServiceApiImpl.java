@@ -31,7 +31,7 @@ public class AutomationsServiceApiImpl implements AutomationsServiceApi, DeviceD
         }
         automationsCursor.close();
 
-        if (listAutomations.size() == 0) {
+        if (listAutomations.isEmpty()) {
             // No automations available, lets disable the ON_BOOT_COMPLETE receiver.
             ComponentName receiver = new ComponentName(context, AutomatorOnBootReceiver.class);
             PackageManager pm = context.getPackageManager();

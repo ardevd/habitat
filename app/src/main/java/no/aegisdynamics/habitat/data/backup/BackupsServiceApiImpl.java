@@ -13,9 +13,9 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,7 +46,7 @@ public class BackupsServiceApiImpl implements BackupsServiceApi {
         List<Backup> backups = new ArrayList<>();
         if (verifyBackupDirectory(context)) {
             File backupDirectory = new File(context.getFilesDir(), BACKUPS_DIR);
-            File backupFiles[] = backupDirectory.listFiles();
+            File[] backupFiles = backupDirectory.listFiles();
             for (File backupFile : backupFiles) {
                 Backup backup = new Backup(backupFile.getName(),
                         backupFile.length(), new Date(backupFile.lastModified()));
@@ -90,7 +90,7 @@ public class BackupsServiceApiImpl implements BackupsServiceApi {
                 }
             }, null) {
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     return ZWayNetworkHelper.getAuthenticationHeaders(context);
                 }
             };
@@ -101,7 +101,7 @@ public class BackupsServiceApiImpl implements BackupsServiceApi {
             request.setRetryPolicy(policy);
 
             // Access the RequestQueue through the singleton class.
-            RequestQueueSingelton.getInstance(context).addToRequestQueue(request);
+            RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(request);
         }
     }
 
@@ -124,14 +124,14 @@ public class BackupsServiceApiImpl implements BackupsServiceApi {
         return backupDirectory.exists() || backupDirectory.mkdir();
     }
 
-    private class CreateBackupFileTask extends AsyncTask<byte[], Void, String> {
+    private static class CreateBackupFileTask extends AsyncTask<byte[], Void, String> {
 
-        private final Context mContext;
+        private final WeakReference<Context> mContext;
         private final BackupsServiceCallback<Boolean> mCallback;
         private final boolean isManualBackup;
 
-        private CreateBackupFileTask (Context context, boolean manualBackup, BackupsServiceCallback<Boolean> callback) {
-            mContext = context;
+        private CreateBackupFileTask(Context context, boolean manualBackup, BackupsServiceCallback<Boolean> callback) {
+            mContext = new WeakReference<>(context);
             mCallback = callback;
             isManualBackup = manualBackup;
         }
@@ -139,38 +139,37 @@ public class BackupsServiceApiImpl implements BackupsServiceApi {
         @Override
         protected String doInBackground(byte[]... responses) {
 
-                String baseFileName = "zway.zab";
-                if (!isManualBackup) {
-                    baseFileName = String.format("zway-%s.zab", BACKUPS_SCHEDULED_IDENTIFIER);
-                }
-                String name = String.format("%s-%s",
-                        new SimpleDateFormat("yyyymmdd_HHmmss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
-                        baseFileName);
+            String baseFileName = "zway.zab";
+            if (!isManualBackup) {
+                baseFileName = String.format("zway-%s.zab", BACKUPS_SCHEDULED_IDENTIFIER);
+            }
+            String name = String.format("%s-%s",
+                    new SimpleDateFormat("yyyymmdd_HHmmss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
+                    baseFileName);
             try (FileOutputStream outputStream = new FileOutputStream(new File(String.format("%s/%s",
-                    mContext.getFilesDir(),
-                    BACKUPS_DIR), name))){
+                    mContext.get().getFilesDir(),
+                    BACKUPS_DIR), name))) {
                 outputStream.write(responses[0]);
                 outputStream.flush();
-            } catch (FileNotFoundException ex) {
-                return ex.getMessage();
             } catch (IOException ex) {
+                LogHelper.logError(mContext.get(), "Backup Service", ex.getMessage());
                 return ex.getMessage();
             }
 
             // If we are doing a scheduled backup, delete backups that are older than
             // the retention period.
             if (!isManualBackup) {
-                File backupDirectory = new File(mContext.getFilesDir(), BACKUPS_DIR);
-                File backupFiles[] = backupDirectory.listFiles();
+                File backupDirectory = new File(mContext.get().getFilesDir(), BACKUPS_DIR);
+                File[] backupFiles = backupDirectory.listFiles();
                 for (File backupFile : backupFiles) {
                     if (backupFile.getName().contains(BACKUPS_SCHEDULED_IDENTIFIER)) {
-                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
+                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext.get());
                         int retentionDays = settings.getInt("backup_retention", RETENTION_DAYS);
-                        Calendar calendar  = Calendar.getInstance();
+                        Calendar calendar = Calendar.getInstance();
                         calendar.add(Calendar.DAY_OF_YEAR, -retentionDays);
-                        if (new Date(backupFile.lastModified()).before(calendar.getTime())) {
-                            // Delete the file
-                            backupFile.delete();
+                        if (new Date(backupFile.lastModified()).before(calendar.getTime())
+                                && !backupFile.delete()) {
+                            return mContext.get().getString(R.string.backup_delete_error);
                         }
                     }
                 }

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Helper class for parsing profile data from JSON API.
  */
-public class ProfileDataHelper {
+class ProfileDataHelper {
 
     private ProfileDataHelper() {
         // Empty constructor

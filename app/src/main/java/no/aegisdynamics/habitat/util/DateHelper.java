@@ -8,8 +8,12 @@ import java.util.Locale;
 
 public class DateHelper {
 
-    private final static String FORMAT_FULL_TIMESTAMP = "yyyy-MM-dd HH:mm";
-    private final static String FORMAT_SIMPLE_TIMESTAMP = "HH:mm";
+    private DateHelper() {
+        // Required empty private constructor
+    }
+
+    private static final String FORMAT_FULL_TIMESTAMP = "yyyy-MM-dd HH:mm";
+    private static final String FORMAT_SIMPLE_TIMESTAMP = "HH:mm";
 
     public static String getDefaultTimestampString() {
         return new SimpleDateFormat(FORMAT_SIMPLE_TIMESTAMP, Locale.getDefault()).format(new Date());

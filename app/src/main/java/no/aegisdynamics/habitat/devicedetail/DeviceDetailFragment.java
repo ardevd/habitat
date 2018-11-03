@@ -3,7 +3,6 @@ package no.aegisdynamics.habitat.devicedetail;
 
 import android.animation.PropertyValuesHolder;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,20 +56,16 @@ import no.aegisdynamics.habitat.data.device.Device;
 import no.aegisdynamics.habitat.data.notifications.Notification;
 import no.aegisdynamics.habitat.itemListeners.DeviceCommandListener;
 import no.aegisdynamics.habitat.itemListeners.NotificationItemListener;
-import no.aegisdynamics.habitat.locationdetail.LocationDetailActivity;
 import no.aegisdynamics.habitat.provider.DeviceDataContract;
 import no.aegisdynamics.habitat.util.DeviceStatusHelper;
 import no.aegisdynamics.habitat.util.FavoritesHelper;
 import no.aegisdynamics.habitat.util.SnackbarHelper;
 
-public class DeviceDetailFragment extends Fragment implements DeviceDetailContract.View, DeviceDataContract{
+public class DeviceDetailFragment extends Fragment implements DeviceDetailContract.View, DeviceDataContract {
 
-    public static final String ARGUMENT_DEVICE_ID = "DEVICE_ID";
-    public static final String ARGUMENT_DEVICE_STATE = "DEVICE_STATE";
-    public static final String ARGUMENT_DEVICE_NOTATION = "DEVICE_NOTATION";
-    public static final String ARGUMENT_DEVICE_PROBE_TITLE = "DEVICE_PROBE_TITLE";
-    public static final String LOG_TAG = "Habitat";
-    private static Device detailedDevice;
+    private static final String ARGUMENT_DEVICE = "device";
+    private static final String LOG_TAG = "Habitat";
+    private Device detailedDevice;
     private NotificationsAdapter mListAdapter;
     private DeviceDetailContract.UserActionsListener mActionsListener;
 
@@ -112,14 +107,9 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
         // Required empty constructor
     }
 
-    public static DeviceDetailFragment newInstance(String deviceId, String deviceState,
-                                                   String deviceNotation,
-                                                   String deviceProbeTitle) {
+    public static DeviceDetailFragment newInstance(Device device) {
         Bundle arguments = new Bundle();
-        arguments.putString(ARGUMENT_DEVICE_ID, deviceId);
-        arguments.putString(ARGUMENT_DEVICE_STATE, deviceState);
-        arguments.putString(ARGUMENT_DEVICE_NOTATION, deviceNotation);
-        arguments.putString(ARGUMENT_DEVICE_PROBE_TITLE, deviceProbeTitle);
+        arguments.putParcelable(ARGUMENT_DEVICE, device);
         DeviceDetailFragment fragment = new DeviceDetailFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -145,6 +135,7 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns));
 
+        detailedDevice = getArguments().getParcelable(ARGUMENT_DEVICE);
         // Pull-to-refresh
         SwipeRefreshLayout swipeRefreshLayout = root.findViewById(R.id.refresh_layout_devicedetail);
         swipeRefreshLayout.setColorSchemeColors(
@@ -154,7 +145,7 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mActionsListener.loadNotificationsForDevice(getArguments().getString(ARGUMENT_DEVICE_ID));
+                mActionsListener.loadNotificationsForDevice(detailedDevice.getId());
             }
         });
 
@@ -189,19 +180,6 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
         seekbarSwitchMultiLevel = inflatedSwitchMultilevelControlLayout.findViewById(R.id.devicedetail_switchmultilevel_seekbar);
         switchMultilevel = inflatedSwitchMultilevelControlLayout.findViewById(R.id.devicedetail_switchmultilevel_switch);
 
-        RelativeLayout locationLayout = root.findViewById(R.id.devicedetail_location_layout);
-
-        locationLayout.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // Show room details of associated location when tapped, if location is available.
-                Intent intent = new Intent(getContext(), LocationDetailActivity.class);
-                intent.putExtra(LocationDetailActivity.EXTRA_LOCATION_ID, detailedDevice.getLocationId());
-                startActivity(intent);
-            }
-        });
-
         // Configure the chart tooltip
         // TODO: Only do this with supported devices
         configureToolTip();
@@ -212,7 +190,7 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
     /**
      * Listener for clicks on notifications in the RecyclerView.
      */
-    private NotificationItemListener mItemListener = new NotificationItemListener() {
+    private final NotificationItemListener mItemListener = new NotificationItemListener() {
 
         @Override
         public void onNotificationClick(Notification clickedNotification) {
@@ -232,14 +210,11 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
     @Override
     public void onResume() {
         super.onResume();
-        String deviceId = getArguments().getString(ARGUMENT_DEVICE_ID);
-        String deviceState = getArguments().getString(ARGUMENT_DEVICE_STATE);
-        String deviceNotation = getArguments().getString(ARGUMENT_DEVICE_NOTATION);
-        String deviceProbeTitle = getArguments().getString(ARGUMENT_DEVICE_PROBE_TITLE);
-        tvSensorValue.setText(deviceState);
-        tvSensorNotation.setText(deviceNotation);
-        tvSensorProbeTitle.setText(deviceProbeTitle);
-        mActionsListener.openDevice(deviceId);
+
+        tvSensorValue.setText(detailedDevice.getStatus());
+        tvSensorNotation.setText(detailedDevice.getStatusNotation());
+        tvSensorProbeTitle.setText(detailedDevice.getDeviceProbeTitle());
+        mActionsListener.openDevice(detailedDevice.getId());
     }
 
     @Override
@@ -255,9 +230,10 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
             case R.id.menu_devicedetail_custom_command:
                 // Show dialog for custom command input
                 showCustomCommandDialog();
-                break;
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
 
@@ -289,12 +265,7 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
 
     @Override
     public void showTitle(String title) {
-        ((DeviceDetailActivity)getActivity()).getSupportActionBar().setTitle(title);
-    }
-
-    @Override
-    public void hideTitle() {
-        ((DeviceDetailActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.devicedetail_title_generic));
+        ((DeviceDetailActivity) getActivity()).getSupportActionBar().setTitle(title);
     }
 
     @Override
@@ -316,7 +287,7 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
                 boolean stateIsOn = DeviceStatusHelper.parseStatusMessageToBoolean(device.getStatus());
                 switchBinary.setOnCheckedChangeListener(null);
                 switchBinary.setChecked(stateIsOn);
-                if (stateIsOn){
+                if (stateIsOn) {
                     tvSwitchStateOn.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
                     tvSwitchStateOff.setTextColor(ContextCompat.getColor(getContext(), R.color.colorGray));
                 } else {
@@ -339,7 +310,7 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
 
             case DEVICE_TYPE_SWITCH_MULTILEVEL:
                 tvSwitchMultilevelValue.setText(device.getStatus());
-                int multilevelValue = Integer.valueOf(device.getStatus());
+                int multilevelValue = Integer.parseInt(device.getStatus());
                 seekbarSwitchMultiLevel.setProgress(multilevelValue);
                 switchMultilevel.setOnCheckedChangeListener(null);
                 if (multilevelValue > 0) {
@@ -381,18 +352,15 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
 
             case DEVICE_TYPE_BATTERY:
                 String batteryValue = String.format("%s %s", device.getStatus(), device.getStatusNotation());
-                int batteryValueInt = Integer.valueOf(device.getStatus());
+                int batteryValueInt = Integer.parseInt(device.getStatus());
 
                 if (batteryValueInt < 20) {
                     ivBatteryIcon.setImageResource(R.drawable.ic_battery_0);
-                }
-                else if (batteryValueInt < 40 && batteryValueInt > 20) {
+                } else if (batteryValueInt < 40 && batteryValueInt > 20) {
                     ivBatteryIcon.setImageResource(R.drawable.ic_battery_40);
-                }
-                else if (batteryValueInt < 60 && batteryValueInt > 40) {
+                } else if (batteryValueInt < 60 && batteryValueInt > 40) {
                     ivBatteryIcon.setImageResource(R.drawable.ic_battery_60);
-                }
-                else if (batteryValueInt < 80 && batteryValueInt > 60) {
+                } else if (batteryValueInt < 80 && batteryValueInt > 60) {
                     ivBatteryIcon.setImageResource(R.drawable.ic_battery_80);
                 }
 
@@ -401,10 +369,10 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
 
             case DEVICE_SENSOR_THERMOSTAT:
                 try {
-                    tvThermostatValue.setText(String.format(Locale.getDefault(),"%.1f", Double.valueOf(device.getStatus())));
+                    tvThermostatValue.setText(String.format(Locale.getDefault(), "%.1f", Double.valueOf(device.getStatus())));
                     tvThermostatNotation.setText(device.getStatusNotation());
 
-                    int currentProgress = ((int) Double.parseDouble(device.getStatus()) * 10) - ((device.getDeviceMinValue() * 10));
+                    int currentProgress = ((int) Double.parseDouble(device.getStatus()) * 10) - (device.getDeviceMinValue() * 10);
                     seekbarThermostat.setMaxProcess((device.getDeviceMaxValue()) * 10 - (device.getDeviceMinValue() * 10));
                     seekbarThermostat.setCurProcess(currentProgress);
 
@@ -503,11 +471,10 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
         handler.postDelayed(new Runnable() {
             public void run() {
                 // Actions to do after 1 second
-                String deviceId = getArguments().getString(ARGUMENT_DEVICE_ID);
-                mActionsListener.openDevice(deviceId);
-                mActionsListener.loadNotificationsForDevice(deviceId);
+                mActionsListener.openDevice(detailedDevice.getId());
+                mActionsListener.loadNotificationsForDevice(detailedDevice.getId());
             }
-        }, 1000);
+        }, 3000);
     }
 
     @Override
@@ -520,7 +487,7 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
     public void updateFavoriteIndicator(final String deviceId) {
 
         Set<String> favoriteDevices = FavoritesHelper.getFavoriteDevicesFromPrefs(getContext());
-        if (favoriteDevices.contains(deviceId)){
+        if (favoriteDevices.contains(deviceId)) {
             ibFavorite.setImageResource(R.drawable.ic_star_24dp);
             isFavorite = true;
         } else {
@@ -528,8 +495,7 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
             isFavorite = false;
         }
 
-        ibFavorite.setOnClickListener(new View.OnClickListener()
-        {
+        ibFavorite.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (isFavorite) {
                     mActionsListener.makeNotFavorite(deviceId, getContext());
@@ -542,25 +508,14 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
     }
 
     @Override
-    public void showDeviceAddedToDash(String deviceId) {
-        SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.devicedetail_dash_added), getView());
-    }
-
-    @Override
-    public void showDeviceRemovedFromDash(String deviceId) {
-        SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.devicedetail_dash_removed), getView());
-    }
-
-    @Override
     public void showNotifications(List<Notification> notifications) {
         if (getView() != null) {
-
 
             RelativeLayout emptyEventsLayout = getView().findViewById(R.id.devicedetail_events_empty_layout);
             SwipeRefreshLayout eventsListLayout = getView().findViewById(R.id.refresh_layout_devicedetail);
             SwipeRefreshLayout multilevelEventsListLayout = getView().findViewById(R.id.refresh_layout_sensormultileveldetail);
 
-            if (notifications.size() > 0) {
+            if (!notifications.isEmpty()) {
                 emptyEventsLayout.setVisibility(View.GONE);
                 // Show charts if device type is supported
                 if (detailedDevice != null) {
@@ -591,22 +546,14 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
     }
 
     @Override
-    public void showNotificationRedeemError(String error) {
-        SnackbarHelper.showSimpleSnackbarMessage(error, getView());
-        String deviceId = getArguments().getString(ARGUMENT_DEVICE_ID);
-        mActionsListener.loadNotificationsForDevice(deviceId);
-    }
-
-    @Override
     public void showNotificationDeleted() {
         SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.notification_deleted), getView());
     }
 
     @Override
-    public void showNotificationDeletedError(String error) {
+    public void showNotificationUpdateError(String error) {
         SnackbarHelper.showSimpleSnackbarMessage(error, getView());
-        String deviceId = getArguments().getString(ARGUMENT_DEVICE_ID);
-        mActionsListener.loadNotificationsForDevice(deviceId);
+        mActionsListener.loadNotificationsForDevice(detailedDevice.getId());
     }
 
     @Override
@@ -618,7 +565,7 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
             alertDialog.setView(dialogView);
             TextView dialogSubtitle = dialogView.findViewById(R.id.custom_command_subtitle);
             final EditText commandInput = dialogView.findViewById(R.id.custom_command_input);
-            dialogSubtitle.setText(getArguments().getString(ARGUMENT_DEVICE_ID));
+            dialogSubtitle.setText(detailedDevice.getId());
             /* When positive (yes/ok) is clicked */
             alertDialog.setPositiveButton(getString(R.string.action_ok), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
@@ -671,8 +618,8 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
 
             for (Notification notification : notifications) {
                 String message = notification.getMessage();
-                if (message != null) {
-                    float value = Float.valueOf(message.replace(getArguments().getString(ARGUMENT_DEVICE_NOTATION), ""));
+                if (message != null && detailedDevice.getStatusNotation() != null) {
+                    float value = Float.parseFloat(message.replace(detailedDevice.getStatusNotation(), ""));
                     String dateStr = dateFormat.format(notification.getTimestamp());
                     dataset.addPoint(dateStr, value);
                     dataSetList.add(Math.round(value));
@@ -681,7 +628,7 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
             }
 
             // Tooltip animation and presentation.
-            if (dataSetList.size() > 0) {
+            if (!dataSetList.isEmpty()) {
                 lineChart.addData(dataset);
 
                 final int LINE_MAX = Collections.max(dataSetList) + 5;
@@ -738,10 +685,10 @@ public class DeviceDetailFragment extends Fragment implements DeviceDetailContra
     /**
      * Listener for commands to devices.
      */
-    private DeviceCommandListener mCommandListener = new DeviceCommandListener() {
+    private final DeviceCommandListener mCommandListener = new DeviceCommandListener() {
         @Override
         public void onCommand(Device commandedDevice, String command) {
-           mActionsListener.sendCommand(commandedDevice, command);
+            mActionsListener.sendCommand(commandedDevice, command);
         }
 
     };

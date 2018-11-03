@@ -2,7 +2,6 @@ package no.aegisdynamics.habitat.data.profile;
 
 import android.content.Context;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -13,7 +12,7 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
-import no.aegisdynamics.habitat.R;
+import no.aegisdynamics.habitat.util.ErrorParserHelper;
 import no.aegisdynamics.habitat.util.LogHelper;
 import no.aegisdynamics.habitat.util.RequestQueueSingelton;
 import no.aegisdynamics.habitat.util.VolleyResponseHelper;
@@ -25,7 +24,7 @@ import no.aegisdynamics.habitat.zautomation.ZWayNetworkHelper;
 
 public class ProfileServiceApiImpl implements ProfileServiceApi {
 
-    private final String TAG = "Profile API";
+    private static final String TAG = "Profile API";
 
     @Override
     public void getProfile(final Context context, final String username, final ProfileServiceCallback<Profile> callback) {
@@ -43,6 +42,7 @@ public class ProfileServiceApiImpl implements ProfileServiceApi {
                                 Profile userProfile = ProfileDataHelper.getProfileFromJsonData(dataObject);
                                 if (userProfile != null) {
                                     callback.onLoaded(userProfile);
+                                    return;
                                 }
                             }
 
@@ -58,25 +58,16 @@ public class ProfileServiceApiImpl implements ProfileServiceApi {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         LogHelper.logError(context, TAG, error.getMessage());
-                        if (error instanceof AuthFailureError) {
-                            callback.onError(context.getString(R.string.devices_authentication_error));
-                        }
-                        else {
-                            if (error.getLocalizedMessage() != null) {
-                                callback.onError(error.getLocalizedMessage());
-                            } else{
-                                callback.onError(context.getString(R.string.error_generic));
-                            }
-                        }
+                        callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, error));
                     }
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 return ZWayNetworkHelper.getAuthenticationHeaders(context);
             }
         };
 
         // Access the RequestQueue through your singleton class.
-        RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
+        RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
     }
 }

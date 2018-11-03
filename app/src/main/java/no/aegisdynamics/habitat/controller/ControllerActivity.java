@@ -1,10 +1,10 @@
 package no.aegisdynamics.habitat.controller;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 
 import no.aegisdynamics.habitat.R;
@@ -37,7 +37,7 @@ public class ControllerActivity extends BaseActivity {
 
     private void initFragment(Fragment controllerFragment) {
         // Add ControllerFragment to the layout
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.contentFrame, controllerFragment);
         transaction.commit();

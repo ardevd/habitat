@@ -138,25 +138,30 @@ public class LogFragment extends Fragment implements LogContract.View {
 
     @Override
     public void showLogDeleteError(String error) {
-        SnackbarHelper.showSimpleSnackbarMessage(error, getView());
-
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+        }
     }
 
     @Override
     public void showLogsDeleted(int count) {
-        SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.logs_logs_deleted, count), getView());
-        mActionsListener.loadLogs();
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.logs_logs_deleted, count), getView());
+            mActionsListener.loadLogs();
+        }
     }
 
     @Override
     public void showLogsDeletedError(String error) {
-        SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+        }
     }
 
     /**
      * Listener for log entry clicks in the RecyclerView
      */
-    private LogItemListener mItemListener = new LogItemListener() {
+    private final LogItemListener mItemListener = new LogItemListener() {
 
         @Override
         public void onLogItemClicked(HabitatLog clickedLogEntry) {

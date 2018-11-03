@@ -48,10 +48,13 @@ public class LocationAddFragment extends Fragment implements LocationAddContract
 
         switch (item.getItemId()) {
             case R.id.menu_locationadd_save:
-                Location mLocation = new Location(0, locationTitleEditText.getText().toString(), null, 0);
+                Location mLocation = new Location(0, locationTitleEditText.getText().toString(),
+                        null, 0);
                 mActionsListener.saveLocation(mLocation);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

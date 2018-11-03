@@ -8,7 +8,7 @@ import java.util.List;
 import no.aegisdynamics.habitat.data.automation.Automation;
 
 
-public interface AutomationsContract {
+interface AutomationsContract {
 
     interface Activity {
         void showFabHint();

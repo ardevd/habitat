@@ -9,7 +9,7 @@ import no.aegisdynamics.habitat.data.device.Device;
 /**
  * Specifies the contract between the view and the presenter.
  */
-public interface DevicesContract {
+interface DevicesContract {
 
     interface View {
         void showDevices(List<Device> devices);

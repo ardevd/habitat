@@ -5,7 +5,7 @@ import android.content.Context;
 
 import java.util.List;
 
-public interface LogServiceApi {
+interface LogServiceApi {
 
     interface LogServiceCallback<T> {
         void onLoaded(T logs);

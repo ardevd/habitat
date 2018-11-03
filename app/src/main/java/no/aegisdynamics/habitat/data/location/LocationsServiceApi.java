@@ -9,7 +9,7 @@ import java.util.List;
  * be piped through this interface.
  */
 
-public interface LocationsServiceApi {
+interface LocationsServiceApi {
 
     interface LocationsServiceCallback<T> {
         void onLoaded (T Locations);

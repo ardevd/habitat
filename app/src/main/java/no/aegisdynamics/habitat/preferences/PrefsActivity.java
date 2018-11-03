@@ -40,7 +40,8 @@ public class PrefsActivity extends AppCompatActivity {
             case android.R.id.home:
                 this.finish();
                 return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 }

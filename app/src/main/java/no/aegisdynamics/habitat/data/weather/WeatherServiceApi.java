@@ -6,7 +6,7 @@ import android.content.Context;
  * Defines an interface to the weather service API. All weather requests should be piped
  * through this interface.
  */
-public interface WeatherServiceApi {
+interface WeatherServiceApi {
 
     interface WeatherServiceCallback<T> {
         void onLoaded(T weather);

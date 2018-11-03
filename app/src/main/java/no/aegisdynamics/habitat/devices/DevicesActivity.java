@@ -1,9 +1,9 @@
 package no.aegisdynamics.habitat.devices;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 
@@ -34,7 +34,7 @@ public class DevicesActivity extends BaseActivity {
 
     private void initFragment(Fragment devicesFragment) {
         // Add DeviceFragment to the layout
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.contentFrame, devicesFragment);
         transaction.commit();

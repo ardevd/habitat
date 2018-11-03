@@ -16,10 +16,11 @@ import android.support.annotation.VisibleForTesting;
 public class ImageFileImpl implements ImageFile {
 
     @VisibleForTesting
+    private
     File mImageFile;
 
     @NonNull
-    final Context mContext;
+    private final Context mContext;
 
     public ImageFileImpl(@NonNull Context context) {
         mContext = context;

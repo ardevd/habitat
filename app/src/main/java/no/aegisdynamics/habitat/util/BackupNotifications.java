@@ -16,9 +16,9 @@ import no.aegisdynamics.habitat.backup.BackupActivity;
 
 public class BackupNotifications {
 
-    private final static String NOTIFICATION_CHANNEL_ID_BACKUPS = "habitat_backups";
-    private final static int NOTIFICATION_NOTIFICATION_REQUEST_CODE = 1;
-    private Context mContext;
+    private static final String NOTIFICATION_CHANNEL_ID_BACKUPS = "habitat_backups";
+    private static final int NOTIFICATION_NOTIFICATION_REQUEST_CODE = 1;
+    private final Context mContext;
 
     public BackupNotifications(Context context) {
         mContext = context;

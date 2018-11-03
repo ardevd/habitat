@@ -68,12 +68,14 @@ public class LogServiceApiImpl implements LogServiceApi, DeviceDataContract {
         values.put(FIELD_LOG_TAG, log.getTag());
         values.put(FIELD_LOG_MESSAGE, log.getMessage());
         values.put(FIELD_LOG_TYPE, log.getType());
-
-        long logId = ContentUris.parseId(context.getContentResolver().insert(CONTENT_URI_LOGS, values));
-        if (logId > 0) {
-            callback.onLoaded(log);
-        } else {
-            callback.onError("Error occurred when adding log entry");
+        if (context != null) {
+            long logId = ContentUris.parseId(context.getContentResolver().insert(CONTENT_URI_LOGS, values));
+            if (logId > 0) {
+                callback.onLoaded(log);
+            } else {
+                callback.onError("Error occurred when adding log entry");
+            }
+            callback.onError("Invalid context when adding log entry");
         }
     }
 }

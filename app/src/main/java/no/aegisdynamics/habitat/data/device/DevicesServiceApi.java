@@ -9,19 +9,19 @@ import java.util.List;
  * be piped through this interface.
  */
 
-public interface DevicesServiceApi {
+interface DevicesServiceApi {
 
     interface DevicesServiceCallback<T> {
         void onLoaded (T devices);
         void onError (String error);
     }
 
-    interface AutomatedCommandServiceCallback<T> {
+    interface AutomatedCommandServiceCallback {
         void onSuccess (String automationTitle);
         void onError (String error, String automationTitle);
     }
 
-    interface FCMDeviceTokenRegistrationServiceCallback<T> {
+    interface FCMDeviceTokenRegistrationServiceCallback {
         void onSuccess ();
         void onError (String error);
     }
@@ -33,7 +33,7 @@ public interface DevicesServiceApi {
     void sendCommand(Context context, String deviceId, String command, DevicesServiceCallback<Boolean> callback);
 
     void sendAutomatedCommand(Context context, String deviceId, String command, String automationTitle,
-                              AutomatedCommandServiceCallback<Boolean> callback);
+                              AutomatedCommandServiceCallback callback);
 
     void getControllerStatus(Context context, DevicesServiceCallback<Boolean> callback);
 

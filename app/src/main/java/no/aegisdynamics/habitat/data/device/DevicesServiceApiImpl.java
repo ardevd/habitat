@@ -9,7 +9,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -21,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +28,9 @@ import java.util.Map;
 
 import no.aegisdynamics.habitat.R;
 import no.aegisdynamics.habitat.provider.DeviceDataContract;
+import no.aegisdynamics.habitat.util.ControllerDataParser;
+import no.aegisdynamics.habitat.util.DeviceDataParser;
+import no.aegisdynamics.habitat.util.ErrorParserHelper;
 import no.aegisdynamics.habitat.util.LogHelper;
 import no.aegisdynamics.habitat.zautomation.ZWayNetworkHelper;
 import no.aegisdynamics.habitat.util.RequestQueueSingelton;
@@ -37,7 +40,7 @@ import no.aegisdynamics.habitat.util.RequestQueueSingelton;
  */
 public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContract {
 
-    private final String TAG = "DevicesServiceApiImpl";
+    private static final String TAG = "DevicesServiceApiImpl";
 
     @Override
     public void getAllDevices(final Context context, final DevicesServiceCallback callback) {
@@ -45,12 +48,11 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
          * We first need to retrieve locations so that we can map it to the location id for each device.
          * Then we load all devices
          */
-       getLocationTitles(context, callback, null);
+        getLocationTitles(context, callback, null);
     }
 
     /**
-     *
-     * @param context - Valid context
+     * @param context  - Valid context
      * @param deviceId - device id string of requested device
      * @param callback - service callback
      */
@@ -74,7 +76,7 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
 
                                 JSONObject dataObject = response.getJSONObject("data");
                                 try {
-                                    Device device = parseDeviceData(dataObject, locationMap);
+                                    Device device = DeviceDataParser.parseDeviceData(dataObject, locationMap);
                                     callback.onLoaded(device);
                                 } catch (JSONException e) {
                                     callback.onError(context.getString(R.string.error_json));
@@ -91,26 +93,17 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
-                        if (error instanceof AuthFailureError) {
-                            callback.onError(context.getString(R.string.devices_authentication_error));
-                        }
-                        else {
-                            if (error.getLocalizedMessage() != null) {
-                                callback.onError(error.getLocalizedMessage());
-                            } else{
-                                callback.onError(context.getString(R.string.error_generic));
-                            }
-                        }
+                        callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, error));
                     }
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 return ZWayNetworkHelper.getAuthenticationHeaders(context);
             }
         };
 
         // Access the RequestQueue through your singleton class.
-        RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
+        RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
 
     }
 
@@ -135,27 +128,17 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        if (error instanceof AuthFailureError) {
-                            callback.onError(context.getString(R.string.devices_authentication_error));
-                        }
-                        else {
-                            if (error.getLocalizedMessage() != null) {
-                                callback.onError(error.getLocalizedMessage());
-                            } else{
-                                callback.onError(context.getString(R.string.error_generic));
-                            }
-                        }
+                        callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, error));
                     }
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 return ZWayNetworkHelper.getAuthenticationHeaders(context);
             }
         };
 
         // Access the RequestQueue through your singleton class.
-        RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
+        RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
     }
 
     private void getLocationTitles(final Context context, final DevicesServiceCallback callback, @Nullable final String deviceId) {
@@ -195,10 +178,9 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
                             }
 
                         } catch (JSONException error) {
-                            error.printStackTrace();
                             if (error.getLocalizedMessage() != null) {
                                 callback.onError(error.getLocalizedMessage());
-                            } else{
+                            } else {
                                 callback.onError(context.getString(R.string.error_generic));
                             }
                         }
@@ -209,27 +191,17 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        if (error instanceof AuthFailureError) {
-                            callback.onError(context.getString(R.string.devices_authentication_error));
-                        }
-                        else {
-                            if (error.getLocalizedMessage() != null) {
-                                callback.onError(error.getLocalizedMessage());
-                            } else{
-                                callback.onError(context.getString(R.string.error_generic));
-                            }
-                        }
+                        callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, error));
                     }
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 return ZWayNetworkHelper.getAuthenticationHeaders(context);
             }
         };
 
         // Access the RequestQueue through your singleton class.
-        RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
+        RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
     }
 
     @Override
@@ -261,35 +233,27 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        if (error instanceof AuthFailureError) {
-                            callback.onError(context.getString(R.string.devices_authentication_error));
-                        }
-                        else {
-                            if (error.getLocalizedMessage() != null) {
-                                callback.onError(error.getLocalizedMessage());
-                            } else{
-                                callback.onError(context.getString(R.string.error_generic));
-                            }
-                        }
+                        callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, error));
                     }
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 return ZWayNetworkHelper.getAuthenticationHeaders(context);
             }
         };
 
         // Restarting controller takes about 10 seconds. Set timeout value accordingly.
-        RetryPolicy policy = new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        RetryPolicy policy = new DefaultRetryPolicy(15000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         jsObjRequest.setRetryPolicy(policy);
+        jsObjRequest.setShouldCache(false);
 
         // Access the RequestQueue through your singleton class.
-        RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
+        RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
     }
 
     @Override
-    public void sendAutomatedCommand(final Context context, String deviceId, String command, final String automationTitle, final AutomatedCommandServiceCallback<Boolean> callback) {
+    public void sendAutomatedCommand(final Context context, String deviceId, String command, final String automationTitle, final AutomatedCommandServiceCallback callback) {
         String url = String.format("%s/%s/command/%s", ZWayNetworkHelper.getZwayDevicesUrl(context), deviceId, command);
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
@@ -305,7 +269,6 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
                             }
 
                         } catch (JSONException e) {
-                            e.printStackTrace();
                             callback.onError(e.getLocalizedMessage(), automationTitle);
                         }
                     }
@@ -313,27 +276,18 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        if (error instanceof AuthFailureError) {
-                            callback.onError(context.getString(R.string.devices_authentication_error), automationTitle);
-                        }
-                        else {
-                            if (error.getLocalizedMessage() != null) {
-                                callback.onError(error.getLocalizedMessage(), automationTitle);
-                            } else{
-                                callback.onError(context.getString(R.string.error_generic), automationTitle);
-                            }
-                        }
+                        callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, error),
+                                automationTitle);
                     }
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 return ZWayNetworkHelper.getAuthenticationHeaders(context);
             }
         };
 
         // Access the RequestQueue through your singleton class.
-        RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
+        RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
     }
 
     @Override
@@ -356,10 +310,9 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
                             }
 
                         } catch (JSONException error) {
-                            error.printStackTrace();
                             if (error.getLocalizedMessage() != null) {
                                 callback.onError(error.getLocalizedMessage());
-                            } else{
+                            } else {
                                 callback.onError(context.getString(R.string.error_generic));
                             }
                         }
@@ -369,32 +322,23 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
-                        if (error instanceof AuthFailureError) {
-                            callback.onError(context.getString(R.string.devices_authentication_error));
-                        }
-                        else {
-                            if (error.getLocalizedMessage() != null) {
-                                callback.onError(error.getLocalizedMessage());
-                            } else{
-                                callback.onError(context.getString(R.string.error_generic));
-                            }
-                        }
+                        callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, error));
                     }
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 return ZWayNetworkHelper.getAuthenticationHeaders(context);
             }
         };
 
         // Access the RequestQueue through your singleton class.
-        RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
+        RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
     }
 
     @Override
     public void registerFCMDeviceToken(final Context context, String deviceToken,
                                        final FCMDeviceTokenRegistrationServiceCallback callback) {
-        String deviceIdentifier = String.format("%s-%s", Build.MODEL, deviceToken.substring(0,4));
+        String deviceIdentifier = String.format("%s-%s", Build.MODEL, deviceToken.substring(0, 4));
         String url = ZWayNetworkHelper.getZwayHabitatAppRegisterTokenUrl(context, deviceToken, deviceIdentifier);
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
@@ -413,10 +357,9 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
                             }
 
                         } catch (JSONException error) {
-                            error.printStackTrace();
                             if (error.getLocalizedMessage() != null) {
                                 callback.onError(error.getLocalizedMessage());
-                            } else{
+                            } else {
                                 callback.onError(context.getString(R.string.error_generic));
                             }
                         }
@@ -425,27 +368,17 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        if (error instanceof AuthFailureError) {
-                            callback.onError(context.getString(R.string.devices_authentication_error));
-                        }
-                        else {
-                            if (error.getLocalizedMessage() != null) {
-                                callback.onError(error.getLocalizedMessage());
-                            } else{
-                                callback.onError(context.getString(R.string.error_generic));
-                            }
-                        }
+                        callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, error));
                     }
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 return ZWayNetworkHelper.getAuthenticationHeaders(context);
             }
         };
 
         // Access the RequestQueue through your singleton class.
-        RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
+        RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
     }
 
     @Override
@@ -473,10 +406,9 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
                             }
 
                         } catch (JSONException error) {
-                            error.printStackTrace();
                             if (error.getLocalizedMessage() != null) {
                                 callback.onError(error.getLocalizedMessage());
-                            } else{
+                            } else {
                                 callback.onError(context.getString(R.string.error_generic));
                             }
                         }
@@ -485,105 +417,29 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        if (error instanceof AuthFailureError) {
-                            callback.onError(context.getString(R.string.devices_authentication_error));
-                        }
-                        else {
-                            if (error.getLocalizedMessage() != null) {
-                                callback.onError(error.getLocalizedMessage());
-                            } else{
-                                callback.onError(context.getString(R.string.error_generic));
-                            }
-                        }
+                        callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, error));
                     }
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 return ZWayNetworkHelper.getAuthenticationHeaders(context);
             }
         };
 
         // Access the RequestQueue through your singleton class.
-        RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
+        RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
     }
 
-    private String[] parseTags(JSONArray tagsArray){
-        String [] tags;
-        List<String> tagsList = new ArrayList<>();
-        try {
-            for(int i = 0; i < tagsArray.length(); i++){
-                    tagsList.add(tagsArray.getString(i));
-                }
-            tags = tagsList.toArray( new String[tagsList.size()] );
-            return tags;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+    private static class CreateDevicesTask extends AsyncTask<JSONObject, Void, Void> {
 
-    private Device parseDeviceData(JSONObject dataObject, HashMap locationMap) throws  JSONException {
-        String deviceId = dataObject.getString("id");
-        String deviceType = dataObject.getString("deviceType");
-        int creatorId = dataObject.getInt("creatorId");
-        int deviceLocationId = dataObject.getInt("location");
-        String deviceLocationTitle = locationMap.get(deviceLocationId).toString();
-        String[] deviceTags = parseTags(dataObject.getJSONArray("tags"));
-
-        // Metrics Object
-        JSONObject deviceMetrics = dataObject.getJSONObject("metrics");
-        String deviceTitle = deviceMetrics.getString("title");
-        String deviceStatus = deviceMetrics.getString("level");
-        String deviceStatusNotation = null;
-        try {
-            deviceStatusNotation = deviceMetrics.getString("scaleTitle");
-        } catch (JSONException e) {
-            // No scale title available
-        }
-        String deviceProbeTitle = null;
-        try {
-            deviceProbeTitle = deviceMetrics.getString("probeTitle");
-        } catch (JSONException e) {
-            // No scale title available
-        }
-
-        int deviceMinValue = 0;
-        int deviceMaxValue = 0;
-        try {
-            deviceMinValue = deviceMetrics.getInt("min");
-            deviceMaxValue = deviceMetrics.getInt("max");
-        } catch (JSONException e) {
-            Log.d(TAG, "No min/max values for device");
-        }
-
-        String deviceIconName = null;
-        try {
-            String deviceIconNameString = deviceMetrics.getString("icon");
-            if (deviceIconNameString.length() > 0) {
-                deviceIconName = deviceIconNameString;
-            }
-
-        } catch (JSONException e) {
-            // No deviceIcon name available.
-        }
-
-        return new Device(deviceId, deviceTitle, deviceType,
-                deviceLocationTitle, deviceLocationId, creatorId, deviceTags, deviceStatus,
-                deviceMinValue, deviceMaxValue,
-                deviceStatusNotation, deviceProbeTitle, deviceIconName);
-
-    }
-
-    private class CreateDevicesTask extends AsyncTask<JSONObject, Void, Void> {
-
-        private final Context mContext;
+        private final WeakReference<Context> mContext;
         private final DevicesServiceCallback mCallback;
         private final HashMap mLocationMap;
         private final List<Device> devices;
+        private static final String TAG = "DevicesServiceApiImplTask";
 
         private CreateDevicesTask (Context context, DevicesServiceCallback callback, final HashMap locationMap) {
-            mContext = context;
+            mContext = new WeakReference<>(context);
             mCallback = callback;
             mLocationMap = locationMap;
             devices = new ArrayList<>();
@@ -607,7 +463,7 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
                             boolean visibility = dataObject.getBoolean("visibility");
                             boolean hidden = dataObject.getBoolean("permanently_hidden");
                             if (visibility && !hidden) {
-                                devices.add(parseDeviceData(dataObject, mLocationMap));
+                                devices.add(DeviceDataParser.parseDeviceData(dataObject, mLocationMap));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -616,10 +472,10 @@ public class DevicesServiceApiImpl implements DevicesServiceApi, DeviceDataContr
                 }
 
             } catch (JSONException e) {
-                LogHelper.logError(mContext, TAG, e.getMessage());
+                LogHelper.logError(mContext.get(), TAG, e.getMessage());
             }
             // Iterate over devices and remove globalRoom devices if set to do so
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext.get());
             if (settings.getBoolean("hide_globalRoom", false)) {
                 List<Device> globalRoomDevices = new ArrayList<>();
                 for (Device device : devices) {

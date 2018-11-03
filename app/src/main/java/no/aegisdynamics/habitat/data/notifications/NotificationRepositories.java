@@ -9,10 +9,8 @@ public class NotificationRepositories {
         // No instance
     }
 
-    private static NotificationsRepository repository = null;
 
-    public synchronized static NotificationsRepository getRepository(@NonNull Context context, @NonNull NotificationsServiceApi notificationsServiceApi) {
-        repository = new APINotificationProviderRepository(notificationsServiceApi, context);
-        return repository;
+    public static synchronized NotificationsRepository getRepository(@NonNull Context context, @NonNull NotificationsServiceApi notificationsServiceApi) {
+        return new APINotificationProviderRepository(notificationsServiceApi, context);
     }
 }

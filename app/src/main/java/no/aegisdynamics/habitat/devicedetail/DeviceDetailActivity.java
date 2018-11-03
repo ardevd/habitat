@@ -11,15 +11,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import no.aegisdynamics.habitat.R;
+import no.aegisdynamics.habitat.data.device.Device;
 
 
 public class DeviceDetailActivity extends AppCompatActivity{
 
-    public static final String EXTRA_DEVICE_ID = "DEVICE_ID";
-    public static final String EXTRA_DEVICE_TITLE = "DEVICE_TITLE";
-    public static final String EXTRA_DEVICE_STATE = "DEVICE_STATE";
-    public static final String EXTRA_DEVICE_NOTATION = "DEVICE_NOTATION";
-    public static final String EXTRA_DEVICE_PROBE_TITLE = "DEVICE_PROBE_TITLE";
+    public static final String EXTRA_DEVICE = "device";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +30,9 @@ public class DeviceDetailActivity extends AppCompatActivity{
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
         if (null == savedInstanceState) {
-            String deviceId = getIntent().getStringExtra(EXTRA_DEVICE_ID);
-            String deviceState = getIntent().getStringExtra(EXTRA_DEVICE_STATE);
-            String deviceNotation = getIntent().getStringExtra(EXTRA_DEVICE_NOTATION);
-            String deviceProbeTitle = getIntent().getStringExtra(EXTRA_DEVICE_PROBE_TITLE);
-            this.setTitle(getIntent().getStringExtra(EXTRA_DEVICE_TITLE));
-            initFragment(DeviceDetailFragment.newInstance(deviceId, deviceState, deviceNotation,
-                    deviceProbeTitle));
+            Device device = getIntent().getParcelableExtra(EXTRA_DEVICE);
+            this.setTitle(device.getTitle());
+            initFragment(DeviceDetailFragment.newInstance(device));
         }
     }
 
@@ -57,7 +50,8 @@ public class DeviceDetailActivity extends AppCompatActivity{
             case android.R.id.home:
                 finish();
                 return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 }

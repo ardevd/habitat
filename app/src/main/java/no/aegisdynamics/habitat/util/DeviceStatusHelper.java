@@ -9,12 +9,17 @@ import no.aegisdynamics.habitat.provider.DeviceDataContract;
  * Device specific helper functions
  */
 public class DeviceStatusHelper implements DeviceDataContract {
-    private final static String SWITCH_BINARY_ON = "on";
-    private final static String SWITCH_BINARY_OFF = "off";
-    private final static String DOOR_LOCK_OPEN = "open";
-    private final static String DOOR_LOCK_CLOSE = "close";
-    private final static String SWITCH_MULTILEVEL_ON = "on";
-    private final static String SWITCH_MULTILEVEL_OFF = "off";
+
+    private static final String SWITCH_BINARY_ON = "on";
+    private static final String SWITCH_BINARY_OFF = "off";
+    private static final String DOOR_LOCK_OPEN = "open";
+    private static final String DOOR_LOCK_CLOSE = "close";
+    private static final String SWITCH_MULTILEVEL_ON = "on";
+    private static final String SWITCH_MULTILEVEL_OFF = "off";
+
+    private DeviceStatusHelper() {
+        // Required empty private constructor
+    }
 
 
     public static boolean parseStatusMessageToBoolean(String status) {

@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,7 @@ import no.aegisdynamics.habitat.automationadd.AutomationAddActivity;
 import no.aegisdynamics.habitat.data.Injection;
 import no.aegisdynamics.habitat.data.automation.Automation;
 import no.aegisdynamics.habitat.itemListeners.AutomationItemListener;
+import no.aegisdynamics.habitat.util.SnackbarHelper;
 
 public class AutomationsFragment extends Fragment implements AutomationsContract.View {
 
@@ -90,7 +90,7 @@ public class AutomationsFragment extends Fragment implements AutomationsContract
     /**
      * Listener for clicks on automations in the RecyclerView.
      */
-    private AutomationItemListener mItemListener = new AutomationItemListener() {
+    private final AutomationItemListener mItemListener = new AutomationItemListener() {
 
         @Override
         public void onAutomationClick(Automation clickedAutomation) {
@@ -105,29 +105,30 @@ public class AutomationsFragment extends Fragment implements AutomationsContract
 
     };
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-    }
 
     @Override
     public void showAutomations(List<Automation> automations) {
         mListAdapter.replaceData(automations);
-        RelativeLayout emptyAutomationsLayout = getView().findViewById(R.id.automations_empty_layout);
-        if (automations.size() > 0) {
-            emptyAutomationsLayout.setVisibility(View.GONE);
-        } else {
-            emptyAutomationsLayout.setVisibility(View.VISIBLE);
-            if (getActivity() instanceof AutomationsContract.Activity) {
-                ((AutomationsContract.Activity) getActivity()).showFabHint();
+        View view = getView();
+        if (view != null) {
+            RelativeLayout emptyAutomationsLayout = getView().findViewById(R.id.automations_empty_layout);
+            if (!automations.isEmpty()) {
+                emptyAutomationsLayout.setVisibility(View.GONE);
+            } else {
+                emptyAutomationsLayout.setVisibility(View.VISIBLE);
+                if (getActivity() instanceof AutomationsContract.Activity) {
+                    ((AutomationsContract.Activity) getActivity()).showFabHint();
+                }
             }
         }
-
     }
 
     @Override
     public void showAutomationsLoadError(String error) {
+        if (!isDetached()) {
+            SnackbarHelper.showFlashbarErrorMessage(getString(R.string.automations_generic_error_title),
+                    error, getActivity());
+        }
 
     }
 

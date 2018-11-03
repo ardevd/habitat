@@ -59,7 +59,7 @@ public class APIDeviceProviderRepository implements DevicesRepository, DeviceDat
     @Override
     public void sendAutomatedCommand(@NonNull String deviceId, @NonNull String command, @NonNull String automationTitle, @NonNull final SendAutomatedCommandCallback callback) {
         mDevicesServiceApi.sendAutomatedCommand(mContext, deviceId, command, automationTitle,
-                new DevicesServiceApi.AutomatedCommandServiceCallback<Boolean>() {
+                new DevicesServiceApi.AutomatedCommandServiceCallback() {
 
                     @Override
                     public void onSuccess(String automationTitle) {

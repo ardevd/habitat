@@ -20,42 +20,43 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.ImageViewTarget;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import no.aegisdynamics.habitat.R;
 import no.aegisdynamics.habitat.adapters.DevicesAdapter;
 import no.aegisdynamics.habitat.data.Injection;
 import no.aegisdynamics.habitat.data.device.Device;
+import no.aegisdynamics.habitat.data.location.Location;
 import no.aegisdynamics.habitat.devicedetail.DeviceDetailActivity;
 import no.aegisdynamics.habitat.itemListeners.DeviceCommandListener;
 import no.aegisdynamics.habitat.itemListeners.DeviceItemListener;
+import no.aegisdynamics.habitat.util.GlideApp;
 import no.aegisdynamics.habitat.util.SnackbarHelper;
 import no.aegisdynamics.habitat.zautomation.ZWayNetworkHelper;
 
 
 public class LocationDetailFragment extends Fragment implements LocationDetailContract.View {
 
-    public static final String ARGUMENT_LOCATION_ID = "LOCATION_ID";
-    public static final String ARGUMENT_LOCATION_TITLE = "LOCATION_TITLE";
-
     private ImageView mLocationImageView;
     private DevicesAdapter mListAdapter;
-    private int locationId;
+    private Location detailedLocation;
+
+    private static final String ARGUMENT_LOCATION = "location";
 
     private LocationDetailContract.UserActionsListener mActionsListener;
 
     public LocationDetailFragment() {
         // Required empty constructor
     }
-    public static LocationDetailFragment newInstance(int locationId, String locationName) {
+
+    public static LocationDetailFragment newInstance(Location location) {
         Bundle arguments = new Bundle();
-        arguments.putInt(ARGUMENT_LOCATION_ID, locationId);
-        arguments.putString(ARGUMENT_LOCATION_TITLE, locationName);
+        arguments.putParcelable(ARGUMENT_LOCATION, location);
         LocationDetailFragment fragment = new LocationDetailFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -95,12 +96,13 @@ public class LocationDetailFragment extends Fragment implements LocationDetailCo
     @Override
     public void onResume() {
         super.onResume();
-        locationId = getArguments().getInt(ARGUMENT_LOCATION_ID);
-        mActionsListener.openLocation(locationId);
-        mActionsListener.loadDevicesForLocation(locationId);
+        detailedLocation = getArguments().getParcelable(ARGUMENT_LOCATION);
+        showDeviceCount(detailedLocation.getDeviceCount());
+        mActionsListener.openLocation(detailedLocation.getId());
+        mActionsListener.loadDevicesForLocation(detailedLocation.getId());
     }
 
-    private DeviceItemListener mItemListener = new DeviceItemListener() {
+    private final DeviceItemListener mItemListener = new DeviceItemListener() {
 
         @Override
         public void onDeviceClick(Device clickedDevice) {
@@ -140,7 +142,7 @@ public class LocationDetailFragment extends Fragment implements LocationDetailCo
 
     @Override
     public void showTitle(String title) {
-        if (!isDetached()) {
+        if (isAdded()) {
             ((LocationDetailActivity) getActivity()).collapsingToolbar.setTitle(title);
         }
     }
@@ -149,20 +151,18 @@ public class LocationDetailFragment extends Fragment implements LocationDetailCo
     public void showImage(String imageName) {
         if (isAdded()) {
             String imageUrl = ZWayNetworkHelper.getZwayLocationImageUrl(getContext().getApplicationContext(), imageName);
-            Glide.with(this)
-                    .load(imageUrl)
+            GlideApp.with(this)
                     .asBitmap()
+                    .load(imageUrl)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
-                    .into(new BitmapImageViewTarget(mLocationImageView) {
-
+                    .into(new ImageViewTarget<Bitmap>(mLocationImageView) {
                         @Override
-                        protected void setResource(Bitmap resource) {
-                            super.setResource(resource);
-                            if (getActivity() instanceof LocationDetailContract.Activity) {
+                        protected void setResource(@Nullable Bitmap resource) {
+                            if (resource != null) {
+                                super.view.setImageBitmap(resource);
                                 ((LocationDetailContract.Activity) getActivity()).updateToolbarColors(resource);
                             }
-
                         }
                     });
         }
@@ -177,13 +177,16 @@ public class LocationDetailFragment extends Fragment implements LocationDetailCo
     }
 
     @Override
-    public void hideDeviceCount() {
-
-    }
-
-    @Override
-    public void showDeviceCount(String description) {
-
+    public void showDeviceCount(int deviceCount) {
+        if (isAdded() && getView() != null) {
+            TextView deviceTitle = getView().findViewById(R.id.locationdetail_devices_title);
+            if (deviceCount > 0) {
+                deviceTitle.setText(String.format(Locale.getDefault(), "%s (%d)",
+                        getString(R.string.locationdetail_devices), deviceCount));
+            } else {
+                deviceTitle.setText(getString(R.string.locationdetail_no_devices));
+            }
+        }
     }
 
     @Override
@@ -207,30 +210,28 @@ public class LocationDetailFragment extends Fragment implements LocationDetailCo
         handler.postDelayed(new Runnable() {
             public void run() {
                 // Actions to do after 1 second
-                mActionsListener.loadDevicesForLocation(locationId);
+                mActionsListener.loadDevicesForLocation(detailedLocation.getId());
             }
         }, 1000);
     }
 
     @Override
     public void showCommandStatusMessage(boolean success) {
-        String status_message = getString(R.string.devices_command_ok);
-        if (!success) {
-            status_message = getString(R.string.devices_command_error);
+        if (isAdded()) {
+            String status_message = getString(R.string.devices_command_ok);
+            if (!success) {
+                status_message = getString(R.string.devices_command_error);
+            }
+            SnackbarHelper.showSimpleSnackbarMessage(status_message, getView());
+            delayedRefresh();
         }
-        SnackbarHelper.showSimpleSnackbarMessage(status_message, getView());
-        delayedRefresh();
     }
 
     @Override
     public void showDeviceDetailUI(@NonNull Device device) {
         // in it's own Activity, since it makes more sense that way
         Intent intent = new Intent(getContext(), DeviceDetailActivity.class);
-        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_ID, device.getId());
-        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_TITLE, device.getTitle());
-        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_STATE, device.getStatus());
-        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_NOTATION, device.getStatusNotation());
-        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_PROBE_TITLE, device.getDeviceProbeTitle());
+        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE, device);
         startActivity(intent);
     }
 
@@ -242,13 +243,13 @@ public class LocationDetailFragment extends Fragment implements LocationDetailCo
         alertDialog.setView(dialogView);
         TextView dialogSubtitle = dialogView.findViewById(R.id.edit_location_subtitle);
         final EditText locationInput = dialogView.findViewById(R.id.edit_location_input);
-        dialogSubtitle.setText(getArguments().getString(ARGUMENT_LOCATION_TITLE));
-            /* When positive (yes/ok) is clicked */
+        dialogSubtitle.setText(detailedLocation.getTitle());
+        /* When positive (yes/ok) is clicked */
         alertDialog.setPositiveButton(getString(R.string.action_ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 String updatedTitle = locationInput.getText().toString();
-                mActionsListener.editLocation(locationId, updatedTitle);
+                mActionsListener.editLocation(detailedLocation.getId(), updatedTitle);
             }
         });
 
@@ -263,13 +264,17 @@ public class LocationDetailFragment extends Fragment implements LocationDetailCo
 
     @Override
     public void showLocationUpdated() {
-        // Location updated. Refresh data.
-        mActionsListener.openLocation(locationId);
-        SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.locationdetail_location_updated), getView());
+        if (isAdded()) {
+            // Location updated. Refresh data.
+            mActionsListener.openLocation(detailedLocation.getId());
+            SnackbarHelper.showSimpleSnackbarMessage(getString(R.string.locationdetail_location_updated), getView());
+        }
     }
 
     @Override
     public void showLocationUpdateError(String error) {
-        SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+        if (isAdded()) {
+            SnackbarHelper.showSimpleSnackbarMessage(error, getView());
+        }
     }
 }

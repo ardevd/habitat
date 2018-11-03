@@ -9,7 +9,7 @@ import java.util.List;
  * be piped through this interface.
  */
 
-public interface AutomationsServiceApi {
+interface AutomationsServiceApi {
 
     interface AutomationsServiceCallback<T> {
         void onLoaded(T automations);

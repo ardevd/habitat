@@ -4,11 +4,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Immutable model class for a Z-Wave notification class
  */
-public class Notification implements Comparable<Notification>{
+public class Notification implements Comparable<Notification> {
 
     private final long notificationId;
     @Nullable
@@ -62,7 +63,7 @@ public class Notification implements Comparable<Notification>{
     }
 
     public void setRedeemed(boolean redeemed) {
-        notificationRedeemed = true;
+        notificationRedeemed = redeemed;
     }
 
     @Override
@@ -74,6 +75,23 @@ public class Notification implements Comparable<Notification>{
         } else {
             return 0;
         }
+    }
 
+    @Override
+    public boolean equals(Object object) {
+        if (object == this) {
+            return true;
+        }
+        if (!(object instanceof Notification)) {
+            return false;
+        }
+
+        Notification notification = (Notification) object;
+        return notificationId == notification.notificationId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(notificationId, notificationTimestamp, notificationDeviceId);
     }
 }

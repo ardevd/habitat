@@ -12,10 +12,10 @@ import no.aegisdynamics.habitat.automations.AutomationsActivity;
 
 public class AutomatorNotificator implements AutomatorContract.Notifier {
 
-    private Context mContext;
-    private final static String CHANNEL_ID = "habitat_automations";
+    private final Context mContext;
+    private static final String CHANNEL_ID = "habitat_automations";
 
-    public AutomatorNotificator(Context context) {
+    AutomatorNotificator(Context context) {
         mContext = context;
     }
 

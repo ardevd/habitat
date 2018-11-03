@@ -9,9 +9,7 @@ public class BackupRepositories {
         // No instance
     }
 
-    private static BackupsRepository repository = null;
-
-    public synchronized static BackupsRepository getRepository(@NonNull Context context,
+    public static synchronized BackupsRepository getRepository(@NonNull Context context,
                                                                @NonNull BackupsServiceApi backupsServiceApi) {
         return new APIBackupProviderRepository(backupsServiceApi, context);
     }

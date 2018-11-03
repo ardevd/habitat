@@ -10,9 +10,7 @@ public class WeatherRepositories {
         // Required empty instance
     }
 
-    private static WeatherRepository repository = null;
-
-    public synchronized static WeatherRepository getRepository(@NonNull Context context,
+    public static synchronized WeatherRepository getRepository(@NonNull Context context,
                                                                @NonNull WeatherServiceApi weatherServiceApi) {
         return new APIWeatherProviderRepository(weatherServiceApi, context);
     }

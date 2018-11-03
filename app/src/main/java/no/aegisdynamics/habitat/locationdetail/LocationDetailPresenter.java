@@ -71,6 +71,7 @@ public class LocationDetailPresenter implements LocationDetailContract.UserActio
             public void onDevicesForLocationLoaded(List<Device> devices) {
                 mLocationDetailView.setProgressIndicator(false);
                 mLocationDetailView.showDevices(devices);
+                mLocationDetailView.showDeviceCount(devices.size());
             }
 
             @Override

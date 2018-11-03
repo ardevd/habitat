@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -21,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import no.aegisdynamics.habitat.R;
+import no.aegisdynamics.habitat.util.ErrorParserHelper;
+import no.aegisdynamics.habitat.util.LocationDataParser;
 import no.aegisdynamics.habitat.zautomation.ZWayNetworkHelper;
 import no.aegisdynamics.habitat.util.RequestQueueSingelton;
 
@@ -48,15 +48,15 @@ public class LocationsServiceApiImpl implements LocationsServiceApi {
                                 JSONArray dataArray = response.getJSONArray("data");
 
                                 for (int i = 0; i < dataArray.length(); i++) {
-                                    try {
-                                        JSONObject locationObject = dataArray.getJSONObject(i);
-                                        Location location = parseLocationFromData(context, locationObject);
-                                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-                                        if (!settings.getBoolean("hide_globalRoom", false) ||
-                                                location.getId() != 0) {
-                                            locations.add(location);
-                                        }
-                                    } catch (JSONException e) {
+
+                                    JSONObject locationObject = dataArray.getJSONObject(i);
+
+                                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+                                    Location location = LocationDataParser.parseLocationFromData(locationObject,
+                                            settings.getBoolean("use_user_images", true));
+                                    if (location != null && (!settings.getBoolean("hide_globalRoom", false) ||
+                                            location.getId() != 0)) {
+                                        locations.add(location);
                                     }
                                 }
                             }
@@ -72,27 +72,17 @@ public class LocationsServiceApiImpl implements LocationsServiceApi {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        if (error instanceof AuthFailureError) {
-                            callback.onError(context.getString(R.string.devices_authentication_error));
-                        }
-                        else {
-                            if (error.getLocalizedMessage() != null) {
-                                callback.onError(error.getLocalizedMessage());
-                            } else{
-                                callback.onError(context.getString(R.string.error_generic));
-                            }
-                        }
+                        callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, error));
                     }
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 return ZWayNetworkHelper.getAuthenticationHeaders(context);
             }
         };
 
         // Access the RequestQueue through your singleton class.
-        RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
+        RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
 
     }
 
@@ -112,18 +102,17 @@ public class LocationsServiceApiImpl implements LocationsServiceApi {
                             if (responseCode == 200) {
 
                                 JSONObject dataObject = response.getJSONObject("data");
-
-                                    try {
-                                        Location location = parseLocationFromData(context, dataObject);
-                                        callback.onLoaded(location);
-                                    } catch (JSONException e) {
-                                        callback.onError(context.getString(R.string.error_json));
-                                    }
-
+                                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+                                Location location = LocationDataParser.parseLocationFromData(dataObject,
+                                        settings.getBoolean("use_user_images", true));
+                                if (location != null) {
+                                    callback.onLoaded(location);
+                                } else {
+                                    callback.onError(context.getString(R.string.error_json));
+                                }
                             }
 
                         } catch (JSONException e) {
-                            e.printStackTrace();
                             callback.onError(context.getString(R.string.error_json));
                         }
 
@@ -133,27 +122,17 @@ public class LocationsServiceApiImpl implements LocationsServiceApi {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        if (error instanceof AuthFailureError) {
-                            callback.onError(context.getString(R.string.devices_authentication_error));
-                        }
-                        else {
-                            if (error.getLocalizedMessage() != null) {
-                                callback.onError(error.getLocalizedMessage());
-                            } else{
-                                callback.onError(context.getString(R.string.error_generic));
-                            }
-                        }
+                        callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, error));
                     }
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 return ZWayNetworkHelper.getAuthenticationHeaders(context);
             }
         };
 
         // Access the RequestQueue through your singleton class.
-        RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
+        RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
 
     }
 
@@ -179,35 +158,25 @@ public class LocationsServiceApiImpl implements LocationsServiceApi {
 
                             } catch (JSONException e) {
                                 callback.onError(e.getMessage());
-                                e.printStackTrace();
                             }
                         }
                     }, new Response.ErrorListener() {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            error.printStackTrace();
-                            if (error instanceof AuthFailureError) {
-                                callback.onError(context.getString(R.string.devices_authentication_error));
-                            } else {
-                                if (error.getLocalizedMessage() != null) {
-                                    callback.onError(error.getLocalizedMessage());
-                                } else {
-                                    callback.onError(context.getString(R.string.error_generic));
-                                }
-                            }
+                            callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, error));
                         }
                     }) {
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     return ZWayNetworkHelper.getAuthenticationHeaders(context);
                 }
 
             };
 
             // Access the RequestQueue through your singleton class.
-            RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
-        } catch (JSONException ex){
+            RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
+        } catch (JSONException ex) {
             // Failed to add body object
         }
     }
@@ -234,35 +203,25 @@ public class LocationsServiceApiImpl implements LocationsServiceApi {
 
                             } catch (JSONException e) {
                                 callback.onError(e.getMessage());
-                                e.printStackTrace();
                             }
                         }
                     }, new Response.ErrorListener() {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            error.printStackTrace();
-                            if (error instanceof AuthFailureError) {
-                                callback.onError(context.getString(R.string.devices_authentication_error));
-                            } else {
-                                if (error.getLocalizedMessage() != null) {
-                                    callback.onError(error.getLocalizedMessage());
-                                } else {
-                                    callback.onError(context.getString(R.string.error_generic));
-                                }
-                            }
+                            callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, error));
                         }
                     }) {
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     return ZWayNetworkHelper.getAuthenticationHeaders(context);
                 }
 
             };
 
             // Access the RequestQueue through your singleton class.
-            RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
-        } catch (JSONException ex){
+            RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
+        } catch (JSONException ex) {
             // Failed to add body object
         }
     }
@@ -273,88 +232,36 @@ public class LocationsServiceApiImpl implements LocationsServiceApi {
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.DELETE, url, null, new Response.Listener<JSONObject>() {
 
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                // Verify response code
-                                int responseCode = response.getInt("code");
-                                if (responseCode == 201) {
-                                    callback.onLoaded(true);
-                                } else {
-                                    callback.onError(context.getString(R.string.error_generic));
-                                }
-
-                            } catch (JSONException e) {
-                                callback.onError(e.getMessage());
-                                e.printStackTrace();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            error.printStackTrace();
-                            if (error instanceof AuthFailureError) {
-                                callback.onError(context.getString(R.string.devices_authentication_error));
-
-                            } // Volley cant handle empty 204 responses. So we need this hack for now.
-                            else if (error instanceof ParseError) {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            // Verify response code
+                            int responseCode = response.getInt("code");
+                            if (responseCode == 201) {
                                 callback.onLoaded(true);
                             } else {
-                                if (error.getLocalizedMessage() != null) {
-                                    callback.onError(error.getLocalizedMessage());
-                                } else {
-                                    callback.onError(context.getString(R.string.error_generic));
-                                }
+                                callback.onError(context.getString(R.string.error_generic));
                             }
+
+                        } catch (JSONException e) {
+                            callback.onError(e.getMessage());
                         }
-                    }) {
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    return ZWayNetworkHelper.getAuthenticationHeaders(context);
-                }
+                    }
+                }, new Response.ErrorListener() {
 
-            };
-
-            // Access the RequestQueue through your singleton class.
-            RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
-    }
-
-    private int getDeviceCount(JSONArray namespaceArray) {
-        try {
-            for (int i = 0; i < namespaceArray.length(); i++) {
-                JSONObject namespaceObject = namespaceArray.getJSONObject(i);
-                String namespaceId = namespaceObject.getString("id");
-                if (namespaceId.equals("devices_all")) {
-                    // Enumerate devices and get count
-                    JSONArray deviceArray = namespaceObject.getJSONArray("params");
-                    return deviceArray.length();
-                }
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, error));
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return ZWayNetworkHelper.getAuthenticationHeaders(context);
             }
-        } catch (JSONException ex) {
-            return 0;
-        }
-        return 0;
-    }
 
-    private Location parseLocationFromData(Context context, JSONObject dataObject) throws JSONException {
-        int locationId = dataObject.getInt("id");
-        String locationTitle = dataObject.getString("title");
-        String locationImage = dataObject.getString("default_img");
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        if (settings.getBoolean("use_user_images", true)) {
-            locationImage = dataObject.getString("user_img");
-        }
-        int locationDeviceCount;
-        if (locationImage.length() == 0) {
-            locationImage = null;
-        }
-        try {
-            JSONArray namespacesArray = dataObject.getJSONArray("namespaces");
-            locationDeviceCount = getDeviceCount(namespacesArray);
-        } catch (JSONException ex) {
-            locationDeviceCount = 0;
-        }
-        return new Location(locationId, locationTitle, locationImage, locationDeviceCount);
+        };
+
+        // Access the RequestQueue through your singleton class.
+        RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
     }
 }

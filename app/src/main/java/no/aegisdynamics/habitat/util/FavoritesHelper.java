@@ -13,6 +13,10 @@ import java.util.Set;
 
 public class FavoritesHelper {
 
+    private FavoritesHelper() {
+        // Required private empty constructor
+    }
+
     public static Set<String> getFavoriteDevicesFromPrefs(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 

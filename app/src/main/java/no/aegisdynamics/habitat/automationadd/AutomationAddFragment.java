@@ -65,9 +65,10 @@ public class AutomationAddFragment extends Fragment implements AutomationAddCont
         switch (item.getItemId()) {
             case R.id.menu_automationadd_save:
                 submitAutomation();
-
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     private void submitAutomation() {

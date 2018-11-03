@@ -25,7 +25,7 @@ import no.aegisdynamics.habitat.itemListeners.LogItemListener;
  * HabitatLogs adapter used for display log items in a recycler view.
  */
 
-public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
+public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogAdapterViewHolder> {
 
     private List<HabitatLog> mHabitatLogs;
     private final LogItemListener mItemListener;
@@ -37,16 +37,16 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public LogAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View notificationView = inflater.inflate(R.layout.item_log, parent, false);
-        return new ViewHolder(notificationView, mItemListener);
+        return new LogAdapterViewHolder(notificationView, mItemListener);
     }
 
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(LogAdapterViewHolder holder, int position) {
         final HabitatLog log = mHabitatLogs.get(position);
 
         holder.logTag.setText(log.getTag());
@@ -79,12 +79,8 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
         return mHabitatLogs.size();
     }
 
-    private HabitatLog getItem(int position) {
-        return mHabitatLogs.get(position);
-    }
 
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
+    public class LogAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
         final TextView logMessage;
 
@@ -96,7 +92,7 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 
         private final LogItemListener mItemListener;
 
-        ViewHolder(View itemView, LogItemListener itemListener) {
+        LogAdapterViewHolder(View itemView, LogItemListener itemListener) {
             super(itemView);
             mItemListener = itemListener;
             logMessage = itemView.findViewById(R.id.item_log_message);
@@ -135,6 +131,11 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 
             for (int i = 0, n = menu.size(); i < n; i++)
                 menu.getItem(i).setOnMenuItemClickListener(listener);
+        }
+
+
+        private HabitatLog getItem(int position) {
+            return mHabitatLogs.get(position);
         }
 
         boolean onCustomMenuItemClick(MenuItem menuItem) {

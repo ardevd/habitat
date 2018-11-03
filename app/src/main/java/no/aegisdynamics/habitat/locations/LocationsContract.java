@@ -6,14 +6,14 @@ import java.util.List;
 
 import no.aegisdynamics.habitat.data.location.Location;
 
-public interface LocationsContract {
+interface LocationsContract {
 
     interface View {
         void showLocations(List<Location> locations);
         void showLocationsLoadError(String error);
         void showAddLocation();
         void setProgressIndicator(boolean active);
-        void showLocationDetailUI(int locationId, String locationTitle);
+        void showLocationDetailUI(Location location);
         void showDeleteLocation();
         void showDeleteLocationError(String error);
     }

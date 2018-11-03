@@ -68,7 +68,7 @@ public class ParticipateActivity extends BaseActivity{
         frameLayout.addView(aboutPage);
     }
 
-    Element getCopyRightsElement() {
+    private Element getCopyRightsElement() {
         Element copyRightsElement = new Element();
         final String copyrights = String.format(getString(R.string.copyright), Calendar.getInstance().get(Calendar.YEAR));
         copyRightsElement.setTitle(copyrights);
@@ -85,7 +85,7 @@ public class ParticipateActivity extends BaseActivity{
         return copyRightsElement;
     }
 
-    Element getLogsElement() {
+    private Element getLogsElement() {
         Element logElement = new Element();
         logElement.setTitle(getString(R.string.participate_logs));
         logElement.setIconDrawable(R.drawable.ic_info);

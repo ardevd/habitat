@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 
 import no.aegisdynamics.habitat.data.location.Location;
 
-public interface LocationAddContract {
+interface LocationAddContract {
 
     interface View {
 

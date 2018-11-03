@@ -10,12 +10,10 @@ public class LocationRepositories {
         // No instance
     }
 
-    private static LocationsRepository repository = null;
-
     public static synchronized LocationsRepository getRepository(@NonNull Context context,
                                                                  @NonNull LocationsServiceApi locationsServiceApi) {
-        repository = new APILocationProviderRepository(locationsServiceApi, context);
-        return repository;
+        return new APILocationProviderRepository(locationsServiceApi, context);
+
     }
 
 }

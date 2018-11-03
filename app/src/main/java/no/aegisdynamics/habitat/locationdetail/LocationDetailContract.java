@@ -9,7 +9,7 @@ import java.util.List;
 import no.aegisdynamics.habitat.data.device.Device;
 
 
-public interface LocationDetailContract {
+interface LocationDetailContract {
 
     interface Activity {
         void updateToolbarColors(Bitmap bitmap);
@@ -24,8 +24,7 @@ public interface LocationDetailContract {
         void showTitle(String title);
         void showImage(String imageUrl);
         void hideImage();
-        void hideDeviceCount();
-        void showDeviceCount(String description);
+        void showDeviceCount(int deviceCount);
         void showDevices(List<Device> devices);
         void showDevicesLoadError(String error);
         void showCommandFailedMessage(String error);

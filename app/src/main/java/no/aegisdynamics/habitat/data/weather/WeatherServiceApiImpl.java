@@ -12,7 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import no.aegisdynamics.habitat.R;
+import no.aegisdynamics.habitat.util.ErrorParserHelper;
 import no.aegisdynamics.habitat.util.RequestQueueSingelton;
 
 /**
@@ -58,26 +58,20 @@ public class WeatherServiceApiImpl implements WeatherServiceApi {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            callback.onError(e.getMessage());
+                            callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, e));
                         }
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-
-                        if (error.getLocalizedMessage() != null) {
-                            callback.onError(error.getLocalizedMessage());
-                        } else{
-                            callback.onError(context.getString(R.string.error_generic));
-                        }
+                        callback.onError(ErrorParserHelper.parseErrorToErrorMessage(context, error));
                     }
                 }) {
         };
 
         // Access the RequestQueue through your singleton class.
-        RequestQueueSingelton.getInstance(context).addToRequestQueue(jsObjRequest);
+        RequestQueueSingelton.getInstance(context.getApplicationContext()).addToRequestQueue(jsObjRequest);
     }
 
     static {

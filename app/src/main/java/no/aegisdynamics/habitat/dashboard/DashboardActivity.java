@@ -1,13 +1,13 @@
 package no.aegisdynamics.habitat.dashboard;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 
@@ -62,7 +62,7 @@ public class DashboardActivity extends BaseActivity implements DashboardContract
 
     private void initFragment(Fragment dashboardFragment) {
         // Add Dashboard Fragment to the layout
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.contentFrame, dashboardFragment);
         transaction.commit();

@@ -6,6 +6,10 @@ import android.support.v7.graphics.Palette;
 
 public class PaletteHelper {
 
+    private PaletteHelper() {
+        // Required empty private constructor
+    }
+
     // Generate palette synchronously and return it
     public static Palette createPaletteSync(Bitmap bitmap) {
         return Palette.from(bitmap).generate();

@@ -12,7 +12,7 @@ import no.aegisdynamics.habitat.data.weather.Weather;
  * Specifies the contract between the Dashboard view and presenter.
  */
 
-public interface DashboardContract {
+interface DashboardContract {
 
     interface View {
         void showPlacePicker();
@@ -30,6 +30,7 @@ public interface DashboardContract {
         void hideLockStateWarning();
         void showAppSupportInfoDialog();
         void onDashboardDevicesRetrieved(List<String> dashboardDevices);
+        void onDashboardDevicesRetrieveError(String error);
     }
 
     interface UserActionsListener {

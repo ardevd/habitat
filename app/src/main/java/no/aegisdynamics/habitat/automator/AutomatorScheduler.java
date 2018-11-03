@@ -21,8 +21,8 @@ import no.aegisdynamics.habitat.provider.DeviceDataContract;
  */
 
 public class AutomatorScheduler implements AutomatorContract.Scheduler, DeviceDataContract {
-    private AlarmManager alarmMgr;
-    private Context context;
+    private final AlarmManager alarmMgr;
+    private final Context context;
 
     public AutomatorScheduler(Context context) {
         alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -40,7 +40,6 @@ public class AutomatorScheduler implements AutomatorContract.Scheduler, DeviceDa
             automationCalendar.set(Calendar.YEAR, currentCalendar.get(Calendar.YEAR));// for 6 hour
             automationCalendar.set(Calendar.MONTH, currentCalendar.get(Calendar.MONTH));// for 0 min
             automationCalendar.set(Calendar.DAY_OF_MONTH, currentCalendar.get(Calendar.DAY_OF_MONTH));// for 0 sec
-            System.out.println(automationCalendar.getTime());
             while (automationCalendar.before(currentCalendar)) {
                 /*
                  *  Scheduled time is in the past. Adjust time with one day

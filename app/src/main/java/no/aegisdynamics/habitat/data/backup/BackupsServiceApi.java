@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Defines an interface to the backup service API.
  */
-public interface BackupsServiceApi {
+interface BackupsServiceApi {
 
     interface BackupsServiceCallback<T> {
         void onLoaded(T backups);

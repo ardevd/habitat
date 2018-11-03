@@ -50,7 +50,7 @@ public class LocationsPresenter implements LocationsContract.UserActionsListener
 
     @Override
     public void openLocationDetails(@NonNull Location requestedRoom) {
-        mLocationsView.showLocationDetailUI(requestedRoom.getId(), requestedRoom.getTitle());
+        mLocationsView.showLocationDetailUI(requestedRoom);
     }
 
     @Override

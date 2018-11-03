@@ -3,6 +3,9 @@ package no.aegisdynamics.habitat.util;
 
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
+import android.security.keystore.StrongBoxUnavailableException;
+import android.support.annotation.RequiresApi;
+import android.util.Log;
 
 import com.google.common.base.Charsets;
 
@@ -27,9 +30,10 @@ import javax.crypto.spec.GCMParameterSpec;
 
 public class KeyStoreHelper {
 
-    private final static String keyAlias = "Habitat_Credentials_Key";
+    private static final String keyAlias = "Habitat_Credentials_Key";
     private static final String TRANSFORMATION = "AES/GCM/NoPadding";
     private static final String ANDROID_KEY_STORE = "AndroidKeyStore";
+    private static final String TAG = "Habitat KeyStoreHelper";
 
     private byte[] iv;
 
@@ -44,7 +48,7 @@ public class KeyStoreHelper {
         return keyStore;
     }
 
-    private SecretKey getSecretKeyFromKeyStore(KeyStore keyStore) throws KeyStoreException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException, InvalidKeyException, NoSuchPaddingException, UnrecoverableEntryException {
+    private SecretKey getSecretKeyFromKeyStore(KeyStore keyStore) throws KeyStoreException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException, UnrecoverableEntryException {
         SecretKey secretKey;
 
         if (!keyStore.containsAlias(keyAlias)) {
@@ -82,19 +86,41 @@ public class KeyStoreHelper {
 
     }
 
-    private SecretKey generateNewEncryptionKey() throws NoSuchProviderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, NoSuchPaddingException {
+    private SecretKey generateNewEncryptionKey() throws NoSuchProviderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
 
         final KeyGenerator keyGenerator = KeyGenerator
                 .getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE);
 
-        final KeyGenParameterSpec keyGenParameterSpec = new KeyGenParameterSpec.Builder(keyAlias,
-                KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
-                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                .setRandomizedEncryptionRequired(true)
-                .build();
+        final KeyGenParameterSpec keyGenParameterSpec;
+        keyGenParameterSpec = getKeyGenParameterSpec();
+
 
         keyGenerator.init(keyGenParameterSpec);
         return keyGenerator.generateKey();
+    }
+
+    private KeyGenParameterSpec getKeyGenParameterSpec() {
+        KeyGenParameterSpec.Builder keygenBuilder = new KeyGenParameterSpec.Builder(keyAlias,
+                KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
+                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+                .setRandomizedEncryptionRequired(true);
+
+        if (android.os.Build.VERSION.SDK_INT >= 28) {
+            keygenBuilder = tryToSetStrongBoxBacking(keygenBuilder);
+        }
+
+        return keygenBuilder.build();
+    }
+
+    @RequiresApi(api = 28)
+    private KeyGenParameterSpec.Builder tryToSetStrongBoxBacking(KeyGenParameterSpec.Builder keygenBuilder) {
+        try {
+            keygenBuilder.setIsStrongBoxBacked(true);
+        } catch (StrongBoxUnavailableException ex) {
+            // Strongbox is not available. Return default keygen spec.
+            Log.i(TAG, "StrongBox not supported on this device");
+        }
+        return keygenBuilder;
     }
 }

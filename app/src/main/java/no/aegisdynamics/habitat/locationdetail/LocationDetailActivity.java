@@ -15,15 +15,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import no.aegisdynamics.habitat.R;
+import no.aegisdynamics.habitat.data.location.Location;
 
 import static no.aegisdynamics.habitat.util.PaletteHelper.checkVibrantSwatch;
 import static no.aegisdynamics.habitat.util.PaletteHelper.createPaletteSync;
 
 public class LocationDetailActivity extends AppCompatActivity implements LocationDetailContract.Activity {
 
-    public static final String EXTRA_LOCATION_ID = "LOCATION_ID";
-    public static final String EXTRA_LOCATION_TITLE = "LOCATION_TITLE";
-    public CollapsingToolbarLayout collapsingToolbar;
+    public static final String EXTRA_LOCATION = "location";
+
+    CollapsingToolbarLayout collapsingToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +36,11 @@ public class LocationDetailActivity extends AppCompatActivity implements Locatio
         // Set Collapsing Toolbar layout to the screen
         collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         if (null == savedInstanceState) {
-            // Get the requested location id
-            int locationId = getIntent().getIntExtra(EXTRA_LOCATION_ID, 0);
-            String locationName = getIntent().getStringExtra(EXTRA_LOCATION_TITLE);
+            // Get the requested location
+            Location location = getIntent().getParcelableExtra(EXTRA_LOCATION);
             // Set title of Detail page
-            collapsingToolbar.setTitle(locationName);
-            initFragment(LocationDetailFragment.newInstance(locationId, locationName));
+            collapsingToolbar.setTitle(location.getTitle());
+            initFragment(LocationDetailFragment.newInstance(location));
         }
 
         // Hide the fab when the recyclerView (inside our nested scroll view) is scrolled down from the top
@@ -63,10 +63,8 @@ public class LocationDetailActivity extends AppCompatActivity implements Locatio
         Palette.Swatch vibrantSwatch = checkVibrantSwatch(p);
 
         // Set the toolbar background and text colors
-        Toolbar toolbar = findViewById(R.id.toolbar);
         if (vibrantSwatch != null) {
             collapsingToolbar.setExpandedTitleColor(vibrantSwatch.getBodyTextColor());
-
         }
     }
 
@@ -84,8 +82,9 @@ public class LocationDetailActivity extends AppCompatActivity implements Locatio
             case android.R.id.home:
                 finish();
                 return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

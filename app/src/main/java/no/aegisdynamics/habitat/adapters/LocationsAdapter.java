@@ -3,7 +3,6 @@ package no.aegisdynamics.habitat.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -14,23 +13,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import java.util.List;
 
 import no.aegisdynamics.habitat.R;
 import no.aegisdynamics.habitat.data.location.Location;
 import no.aegisdynamics.habitat.itemListeners.LocationItemListener;
+import no.aegisdynamics.habitat.util.GlideApp;
 import no.aegisdynamics.habitat.zautomation.ZWayNetworkHelper;
 
 /**
  * Adapter for displaying list of locations with associated images where available.
  */
-public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.ViewHolder> {
+public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.LocationsViewHolder> {
 
     private List<Location> mLocations;
     private final LocationItemListener mItemListener;
@@ -42,17 +39,17 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
 
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public LocationsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View locationView = inflater.inflate(R.layout.item_location, parent, false);
 
-        return new ViewHolder(locationView, mItemListener);
+        return new LocationsViewHolder(locationView, mItemListener);
     }
 
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(LocationsViewHolder holder, int position) {
         final Location location = mLocations.get(position);
 
         holder.title.setText(location.getTitle());
@@ -61,27 +58,15 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
             String imageUrl = ZWayNetworkHelper.getZwayLocationImageUrl(holder.image.getContext().getApplicationContext(),location.getImageName());
             holder.image.setVisibility(View.VISIBLE);
             // Use Glide for image loading
-            Glide.with(holder.image.getContext())
+            GlideApp.with(holder.image.getContext())
                     .load(imageUrl)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
-                    .into(new GlideDrawableImageViewTarget(holder.image) {
+                    .into(holder.image);
 
-
-                        @Override
-                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                            super.onLoadFailed(e, errorDrawable);
-                        }
-
-                        @Override
-                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
-                            super.onResourceReady(resource, animation);
-                        }
-                    });
         } else {
             // Due to the nature of the RecyclerView, we need to ensure we clear
             // out images to odd behavior.
-            Glide.clear(holder.image);
             holder.image.setVisibility(View.GONE);
         }
 
@@ -101,12 +86,7 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
         return mLocations.size();
     }
 
-    private Location getItem(int position) {
-        return mLocations.get(position);
-    }
-
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
+    public class LocationsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
         final TextView title;
 
@@ -116,7 +96,7 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
 
         private final LocationItemListener mItemListener;
 
-        ViewHolder(View itemView, LocationItemListener itemListener) {
+        LocationsViewHolder(View itemView, LocationItemListener itemListener) {
             super(itemView);
             mItemListener = itemListener;
             title = itemView.findViewById(R.id.item_location_title);
@@ -155,6 +135,10 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
 
             for (int i = 0, n = menu.size(); i < n; i++)
                 menu.getItem(i).setOnMenuItemClickListener(listener);
+        }
+
+        private Location getItem(int position) {
+            return mLocations.get(position);
         }
 
         boolean onCustomMenuItemClick(MenuItem menuItem) {

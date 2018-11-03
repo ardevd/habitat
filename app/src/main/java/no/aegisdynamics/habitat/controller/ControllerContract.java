@@ -6,7 +6,7 @@ import no.aegisdynamics.habitat.data.device.Controller;
  * Specifies the contract between the Controller view and the presenter.
  */
 
-public interface ControllerContract {
+interface ControllerContract {
 
     interface View {
         void showControllerWillRestartMessage();
@@ -18,6 +18,7 @@ public interface ControllerContract {
         void showControllerData(Controller controller);
         void showControllerDataError(String error);
         void setProgressIndicator(boolean active);
+        void showControllerUnsupportedVersionMessage(String controllerVersion);
     }
 
     interface UserActionsListener {

@@ -29,7 +29,7 @@ import no.aegisdynamics.habitat.util.FileSizeStringifier;
  * ListView adapter for backups
  */
 
-public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.ViewHolder> {
+public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.BackupViewHolder> {
 
     private List<Backup> mBackups;
     private final BackupItemListener mItemListener;
@@ -46,15 +46,15 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.ViewHolder
     }
 
     @Override
-    public BackupAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BackupAdapter.BackupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View backupView = inflater.inflate(R.layout.item_backup, parent, false);
-        return new BackupAdapter.ViewHolder(backupView, mItemListener);
+        return new BackupAdapter.BackupViewHolder(backupView, mItemListener);
     }
 
     @Override
-    public void onBindViewHolder(BackupAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(BackupAdapter.BackupViewHolder holder, int position) {
         final Backup backup = mBackups.get(position);
 
         holder.filename.setText(backup.getFilename());
@@ -95,16 +95,12 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.ViewHolder
         return mBackups.size();
     }
 
-    private Backup getItem(int position) {
-        return mBackups.get(position);
-    }
-
     public void replaceData(List<Backup> backups) {
         setList(backups);
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+    public class BackupViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             View.OnCreateContextMenuListener {
 
         private final TextView filename;
@@ -114,7 +110,7 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.ViewHolder
 
         private final BackupItemListener mItemListener;
 
-        ViewHolder(View itemView, BackupItemListener itemListener) {
+        BackupViewHolder(View itemView, BackupItemListener itemListener) {
             super(itemView);
 
             // Views
@@ -156,6 +152,10 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.ViewHolder
 
             for (int i = 0, n = contextMenu.size(); i < n; i++)
                 contextMenu.getItem(i).setOnMenuItemClickListener(listener);
+        }
+
+        private Backup getItem(int position) {
+            return mBackups.get(position);
         }
 
         boolean onCustomMenuItemClick(MenuItem menuItem) {

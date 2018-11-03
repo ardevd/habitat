@@ -4,7 +4,7 @@ import java.util.List;
 
 import no.aegisdynamics.habitat.data.notifications.Notification;
 
-public interface NotificationsContract {
+interface NotificationsContract {
 
     interface View {
         void showNotifications(List<Notification> notifications);

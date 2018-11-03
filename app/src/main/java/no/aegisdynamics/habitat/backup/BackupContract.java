@@ -8,7 +8,7 @@ import no.aegisdynamics.habitat.data.backup.Backup;
  * Specifies the contract between the Backup view and presenter.
  */
 
-public interface BackupContract {
+interface BackupContract {
 
     interface View {
         void showBackupStarted();

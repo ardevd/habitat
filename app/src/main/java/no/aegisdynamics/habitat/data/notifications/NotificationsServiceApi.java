@@ -8,7 +8,7 @@ import java.util.List;
  * Defines an interface to the service API that is used by this application. All notification data requests should
  * be piped through this interface.
  */
-public interface NotificationsServiceApi {
+interface NotificationsServiceApi {
 
     interface NotificationsServiceCallback<T> {
         void onLoaded (T notifications);

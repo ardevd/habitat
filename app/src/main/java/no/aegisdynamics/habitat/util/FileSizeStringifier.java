@@ -6,6 +6,10 @@ package no.aegisdynamics.habitat.util;
 
 public class FileSizeStringifier {
 
+    private FileSizeStringifier() {
+        // Required empty private constructor
+    }
+
     public static String convertBytesToScaledString(long bytes) {
         if (bytes >= 102400) {
             return String.format("%d MB", bytes/1000000);

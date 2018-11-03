@@ -9,6 +9,10 @@ import java.math.RoundingMode;
 
 public class TemperatureConverterHelper {
 
+    private TemperatureConverterHelper() {
+        // Required empty private constructor
+    }
+
     public static double convertKelvinToCelsius(double kelvinTemp) {
         return kelvinTemp - 273.15;
     }

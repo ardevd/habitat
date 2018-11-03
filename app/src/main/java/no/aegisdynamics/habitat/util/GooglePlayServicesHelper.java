@@ -8,6 +8,10 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 public class GooglePlayServicesHelper {
 
+    private GooglePlayServicesHelper() {
+        // Required empty private constructor
+    }
+
     public static boolean checkForGooglePlayServices(Activity activity, int REQUEST_CODE) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(activity);
@@ -15,7 +19,6 @@ public class GooglePlayServicesHelper {
             if (apiAvailability.isUserResolvableError(resultCode)) {
                 apiAvailability.getErrorDialog(activity, resultCode, REQUEST_CODE)
                         .show();
-            } else {
             }
             return false;
         }
